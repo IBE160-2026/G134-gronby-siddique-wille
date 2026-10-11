@@ -28,6 +28,15 @@ Erfaringsgruven tar studenten gjennom fire steg.
 2. **Annonsen.** Studenten limer inn en stillingsannonse, og verktøyet trekker ut hva arbeidsgiveren faktisk krever.
 3. **Bevistabellen.** For hvert krav ser studenten hvilken av sine egne erfaringer som dokumenterer det, sammen med en kort bevishistorie i studentens egne ord. Krav uten bevis markeres tydelig som hull, med forslag til hva studenten kan reflektere over eller bygge opp.
 4. **Resultatet.** Det kan tas med videre og brukes i CV, søknad og intervju. Siden første versjon ikke lagrer noe, tar studenten med seg resultatet som tekst og oppbevarer det selv.
+   
+**Når er samtalen ferdig?** Samtalen avsluttes når studenten har beskrevet minst tre erfaringer med rolle, handling og resultat, eller når studenten selv velger «Ferdig». Verktøyet oppsummerer erfaringene og lar studenten rette før neste steg.
+
+**Eksempel på bevistabellen:**
+
+| Krav fra annonsen | Bevis | Fra samtalen |
+|---|---|---|
+| Erfaring med kundekontakt | Tre år deltid i butikk med ansvar for reklamasjoner | «Jeg tok meg av klagene når sjefen ikke var der» |
+| Kjennskap til Excel | **Hull** | Forslag: tenk over om du har brukt regneark i studiet eller jobben |
 
 Regelen bak alt er at verktøyet aldri finner på noe. Alt det bruker må kunne knyttes til noe studenten selv har sagt.
 
@@ -59,6 +68,16 @@ Målene under er utgangspunkt som vi tester i brukertester med studenter.
 | Kvalitet og tillit | Ingen påstander i bevistabellen som ikke kan spores til brukerens egne svar | Stikkprøver i brukertestene |
 | Bruk | Minst 7 av 10 testbrukere fullfører hele forløpet (samtale, annonse, bevistabell) i én økt | Antall fullførte forløp |
 
+Kriteriene under kan testes automatisk eller som dokumenterte manuelle tester.
+
+| Kriterium | Mål | Slik tester vi |
+|---|---|---|
+| Kravuttrekk | For testannonse A trekker verktøyet ut alle fem kravene vi har definert på forhånd | Automatisk test med mock-svar |
+| Sporbarhet | Hvert bevis i tabellen viser til minst ett svar fra samtalen | Automatisk test |
+| Hull | Et krav uten bevis vises som hull, med forslag | Automatisk test med fast testsett |
+| Eksport | Resultatet kan kopieres som ren tekst | Dokumentert manuell test |
+| Demomodus | Hele flyten kan kjøres uten API-nøkkel | Manuell test etter README |
+
 ## Scope
 
 **IN for v1**
@@ -68,6 +87,11 @@ Målene under er utgangspunkt som vi tester i brukertester med studenter.
 3. Bevistabell som kobler krav til studentens erfaringer, med tydelige hull.
 4. Mulighet til å ta med resultatet som ren tekst.
 5. Personvern og sikkerhet: all kommunikasjon mellom brukeren og tjenesten krypteres, og verktøyet lagrer ingen CV-er eller personopplysninger etter at økten er avsluttet. Teksten sendes til en språkmodell for å bli behandlet i økten, og brukeren får beskjed om dette før start. Vi velger leverandør og innstillinger slik at teksten ikke brukes til å trene modellen.
+6. Demomodus: appen kan kjøres med lagrede eksempelsvar uten API-nøkkel, slik at sensor og testere kan prøve hele flyten uten konto.
+
+**Hvis tid i v1**
+
+1. Studenten kan redigere bevisene i bevistabellen.
 
 **OUT for v1**
 
@@ -77,6 +101,19 @@ Målene under er utgangspunkt som vi tester i brukertester med studenter.
 4. Brukerkontoer og varig lagring. Hvis vi senere innfører lagring, skal dataene krypteres og kunne slettes av brukeren.
 5. Kobling til jobbsider og innsending av søknader.
 6. Intervjutrening og dashboard for karriereveiledere.
+
+
+## Språkmodell, kostnad og kjøring
+
+Appen bruker Claude Haiku 5.5 fra Anthropic via API. Vi valgte den fordi den er blant de billigste modellene på markedet, håndterer norsk godt og er rask nok til en samtale. Anthropic bruker ikke data fra API-et til å trene modellene sine, noe som passer med personvernkravet vårt i scope.
+
+En økt bruker omtrent 15 kall til modellen: rundt 12 i samtalen, ett for å trekke ut krav fra annonsen og ett eller to for å lage bevistabellen. Med prisen på 0,10 dollar per million tokens inn og 0,50 dollar ut anslår vi kostnaden til under 10 øre per økt. Hele semesterets utvikling og testing bør dermed koste under 100 kroner.
+
+Prisene er hentet 11. oktober 2026 og kan ha endret seg.
+
+Kilder:
+- [Anthropic: Pricing](https://platform.claude.com/docs/en/about-claude/pricing)
+- [Anthropic: Commercial Terms of Service](https://www.anthropic.com/legal/commercial-terms)
 
 ## Vision
 
