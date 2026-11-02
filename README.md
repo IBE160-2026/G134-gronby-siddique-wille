@@ -14,10 +14,23 @@ Gruppeprosjekt i **IBE160 Programmering med KI** ved Høgskolen i Molde, høsten
 
 Planleggingsfasen. Appen er ikke bygget ennå.
 
+## Arbeidsfordeling
+
+| Del | Ansvarlig | Status |
+|---|---|---|
+| BMAD-installasjon, product brief og PRD-utkast | Thea | Ferdig |
+| UX | Victoria | Ikke startet |
+| Arkitektur og testsett | Rikke | Ikke startet |
+| Arbeidsfordeling | Alle | Muntlig avtalt 2. november |
+| Gjennomgang av PRD og antagelser | Alle | Ikke startet |
+| Epics og stories | Alle | Ikke startet |
+
 ## Planleggingsdokumenter
 
 - [Product brief](docs/product-brief.md)
 - [Tilbakemelding på product brief](docs/tilbakemelding-product-brief.md)
+- [PRD-utkast](docs/prds/prd-G134-gronby-siddique-wille-2026-11-02/prd.md)
+
 
 ## Kjøre appen
 
