@@ -5,3 +5,8 @@
 #
 # [agents.bmad-agent-pm]
 # description = "Prefers short, bulleted PRDs over narrative drafts."
+
+[modules.bmm]
+# Planleggingsdokumenter (product brief, PRD, osv.) ligger i docs/, ikke i
+# _bmad-output/planning-artifacts/. Hold alt planleggingsarbeid i docs/ samlet.
+planning_artifacts = "{project-root}/docs"
