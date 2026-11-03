@@ -21,7 +21,7 @@ Planleggingsfasen. Appen er ikke bygget ennå.
 | BMAD-installasjon, product brief og PRD-utkast | Thea | Ferdig |
 | UX | Victoria | Ikke startet |
 | Arkitektur og testsett | Rikke | Ikke startet |
-| Arbeidsfordeling | Alle | Muntlig avtalt 2. november |
+| Arbeidsfordeling | Alle | Skriftlig bekreftet 3. november (e-post) |
 | Gjennomgang av PRD og antagelser | Alle | Ikke startet |
 | Epics og stories | Alle | Ikke startet |
 
