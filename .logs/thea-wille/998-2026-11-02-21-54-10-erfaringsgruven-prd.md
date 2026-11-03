@@ -21,6 +21,29 @@ Opprette PRD for Erfaringsgruven med `bmad-prd`-skillen, basert på eksisterende
 
 ### Åpne punkter
 - PRD-status er fortsatt `draft` — brukeren leser utkastet selv; `status: final` skal **ikke** settes før bruker ber om det.
-- 5 åpne spørsmål i PRD §9 gjenstår å avklare med gruppen: (1) antall oppfølgingsspørsmål per erfaring, (2) én vs. flere stillingsannonser per økt, (3) statisk refleksjonsforslag vs. aktivt oppfølgingsspørsmål ved hull, (4) definisjon av faste testsett/fixtures for kravuttrekk, (5) om sporbarhet (FR-6) skal være synlig i UI eller holder i datamodellen.
+- 5 åpne spørsmål i PRD §9 gjenstår å avklare med gruppen: (1) antall oppfølgingsspørsmål per erfaring, (2) én vs. flere stillingsannonser per økt, (3) statisk refleksjonsforslag vs. aktivt oppfølgingsspørsmål ved hull, (4) definisjon av faste testsett/fixtures for kravuttrekk, (5) om sporbarhet (FR-6) skal være synlig i UI eller holder i datamodellen. *(Løst 2026-11-03, se seksjonen under — kun punkt 4 er fortsatt åpent.)*
 - Reviewer Gate (bmad-prd Finalize) er ikke kjørt — gjøres når bruker er klar for finalisering.
 - Resten av gruppen (2 andre medlemmer) har ikke sett PRD-en ennå.
+
+## 2026-11-03 kl. 18:09 — Thea Wille
+
+### Oppgave
+Gruppen har bekreftet svar på fire av de fem åpne spørsmålene fra forrige økt. Oppdater `prd.md` tilsvarende: fjern `[ASSUMPTION]`-tagger for FR-2, FR-4, FR-6, FR-7; legg til i FR-2 at samtalen stiller maks tre oppfølgingsspørsmål per erfaring; lukk åpne spørsmål 1, 2, 3, 5 med svarene; la spørsmål 4 stå åpent, tildelt Rikke; oppdater antagelsesindeksen (§10).
+
+### Plan
+- Målrettede `Edit`-operasjoner i `prd.md`, kun de nevnte stedene (FR-2, FR-4, FR-6, FR-7, §9, §10, `updated`-dato) — ingen andre deler av dokumentet rørt, som bedt.
+- Loggførte beslutningene i `.memlog.md` for PRD-arbeidsmappen (entries 17–18).
+
+### Resultat
+- `docs/prds/prd-G134-gronby-siddique-wille-2026-11-02/prd.md` oppdatert (`updated: 2026-11-03`):
+  - FR-2: ny konsekvens "maks tre oppfølgingsspørsmål per erfaring", `[ASSUMPTION]`-tag fjernet.
+  - FR-4, FR-6: `[ASSUMPTION]`-tagger fjernet, kravtekst ellers uendret.
+  - FR-7: `[ASSUMPTION]`-bullet fjernet.
+  - §9 Åpne spørsmål: 1, 2, 3, 5 markert **[Lukket]** med svar; 4 markert **[Åpent — ansvarlig: Rikke]**.
+  - §10 Antagelsesindeks: redusert til kun §2.3 UJ-1 (Mia er en syntetisert protagonist) — eneste gjenstående antagelse i dokumentet.
+- Ikke committet ennå i denne økten (PRD-filene ligger ukommittert, som tidligere — bruker leser selv og avgjør når).
+
+### Åpne punkter
+- Åpent spørsmål 4 (faste testsett/fixtures for kravuttrekk) — ansvarlig: Rikke.
+- PRD-status fortsatt `draft`; Reviewer Gate/Finalize ikke kjørt.
+- Resten av gruppen har fortsatt ikke sett PRD-en.
