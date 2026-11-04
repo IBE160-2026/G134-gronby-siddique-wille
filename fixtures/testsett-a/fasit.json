@@ -1,0 +1,79 @@
+{
+  "testsett": "testsett-a",
+  "fiktiv": true,
+  "student": "student.json",
+  "annonse": "annonse-a.md",
+  "antall_krav": 5,
+  "krav": [
+    {
+      "id": "K1",
+      "krav": "Erfaring med kundekontakt, gjerne i perioder med høyt tempo og tidspress",
+      "nokkelord": ["kundekontakt", "tidspress", "tempo"],
+      "status": "dekket",
+      "erfaring": "E1",
+      "bevis": ["S3", "S4"],
+      "tillatt_i_tillegg": ["S2"],
+      "forbudte_bevis": [],
+      "felle": false,
+      "begrunnelse": "S3 beskriver kundekontakt i kassa med lang kø i desember. S4 viser resultatet: færre klager og ros fra en kunde. S2 viser bare rollen og kan brukes som støtte, men er ikke nok alene. Dette er klimakset i UJ-1."
+    },
+    {
+      "id": "K2",
+      "krav": "Erfaring med å lede eller koordinere arbeid i en gruppe",
+      "nokkelord": ["lede", "koordinere", "gruppe"],
+      "status": "dekket",
+      "erfaring": "E2",
+      "bevis": ["S5", "S6", "S7"],
+      "tillatt_i_tillegg": ["S4", "S9"],
+      "forbudte_bevis": [],
+      "felle": false,
+      "begrunnelse": "S5–S7 beskriver at Mia ledet en gruppe på fem, med plan, oppgavefordeling, ukentlige møter og levering før frist. S4 (opplæring av nye ekstrahjelper) og S9 (tok på seg presentasjonen for gruppa) er grensetilfeller og godtas som tillegg, men ikke som eneste bevis."
+    },
+    {
+      "id": "K3",
+      "krav": "Gode engelskkunnskaper, både muntlig og skriftlig",
+      "nokkelord": ["engelsk", "muntlig", "skriftlig"],
+      "status": "dekket",
+      "erfaring": "E3",
+      "bevis": ["S8", "S9", "S10"],
+      "tillatt_i_tillegg": [],
+      "forbudte_bevis": [],
+      "felle": false,
+      "begrunnelse": "S8 viser undervisning og gruppearbeid på engelsk, S9 presentasjon (muntlig) og rapport (skriftlig) på engelsk, og S10 at hun bestod og fikk ros for presentasjonen."
+    },
+    {
+      "id": "K4",
+      "krav": "Erfaring med Excel, inkludert formler og pivottabeller",
+      "nokkelord": ["excel", "formler", "pivottabeller"],
+      "status": "hull",
+      "erfaring": null,
+      "bevis": [],
+      "tillatt_i_tillegg": [],
+      "forbudte_bevis": ["S12"],
+      "felle": false,
+      "begrunnelse": "Mia har ingen Excel-erfaring. S12 nevner Excel, men sier at hun nesten ikke har brukt det. Hvis S12 brukes som bevis, kobler systemet på nøkkelordet og ikke på innholdet."
+    },
+    {
+      "id": "K5",
+      "krav": "Erfaring fra reiselivsbransjen, for eksempel fra hotell, reisebyrå eller turoperatør",
+      "nokkelord": ["reiseliv", "hotell", "reisebyrå", "turoperatør"],
+      "status": "hull",
+      "erfaring": null,
+      "bevis": [],
+      "tillatt_i_tillegg": [],
+      "forbudte_bevis": ["S1", "S8", "S11"],
+      "felle": true,
+      "begrunnelse": "Felle for SM-C1. Mia var på utveksling (S1, S8) og planla private reiser med billige fly og overnatting (S11). Dette ligner på reiseliv, men er ikke arbeid i bransjen. Riktig svar er hull med refleksjonsforslag, ikke et bevis."
+    }
+  ],
+  "ikke_krav": [
+    "Ta imot bestillinger og henvendelser fra kunder på telefon, e-post og i skranken",
+    "Hjelpe gjester med informasjon før og under turene",
+    "Følge opp avbestillinger og endringer",
+    "Delta i planleggingen av sesongen sammen med resten av teamet",
+    "Et uformelt og hyggelig arbeidsmiljø",
+    "Fleksible arbeidstider som passer med studier",
+    "Gratis deltakelse på våre turer",
+    "Opplæring i bookingsystemet vårt"
+  ]
+}

@@ -1,0 +1,126 @@
+{
+  "testsett": "testsett-a",
+  "fiktiv": true,
+  "student": {
+    "id": "mia",
+    "navn": "Mia",
+    "beskrivelse": "Fiktiv student, siste år på bachelor. Deltidsjobb i sportsbutikk i tre år, har ledet en gruppeoppgave og vært på utveksling ett semester. Bygget på UJ-1 i PRD-en."
+  },
+  "samtale": [
+    {
+      "id": "S1",
+      "sporsmal": "Hei! Fortell litt om hva du har drevet med ved siden av studiene de siste årene. Jobb, verv, prosjekter – alt teller.",
+      "svar": "Ærlig talt har jeg ikke så mye relevant erfaring. Jeg har jobbet deltid i en sportsbutikk siden første året, og så var jeg på utveksling i Spania ett semester. Ellers er det mest skole."
+    },
+    {
+      "id": "S2",
+      "sporsmal": "Butikkjobben høres interessant ut. Hva er rollen din der?",
+      "svar": "Jeg er salgsmedarbeider på Brattli Sport, rundt 15 timer i uka, og har vært der i tre år. Det siste året har jeg også hatt ansvaret for kassa på lørdager når butikksjefen ikke er på jobb."
+    },
+    {
+      "id": "S3",
+      "sporsmal": "Kan du beskrive en travel dag? Hva gjør du konkret når det er mye folk i butikken?",
+      "svar": "Lørdager i desember er verst, da kan det være kø helt ut døra. Jeg står i kassa, svarer på spørsmål om størrelser og bytter, og må holde hodet kaldt når folk er stresset. Jeg begynte å gå bort til dem som sto bakerst i køen og si hvor lenge det ville ta, så de visste hva de hadde i vente."
+    },
+    {
+      "id": "S4",
+      "sporsmal": "Hvordan gikk det? Fikk du tilbakemeldinger, eller merket du at det du gjorde hadde en effekt?",
+      "svar": "Butikksjefen sa at det kom færre klager på køen etter at vi begynte å informere folk mens de ventet, og jeg fikk ansvaret for å lære opp fire nye ekstrahjelper før jul i fjor. En kunde nevnte meg også med navn i en kundeundersøkelse og skrev at jeg var rolig og hjelpsom selv om det var kaos."
+    },
+    {
+      "id": "S5",
+      "sporsmal": "Du nevnte skole. Har du vært med på gruppearbeid der du hadde en spesiell rolle?",
+      "svar": "Ja, i et prosjektfag i andre året var jeg på en måte leder for gruppa vår. Vi var fem stykker. Det var ikke en formell rolle, men noen måtte ta tak, og det ble meg."
+    },
+    {
+      "id": "S6",
+      "sporsmal": "Hva gjorde du konkret for å ta tak?",
+      "svar": "Jeg lagde en plan med frister for hver del, fordelte oppgavene etter hva folk var gode på, og satte opp et kort møte hver mandag. Da to på gruppa var uenige om hvilken metode vi skulle bruke, tok jeg en prat med begge, og vi ble enige om et kompromiss."
+    },
+    {
+      "id": "S7",
+      "sporsmal": "Hvordan endte prosjektet?",
+      "svar": "Vi leverte en uke før fristen og fikk B. Alle på gruppa skrev i evalueringen at samarbeidet fungerte bra, og det er ikke alltid tilfelle i gruppeoppgaver."
+    },
+    {
+      "id": "S8",
+      "sporsmal": "Fortell om utvekslingen. Hvor var du, og hva gjorde du der?",
+      "svar": "Jeg var i Valencia vårsemesteret i fjor. All undervisning var på engelsk, og jeg tok tre fag. I det ene faget jobbet jeg i en gruppe med studenter fra Tyskland, Italia og Brasil, og vi brukte engelsk som felles språk."
+    },
+    {
+      "id": "S9",
+      "sporsmal": "Hva var mest krevende der, og hvordan løste du det?",
+      "svar": "I starten syntes jeg det var skummelt å snakke engelsk foran klassen. Men jeg tok på meg å holde sluttpresentasjonen for gruppa vår, og skrev den skriftlige rapporten på engelsk sammen med en annen på gruppa. Jeg øvde mye på forhånd."
+    },
+    {
+      "id": "S10",
+      "sporsmal": "Og hvordan gikk det?",
+      "svar": "Jeg bestod alle tre fagene, og foreleseren sa at presentasjonen vår var en av de tydeligste i klassen. Nå er jeg mye tryggere på å bruke engelsk, både muntlig og skriftlig."
+    },
+    {
+      "id": "S11",
+      "sporsmal": "Gjorde du noe annet mens du var i Spania som du lærte noe av?",
+      "svar": "Jeg reiste mye i helgene. Jeg planla turer til Barcelona, Madrid og Lisboa for meg og noen venner, fant billige fly og overnatting og lagde reiseplaner. Det var mest for moro skyld, men jeg ble ganske flink til å finne gode tilbud."
+    },
+    {
+      "id": "S12",
+      "sporsmal": "Er det noe annet du har gjort? Verktøy du har brukt, kurs eller verv?",
+      "svar": "Ikke så mye mer, egentlig. Vi bruker et kassesystem på jobben, og på skolen har vi brukt Word og PowerPoint mye. Excel har jeg nesten ikke brukt, bare åpnet det et par ganger i et fag."
+    },
+    {
+      "id": "S13",
+      "sporsmal": "Takk! Jeg har fanget tre erfaringer: butikkjobben, gruppeprosjektet og utvekslingen. Stemmer oppsummeringen, eller vil du rette noe?",
+      "svar": "Det stemmer. Ferdig."
+    }
+  ],
+  "erfaringer": [
+    {
+      "id": "E1",
+      "tittel": "Salgsmedarbeider i sportsbutikk (tre år, deltid)",
+      "rolle": {
+        "tekst": "Salgsmedarbeider på Brattli Sport, rundt 15 timer i uka i tre år, med ansvar for kassa på lørdager det siste året.",
+        "kilder": ["S2"]
+      },
+      "handling": {
+        "tekst": "Står i kassa i travle perioder, svarer på spørsmål om størrelser og bytter, og informerer kunder bakerst i køen om ventetiden.",
+        "kilder": ["S3"]
+      },
+      "resultat": {
+        "tekst": "Færre klager på kø, fikk ansvar for å lære opp fire nye ekstrahjelper, og en kunde nevnte henne med navn i en kundeundersøkelse.",
+        "kilder": ["S4"]
+      }
+    },
+    {
+      "id": "E2",
+      "tittel": "Uformell leder for prosjektgruppe (fem studenter)",
+      "rolle": {
+        "tekst": "Uformell leder for en gruppe på fem i et prosjektfag i andre året.",
+        "kilder": ["S5"]
+      },
+      "handling": {
+        "tekst": "Lagde plan med frister, fordelte oppgaver, holdt ukentlige møter og løste en uenighet i gruppa med et kompromiss.",
+        "kilder": ["S6"]
+      },
+      "resultat": {
+        "tekst": "Leverte en uke før fristen, fikk B, og alle på gruppa ga positiv tilbakemelding på samarbeidet.",
+        "kilder": ["S7"]
+      }
+    },
+    {
+      "id": "E3",
+      "tittel": "Utvekslingssemester i Valencia",
+      "rolle": {
+        "tekst": "Utvekslingsstudent ett semester med all undervisning på engelsk, og medlem av en internasjonal gruppe.",
+        "kilder": ["S8"]
+      },
+      "handling": {
+        "tekst": "Holdt sluttpresentasjonen for gruppa på engelsk og skrev den skriftlige rapporten på engelsk sammen med en annen.",
+        "kilder": ["S9"]
+      },
+      "resultat": {
+        "tekst": "Bestod alle tre fagene, presentasjonen fikk ros av foreleseren, og hun er nå trygg på engelsk muntlig og skriftlig.",
+        "kilder": ["S10"]
+      }
+    }
+  ]
+}
