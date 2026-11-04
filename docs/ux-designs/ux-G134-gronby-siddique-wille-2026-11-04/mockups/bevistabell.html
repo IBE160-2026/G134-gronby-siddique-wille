@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Erfaringsgruven – Bevistabell (mock)</title>
+<style>
+/* Styres av: DESIGN.md (Colors: covered/gap, Typography: display/quote, Components: kravrad dekket/hull,
+   bevissitat, markert svar i samtalelogg, Button primær) og EXPERIENCE.md (IA: Bevistabell + «Vis i samtalen»;
+   Component Patterns: kravrad, bevissitat, «Vis i samtalen», eksportdialog; Key Flows UJ-1 steg 7–9).
+   Viser to tilstander: tabellen alene (venstre) og med «Vis i samtalen»-Sheet åpen (høyre). Spines vinner ved konflikt. */
+:root{--bg:#FBF8F3;--fg:#1F2421;--card:#FFF;--muted:#F1ECE3;--mutedfg:#5E6660;--border:#E4DDD1;
+--primary:#1F5E4A;--pfg:#FFF;--covered:#E3F0EA;--coveredfg:#1F5E4A;--gap:#F4EEE3;--gapfg:#6B5B3E;--gapb:#CDBF9F;--md:10px;--lg:14px}
+*{box-sizing:border-box}
+body{margin:0;background:#d9d4cb;font:15px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--fg)}
+.frame{max-width:1280px;margin:24px auto;background:var(--bg);border-radius:12px;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.15);position:relative}
+.chrome{background:#ece7de;padding:10px 16px;display:flex;gap:8px;align-items:center;font-size:12px;color:#777}
+.dot{width:11px;height:11px;border-radius:50%;background:#cfc7b9}.url{margin-left:12px;background:#fff;border-radius:6px;padding:3px 12px}
+header{display:flex;justify-content:space-between;align-items:center;padding:16px 32px;border-bottom:1px solid var(--border)}
+.logo{font-family:"Source Serif 4",Georgia,serif;font-size:20px;font-weight:500}
+.steps{display:flex;gap:6px;font-size:13px;color:var(--mutedfg)}.steps span{padding:4px 10px;border-radius:999px}
+.steps .ok{color:var(--coveredfg);text-decoration:underline}.steps .on{background:var(--covered);color:var(--coveredfg);font-weight:600}
+.ghost{background:none;border:1px solid var(--border);border-radius:var(--md);padding:6px 12px;font:inherit;color:var(--fg)}
+main{max-width:880px;margin:0 auto;padding:32px}
+h1{font-family:"Source Serif 4",Georgia,serif;font-weight:500;font-size:32px;line-height:1.2;margin:0 0 6px}
+.lead{color:var(--mutedfg);margin:0 0 24px}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px}
+.btn{background:var(--primary);color:var(--pfg);border:0;border-radius:var(--md);padding:10px 16px;font:inherit;font-weight:600}
+.row{border-radius:var(--md);padding:16px 18px;margin-bottom:12px}
+.cov{background:var(--card);border:1px solid var(--border);border-left:4px solid var(--primary)}
+.gap{background:var(--gap);border:1px dashed var(--gapb);color:var(--gapfg)}
+.rh{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+.req{font-weight:600;color:var(--fg)}
+.tag{font-size:12px;padding:2px 10px;border-radius:999px;white-space:nowrap}
+.tag.c{background:var(--covered);color:var(--coveredfg)}.tag.g{border:1px solid var(--gapb);color:var(--gapfg)}
+.exp{font-size:13px;color:var(--mutedfg);margin:6px 0 8px}
+blockquote{margin:0;border-left:3px solid var(--primary);padding:2px 0 2px 12px;font-family:"Source Serif 4",Georgia,serif;font-style:italic;font-size:16px;line-height:1.5}
+.link{display:inline-block;margin-top:8px;font-size:13px;color:var(--coveredfg);font-weight:600}
+.more{font-size:13px;color:var(--mutedfg);margin-left:12px}
+.tip{margin-top:6px}
+.overlay{position:absolute;inset:0;background:rgba(31,36,33,.25)}
+.sheet{position:absolute;top:0;right:0;bottom:0;width:440px;background:var(--card);border-left:1px solid var(--border);padding:24px;overflow:hidden}
+.sheet h2{font-family:"Source Serif 4",Georgia,serif;font-weight:500;font-size:22px;margin:0 0 4px}
+.sheet .sub{font-size:13px;color:var(--mutedfg);margin-bottom:16px}
+.x{position:absolute;top:18px;right:18px}
+.m{padding:10px 14px;border-radius:var(--lg);margin-bottom:10px;font-size:15px}
+.ma{background:var(--bg);border:1px solid var(--border)}.ms{background:var(--muted);margin-left:40px}
+.hl{background:var(--covered);color:#143d30;outline:2px solid var(--primary)}
+.label{display:block;font-size:11px;font-weight:600;color:var(--coveredfg);margin-bottom:4px}
+.caption{max-width:1280px;margin:0 auto 8px;font-size:13px;color:#555}
+</style>
+</head>
+<body>
+<p class="caption" style="margin-top:24px">Tilstand A: bevistabellen (UJ-1 steg 7–8)</p>
+<div class="frame">
+  <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">localhost:5173</span></div>
+  <header>
+    <span class="logo">Erfaringsgruven</span>
+    <nav class="steps" aria-label="Steg"><span class="ok">1 Samtale</span><span class="ok">2 Oppsummering</span><span class="ok">3 Annonse</span><span class="ok">4 Krav</span><span class="on">5 Bevistabell</span></nav>
+    <button class="ghost">Ny økt</button>
+  </header>
+  <main>
+    <div class="top">
+      <div><h1>Dette har du å vise til</h1>
+      <p class="lead">5 av 6 krav er dekket av dine egne erfaringer. Sitatene er dine egne ord fra samtalen.</p></div>
+      <button class="btn">Eksporter</button>
+    </div>
+
+    <div class="row cov"><div class="rh"><span class="req">Erfaring med kundekontakt under tidspress</span><span class="tag c">Dekket</span></div>
+      <div class="exp">Fra: Butikkjobb</div>
+      <blockquote>«I julehandelen var vi ofte to på kassa. Da tok jeg køen og ropte inn en kollega fra lageret når det ble over fem i kø …»</blockquote>
+      <a class="link" href="#">Vis i samtalen →</a></div>
+
+    <div class="row cov"><div class="rh"><span class="req">Evne til å samarbeide i team</span><span class="tag c">Dekket</span></div>
+      <div class="exp">Fra: Gruppeoppgave i markedsføring, Butikkjobb</div>
+      <blockquote>«Jeg fordelte oppgavene i gruppa og satte opp ukentlige møter da vi begynte å henge etter.»</blockquote>
+      <a class="link" href="#">Vis i samtalen →</a><span class="more">+1 bevis til</span></div>
+
+    <div class="row cov"><div class="rh"><span class="req">Kulturell forståelse / internasjonal erfaring</span><span class="tag c">Dekket</span></div>
+      <div class="exp">Fra: Utveksling i Lyon</div>
+      <blockquote>«Jeg tok alle fagene på fransk og var med på å arrangere en velkomstuke for de nye utvekslingsstudentene.»</blockquote>
+      <a class="link" href="#">Vis i samtalen →</a></div>
+
+    <div class="row gap"><div class="rh"><span class="req" style="color:var(--gapfg)">Erfaring med Excel</span><span class="tag g">Ikke dekket ennå</span></div>
+      <p class="tip">Tenk på: har du brukt regneark i studier eller jobb, for eksempel til budsjett eller vaktlister?</p></div>
+    <p class="exp">(Utsnitt: 2 dekkede krav til er utelatt i mocken.)</p>
+  </main>
+</div>
+
+<p class="caption" style="margin-top:32px">Tilstand B: «Vis i samtalen» åpen (UJ-1 klimaks, FR-6)</p>
+<div class="frame" style="height:640px">
+  <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">localhost:5173</span></div>
+  <main style="opacity:.6"><h1>Dette har du å vise til</h1><p class="lead">5 av 6 krav er dekket av dine egne erfaringer.</p>
+    <div class="row cov"><div class="rh"><span class="req">Erfaring med kundekontakt under tidspress</span><span class="tag c">Dekket</span></div></div></main>
+  <div class="overlay"></div>
+  <aside class="sheet" role="dialog" aria-label="Samtalelogg">
+    <button class="ghost x" aria-label="Lukk">Esc</button>
+    <h2>Fra samtalen</h2>
+    <div class="sub">Bevis for: Erfaring med kundekontakt under tidspress</div>
+    <div class="m ma">Butikkjobben høres interessant ut. Hva var rollen din der?</div>
+    <div class="m ms">Deltid som butikkmedarbeider i tre år. Mest kasse og kundeservice.</div>
+    <div class="m ma">Hva gjorde <em>du</em> konkret da det ble travelt?</div>
+    <div class="m ms hl" tabindex="-1"><span class="label">Ditt svar, brukt som bevis</span>I julehandelen var vi ofte to på kassa. Da tok jeg køen og ropte inn en kollega fra lageret når det ble over fem i kø, og så tok jeg klagene selv så den andre kunne fortsette.</div>
+    <div class="m ma">Hvordan gikk det til slutt?</div>
+  </aside>
+</div>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Erfaringsgruven – Samtale (mock)</title>
+<style>
+/* Styres av: DESIGN.md (Colors, Typography, Layout & Spacing, Components: chatboble, erfaringskort,
+   R-H-R-brikke, fremdriftsmåler, Button primær) og EXPERIENCE.md (IA: Samtale; Component Patterns:
+   chatboble, chatinput, erfaringskort, R-H-R-brikke, fremdriftsmåler, «Ferdig»-knapp, stegindikator;
+   State Patterns: Delvis erfaring; Key Flows UJ-1 steg 2–4). Spines vinner ved konflikt. */
+:root{--bg:#FBF8F3;--fg:#1F2421;--card:#FFF;--muted:#F1ECE3;--mutedfg:#5E6660;--border:#E4DDD1;
+--primary:#1F5E4A;--pfg:#FFF;--covered:#E3F0EA;--coveredfg:#1F5E4A;--sm:6px;--md:10px;--lg:14px}
+*{box-sizing:border-box}
+body{margin:0;background:#d9d4cb;font:15px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--fg)}
+.frame{max-width:1280px;margin:24px auto;background:var(--bg);border-radius:12px;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.15)}
+.chrome{background:#ece7de;padding:10px 16px;display:flex;gap:8px;align-items:center;font-size:12px;color:#777}
+.dot{width:11px;height:11px;border-radius:50%;background:#cfc7b9}
+.url{margin-left:12px;background:#fff;border-radius:6px;padding:3px 12px}
+header{display:flex;justify-content:space-between;align-items:center;padding:16px 32px;border-bottom:1px solid var(--border)}
+.logo{font-family:"Source Serif 4",Georgia,serif;font-size:20px;font-weight:500}
+.steps{display:flex;gap:6px;font-size:13px;color:var(--mutedfg)}
+.steps span{padding:4px 10px;border-radius:999px}
+.steps .on{background:var(--covered);color:var(--coveredfg);font-weight:600}
+.ghost{background:none;border:1px solid var(--border);border-radius:var(--md);padding:6px 12px;font:inherit;color:var(--fg)}
+main{display:grid;grid-template-columns:minmax(0,720px) 360px;gap:32px;justify-content:center;padding:24px 32px 0}
+.chat{display:flex;flex-direction:column;min-height:620px}
+.log{flex:1;display:flex;flex-direction:column;gap:14px;font-size:16px;line-height:1.6}
+.b{max-width:80%;padding:12px 16px;border-radius:var(--lg)}
+.a{background:var(--card);border:1px solid var(--border);align-self:flex-start}
+.s{background:var(--muted);align-self:flex-end}
+.typing{align-self:flex-start;color:var(--mutedfg);font-size:14px}
+.input{margin:20px 0 24px;display:flex;gap:10px;align-items:flex-end;background:var(--card);border:1px solid var(--border);border-radius:var(--lg);padding:10px}
+.input textarea{flex:1;border:0;resize:none;font:inherit;font-size:16px;background:none;min-height:48px}
+.btn{background:var(--primary);color:var(--pfg);border:0;border-radius:var(--md);padding:10px 16px;font:inherit;font-weight:600}
+aside{border-left:1px solid var(--border);padding-left:24px}
+aside h2{font-family:"Source Serif 4",Georgia,serif;font-weight:500;font-size:22px;margin:4px 0 8px}
+.meter{display:flex;gap:4px;margin:6px 0 4px}.meter i{flex:1;height:8px;border-radius:999px;background:var(--muted)}.meter i.f{background:var(--primary)}
+.mlabel{font-size:13px;color:var(--mutedfg);margin-bottom:18px}
+.ecard{background:var(--card);border:1px solid var(--border);border-radius:var(--md);padding:12px 14px;margin-bottom:12px}
+.ecard b{display:block;margin-bottom:8px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font-size:12px;padding:3px 10px;border-radius:999px;background:var(--muted);color:var(--mutedfg);border:1px dashed #cdbf9f}
+.chip.f{background:var(--covered);color:var(--coveredfg);border:1px solid transparent}
+.chip.f::before{content:"✓ "}
+.done{margin-top:18px;width:100%}
+.note{font-size:12px;color:var(--mutedfg);margin-top:8px}
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">localhost:5173</span></div>
+  <header>
+    <span class="logo">Erfaringsgruven</span>
+    <nav class="steps" aria-label="Steg"><span class="on">1 Samtale</span><span>2 Oppsummering</span><span>3 Annonse</span><span>4 Krav</span><span>5 Bevistabell</span></nav>
+    <button class="ghost">Ny økt</button>
+  </header>
+  <main>
+    <section class="chat" aria-label="Samtale">
+      <div class="log" aria-live="polite">
+        <div class="b a">Hei! Fortell om noe du har gjort de siste årene: jobb, frivillig, studier, hva som helst.</div>
+        <div class="b s">Hm, jeg har egentlig bare jobbet i butikk ved siden av studiene. Og så var jeg på utveksling i Lyon.</div>
+        <div class="b a">Butikkjobben høres interessant ut. Hva var rollen din der?</div>
+        <div class="b s">Deltid som butikkmedarbeider i tre år. Mest kasse og kundeservice.</div>
+        <div class="b a">Hva gjorde <em>du</em> konkret da det ble travelt?</div>
+        <div class="b s">I julehandelen var vi ofte to på kassa. Da tok jeg køen og ropte inn en kollega fra lageret når det ble over fem i kø, og så tok jeg klagene selv så den andre kunne fortsette.</div>
+        <div class="b a">Hvordan gikk det til slutt?</div>
+      </div>
+      <div class="input">
+        <textarea aria-label="Ditt svar" placeholder="Skriv svaret ditt …"></textarea>
+        <button class="btn">Send</button>
+      </div>
+    </section>
+    <aside aria-label="Fangede erfaringer">
+      <h2>Dine erfaringer</h2>
+      <div class="meter" aria-hidden="true"><i class="f"></i><i></i><i></i></div>
+      <div class="mlabel">1 av 3 erfaringer fanget</div>
+      <div class="ecard"><b>Gruppeoppgave i markedsføring</b>
+        <div class="chips"><span class="chip f">Rolle</span><span class="chip f">Handling</span><span class="chip f">Resultat</span></div></div>
+      <div class="ecard"><b>Butikkjobb</b>
+        <div class="chips"><span class="chip f">Rolle</span><span class="chip f">Handling</span><span class="chip">Resultat</span></div></div>
+      <div class="ecard"><b>Utveksling i Lyon</b>
+        <div class="chips"><span class="chip">Rolle</span><span class="chip">Handling</span><span class="chip">Resultat</span></div></div>
+      <button class="ghost done">Ferdig</button>
+      <p class="note">Ingenting lagres når du lukker fanen.</p>
+    </aside>
+  </main>
+</div>
+</body>
+</html>
