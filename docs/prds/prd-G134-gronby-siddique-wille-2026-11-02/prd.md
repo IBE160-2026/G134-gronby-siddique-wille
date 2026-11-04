@@ -2,7 +2,7 @@
 title: Erfaringsgruven
 status: draft
 created: 2026-11-02
-updated: 2026-11-02
+updated: 2026-11-04
 ---
 
 # PRD: Erfaringsgruven
@@ -39,7 +39,7 @@ Markedssøk gjort under dette PRD-arbeidet fant ingen sammenlignbart produkt som
 - **Inngangstilstand:** Ingen innlogging. Mia åpner Erfaringsgruven lokalt i nettleseren og starter en ny økt.
 - **Forløp:** (1) Erfaringsgruven stiller åpne oppfølgingsspørsmål om ting hun har gjort, ikke bare "skriv CV-en din" — hun nevner butikkjobben uten å tenke på den som "erfaring". (2) Systemet følger opp til rolle, handling og resultat er konkrete (realiserer FR-1–FR-3), til minst tre erfaringer er fanget. (3) Hun limer inn stillingsannonsen (realiserer FR-4). (4) Systemet trekker ut kravene og viser en bevistabell: krav for krav, med hvilken av Mias erfaringer som dekker det, og et kort sitat fra hennes eget svar (realiserer FR-5–FR-7).
 - **Klimaks:** Mia ser at "erfaring med kundekontakt under tidspress" — et krav hun var sikker på at hun ikke dekket — faktisk er dekket av butikkjobben, med hennes eget svar som bevis.
-- **Avslutning:** Ett krav har ingen dekkende erfaring og vises som et "hull" med et refleksjonsforslag (realiserer FR-8). Mia kopierer bevistabellen som ren tekst (realiserer FR-9) og tar den med inn i søknaden sin.
+- **Avslutning:** Ett krav har ingen dekkende erfaring og vises som et "hull" med et refleksjonsforslag (realiserer FR-7). Mia kopierer bevistabellen som ren tekst (realiserer FR-8) og tar den med inn i søknaden sin.
 - **Edge case:** Hvis Mia avslutter samtalen tidlig (velger "Ferdig" før tre erfaringer er fanget), vises oppsummeringen av det hun faktisk har gitt, og hun kan velge å fortsette samtalen eller gå videre med det hun har.
 
 ## 3. Ordliste
@@ -79,10 +79,10 @@ Systemet følger opp en nevnt erfaring med spørsmål til den er beskrevet med r
 - [ASSUMPTION: Hvor mange oppfølgingsspørsmål som er "nok" per erfaring er ikke tallfestet — se Åpent spørsmål 1.]
 
 #### FR-3: Avslutt samtale og vis oppsummering
-Samtalen avsluttes når minst tre erfaringer er fanget (FR-2), eller når studenten selv velger "Ferdig". En oppsummering av fangede erfaringer vises for retting før neste steg.
+Når minst tre erfaringer er fanget (FR-2), tilbyr systemet studenten å gå videre til oppsummeringen, men studenten kan fortsette samtalen. Studenten kan også når som helst velge "Ferdig". En oppsummering av fangede erfaringer vises for retting før neste steg. (Justert 2026-11-04 etter UX-spesifikasjonen, se EXPERIENCE.md.)
 
 **Konsekvenser (testbare):**
-- Avslutning skjer ved ≥3 fangede erfaringer ELLER et aktivt "Ferdig"-valg fra studenten, aldri automatisk av andre grunner.
+- Ved ≥3 fangede erfaringer tilbys "Gå videre til oppsummering"; overgangen til oppsummeringen skjer bare ved et aktivt valg fra studenten (gå videre eller "Ferdig"), aldri automatisk.
 - Oppsummeringen viser alle fangede erfaringer og lar studenten rette dem før kravuttrekket starter.
 
 ### 4.2 Kravuttrekk fra stillingsannonse
@@ -112,7 +112,7 @@ For hvert krav viser systemet hvilken(e) erfaring(er) som dekker det, med en kor
 - For et fast testsett dekkes ≥80 % av de kravene som faktisk har en matchende erfaring.
 
 #### FR-6: Vis sporbarhet i grensesnittet
-Hvert bevis i bevistabellen lenker til eller siterer det konkrete samtalesvaret det bygger på, synlig for studenten i grensesnittet — ikke bare i datamodellen bak kulissene. [ASSUMPTION: dette tolker tilbakemeldingens punkt om synlig sporbarhet som et UI-krav — bekreft, se Åpent spørsmål 5.]
+Hvert bevis i bevistabellen lenker til eller siterer det konkrete samtalesvaret det bygger på, synlig for studenten i grensesnittet — ikke bare i datamodellen bak kulissene. Bekreftet av UX-spesifikasjonen (2026-11-04): hvert bevis viser et ordrett sitat fra samtalesvaret med lenken «Vis i samtalen», se EXPERIENCE.md. Åpent spørsmål 5 er lukket.
 
 **Konsekvenser (testbare):**
 - For et fast testsett viser hvert bevis til minst ett konkret samtalesvar, verifiserbart automatisk.
@@ -202,15 +202,15 @@ Systemet kan startes i en demomodus som kjører hele flyten (samtale → kravutt
 ## 9. Åpne spørsmål
 
 1. Hvor mange oppfølgingsspørsmål per erfaring er "nok" før den regnes som konkret nok til å brukes som bevis (FR-2)? Dagens kriterium er at rolle, handling og resultat alle må være til stede, uten et tallfestet øvre/nedre antall spørsmål.
-2. Skal verktøyet støtte flere stillingsannonser i samme økt (for sammenligning), eller er én annonse per økt riktig modell for v1 (FR-4)? [ASSUMPTION i FR-4: én annonse per økt.]
-3. Når ingen erfaring dekker et krav (FR-7): er et statisk refleksjonsforslag tilstrekkelig for v1, eller bør systemet aktivt stille et ekstra oppfølgingsspørsmål for å prøve å avdekke skjult erfaring før kravet markeres som hull?
+2. Skal verktøyet støtte flere stillingsannonser i samme økt (for sammenligning), eller er én annonse per økt riktig modell for v1 (FR-4)? [ASSUMPTION i FR-4: én annonse per økt.] UX-spesifikasjonen (2026-11-04) er bygd for én annonse per økt — gruppen bekrefter.
+3. Når ingen erfaring dekker et krav (FR-7): er et statisk refleksjonsforslag tilstrekkelig for v1, eller bør systemet aktivt stille et ekstra oppfølgingsspørsmål for å prøve å avdekke skjult erfaring før kravet markeres som hull? UX-spesifikasjonen (2026-11-04) bruker et statisk refleksjonsforslag med nøytral markering — gruppen bekrefter.
 4. Hvordan skal kravuttrekket og bevis-/hull-logikken testes og valideres utover testannonse A? Hvilke(t) faste testsett (fiktiv(e) student(er) + annonse(r), med forventede krav/bevis/hull) skal defineres, og hvor i repoet dokumenteres de?
-5. Skal sporbarhet mellom bevis og samtalesvar vises direkte i grensesnittet (FR-6), eller er det tilstrekkelig at sporbarheten finnes i datamodellen for v1? FR-6 antar synlig UI-sporbarhet basert på tilbakemeldingen — bekreft denne tolkningen.
+5. ~~Skal sporbarhet mellom bevis og samtalesvar vises direkte i grensesnittet (FR-6), eller er det tilstrekkelig at sporbarheten finnes i datamodellen for v1?~~ **Besvart 2026-11-04 av UX-spesifikasjonen:** synlig i grensesnittet, som ordrett sitat med «Vis i samtalen» (EXPERIENCE.md).
 
 ## 10. Antagelsesindeks
 
 - §4.1 FR-2: Antall oppfølgingsspørsmål per erfaring er ikke tallfestet — se Åpent spørsmål 1.
 - §4.2 FR-4: v1 støtter én stillingsannonse per økt, ikke flere samtidig — se Åpent spørsmål 2.
-- §4.3 FR-6: Sporbarhet mellom bevis og samtalesvar skal være synlig i selve grensesnittet, ikke bare i datamodellen — se Åpent spørsmål 5.
+- §4.3 FR-6: ~~Sporbarhet mellom bevis og samtalesvar skal være synlig i selve grensesnittet~~ — bekreftet av UX 2026-11-04, ikke lenger en antagelse.
 - §4.3 FR-7: Et statisk refleksjonsforslag anses tilstrekkelig for v1 — se Åpent spørsmål 3.
 - §2.3 UJ-1: "Mia" er en syntetisert, representativ protagonist — ikke en faktisk intervjuet bruker.
