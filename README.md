@@ -20,7 +20,7 @@ Planleggingsfasen. Appen er ikke bygget ennå.
 |---|---|---|
 | BMAD-installasjon, product brief og PRD-utkast | Thea | Ferdig |
 | UX | Victoria | Ferdig |
-| Arkitektur og testsett | Rikke | Påbegynt |
+| Arkitektur og testsett | Rikke | Arkitektur og testsett A ferdig, venter på gruppens godkjenning |
 | Arbeidsfordeling | Alle | Skriftlig bekreftet 3. november (e-post) | 
 | Gjennomgang av PRD og antagelser | Alle | Påbegynt |
 | Epics og stories | Alle | Ikke startet |
@@ -32,8 +32,13 @@ Planleggingsfasen. Appen er ikke bygget ennå.
 - [PRD-utkast](docs/prds/prd-G134-gronby-siddique-wille-2026-11-02/prd.md)
 - [UX: DESIGN.md](docs/ux-designs/ux-G134-gronby-siddique-wille-2026-11-04/DESIGN.md)
 - [EXPERIENCE.md](docs/ux-designs/ux-G134-gronby-siddique-wille-2026-11-04/EXPERIENCE.md)
+- [Arkitektur-spine](docs/architecture/architecture-G134-gronby-siddique-wille-2026-11-04/ARCHITECTURE-SPINE.md)
+- [Arkitektur: valg og begrunnelser](docs/architecture/architecture-G134-gronby-siddique-wille-2026-11-04/arkitektur-begrunnelse.md)
+- [Testsett A: fiktiv student, annonse og fasit](fixtures/testsett-a/README.md)
 
 
 ## Kjøre appen
 
 Kommer når appen er bygget. Planen er en demomodus som virker uten API-nøkkel.
+
+Du trenger [Node.js 26 LTS](https://nodejs.org/) installert. Resten av oppskriften (npm install, API-nøkkel i `.env.local`, demomodus) skrives når appen finnes.
