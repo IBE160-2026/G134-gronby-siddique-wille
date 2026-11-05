@@ -1,8 +1,8 @@
 ---
 title: Erfaringsgruven
-status: draft
+status: final
 created: 2026-11-02
-updated: 2026-11-04
+updated: 2026-11-05
 ---
 
 # PRD: Erfaringsgruven
@@ -76,7 +76,7 @@ Systemet følger opp en nevnt erfaring med spørsmål til den er beskrevet med r
 
 **Konsekvenser (testbare):**
 - En erfaring regnes som "fanget" først når rolle, handling og resultat alle er til stede i studentens svar.
-- [ASSUMPTION: Hvor mange oppfølgingsspørsmål som er "nok" per erfaring er ikke tallfestet — se Åpent spørsmål 1.]
+- Systemet stiller maks tre oppfølgingsspørsmål per erfaring. Mangler rolle, handling eller resultat fortsatt etter det, går samtalen videre, og erfaringen regnes ikke som fanget (gruppebeslutning, se Åpent spørsmål 1).
 
 #### FR-3: Avslutt samtale og vis oppsummering
 Når minst tre erfaringer er fanget (FR-2), tilbyr systemet studenten å gå videre til oppsummeringen, men studenten kan fortsette samtalen. Studenten kan også når som helst velge "Ferdig". En oppsummering av fangede erfaringer vises for retting før neste steg. (Justert 2026-11-04 etter UX-spesifikasjonen, se EXPERIENCE.md.)
@@ -92,7 +92,7 @@ Når minst tre erfaringer er fanget (FR-2), tilbyr systemet studenten å gå vid
 **Funksjonelle krav:**
 
 #### FR-4: Lim inn og trekk ut krav
-Student kan lime inn fritekst fra én stillingsannonse per økt, og systemet trekker ut listen av krav fra teksten. [ASSUMPTION: v1 støtter én stillingsannonse per økt, ikke flere samtidig — se Åpent spørsmål 2.]
+Student kan lime inn fritekst fra én stillingsannonse per økt, og systemet trekker ut listen av krav fra teksten. Flere annonser i samme økt er en mulig utvidelse, se §7.2 og Åpent spørsmål 2.
 
 **Konsekvenser (testbare):**
 - For et fast testsett (testannonse A) trekkes alle definerte krav ut korrekt (automatisk test).
@@ -123,7 +123,7 @@ Et krav uten dekkende erfaring markeres som et hull, med et forslag til studente
 
 **Konsekvenser (testbare):**
 - For et fast testsett vises hvert krav uten match som hull, hver med et refleksjonsforslag (automatisk test).
-- [ASSUMPTION: Et statisk refleksjonsforslag anses tilstrekkelig for v1 — se Åpent spørsmål 3 for om systemet heller bør stille et ekstra oppfølgingsspørsmål først.]
+- Refleksjonsforslaget er statisk i v1, og hullet vises med nøytral markering (gruppebeslutning, se Åpent spørsmål 3).
 
 ### 4.4 Resultat
 
@@ -154,7 +154,7 @@ Systemet kan startes i en demomodus som kjører hele flyten (samtale → kravutt
 - **Personvern:** Kommunikasjon er kryptert. Ingen CV- eller personopplysninger lagres etter at økten er over (jf. §6.2, "ingen lagring i v1"). Studenten informeres om dette før økten starter.
 - **Kostnad:** Verktøyet bruker en ekstern språkmodell via API; v1 er dimensjonert for lav kostnad per økt innenfor et skoleprosjekt-budsjett. Konkret modellvalg og kostnadstall ligger i `addendum.md`.
 - **Plattform:** Lokal webapp — kjøres i nettleser via en lokal dev-server, ingen installasjon utover prosjektets oppsett. Bekreftet med bruker.
-- **Testbarhet:** Et fast testsett (fiktiv student + testannonse A, med forventede krav/bevis/hull) må finnes og dokumenteres, slik at FR-4, FR-5, FR-6 og FR-7 kan verifiseres automatisk — se Åpent spørsmål 4.
+- **Testbarhet:** Et fast testsett (fiktiv student + testannonse A, med forventede krav/bevis/hull) må finnes og dokumenteres, slik at FR-4, FR-5, FR-6 og FR-7 kan verifiseres automatisk. Testsett A ligger i `fixtures/testsett-a/` — se Åpent spørsmål 4.
 
 ## 6. Eksplisitte ikke-mål
 
@@ -177,7 +177,7 @@ Systemet kan startes i en demomodus som kjører hele flyten (samtale → kravutt
 ### 7.2 Utenfor omfang for MVP
 
 - Redigering av bevis i bevistabellen etter at den er generert — først hvis tid, se brief.
-- Støtte for flere stillingsannonser i samme økt (sammenligning) — se Åpent spørsmål 2.
+- Støtte for flere stillingsannonser i samme økt (sammenligning) — mulig utvidelse hvis kjerneflyten blir ferdig tidlig, jf. tilbakemeldingen på product brief.
 - Brukerkontoer eller lagring mellom økter.
 - Integrasjon mot jobbsider eller innsending av søknader.
 - Intervjutrening eller veilederdashboard.
@@ -201,16 +201,16 @@ Systemet kan startes i en demomodus som kjører hele flyten (samtale → kravutt
 
 ## 9. Åpne spørsmål
 
-1. Hvor mange oppfølgingsspørsmål per erfaring er "nok" før den regnes som konkret nok til å brukes som bevis (FR-2)? Dagens kriterium er at rolle, handling og resultat alle må være til stede, uten et tallfestet øvre/nedre antall spørsmål.
-2. Skal verktøyet støtte flere stillingsannonser i samme økt (for sammenligning), eller er én annonse per økt riktig modell for v1 (FR-4)? [ASSUMPTION i FR-4: én annonse per økt.] UX-spesifikasjonen (2026-11-04) er bygd for én annonse per økt — gruppen bekrefter.
-3. Når ingen erfaring dekker et krav (FR-7): er et statisk refleksjonsforslag tilstrekkelig for v1, eller bør systemet aktivt stille et ekstra oppfølgingsspørsmål for å prøve å avdekke skjult erfaring før kravet markeres som hull? UX-spesifikasjonen (2026-11-04) bruker et statisk refleksjonsforslag med nøytral markering — gruppen bekrefter.
-4. Hvordan skal kravuttrekket og bevis-/hull-logikken testes og valideres utover testannonse A? Hvilke(t) faste testsett (fiktiv(e) student(er) + annonse(r), med forventede krav/bevis/hull) skal defineres, og hvor i repoet dokumenteres de?
+1. ~~Hvor mange oppfølgingsspørsmål per erfaring er "nok" før den regnes som konkret nok til å brukes som bevis (FR-2)?~~ **Besvart av gruppen 2026-11-04:** rolle, handling og resultat må være til stede, med maks tre oppfølgingsspørsmål per erfaring.
+2. ~~Skal verktøyet støtte flere stillingsannonser i samme økt (for sammenligning), eller er én annonse per økt riktig modell for v1 (FR-4)?~~ **Besvart av gruppen 2026-11-04:** én annonse per økt i v1. Flere annonser er en mulig utvidelse hvis kjerneflyten blir ferdig tidlig.
+3. ~~Når ingen erfaring dekker et krav (FR-7): er et statisk refleksjonsforslag tilstrekkelig for v1, eller bør systemet aktivt stille et ekstra oppfølgingsspørsmål?~~ **Besvart av gruppen 2026-11-04:** statisk refleksjonsforslag med nøytral markering i v1, slik UX-spesifikasjonen er bygd. Et ekstra oppfølgingsspørsmål er en mulig utvidelse.
+4. ~~Hvordan skal kravuttrekket og bevis-/hull-logikken testes, og hvor i repoet dokumenteres testsettene?~~ **Besvart 2026-11-04:** Rikke har laget testsett A (fiktiv student, annonse og fasit) i `fixtures/testsett-a/`. Testkoden skrives i implementeringen.
 5. ~~Skal sporbarhet mellom bevis og samtalesvar vises direkte i grensesnittet (FR-6), eller er det tilstrekkelig at sporbarheten finnes i datamodellen for v1?~~ **Besvart 2026-11-04 av UX-spesifikasjonen:** synlig i grensesnittet, som ordrett sitat med «Vis i samtalen» (EXPERIENCE.md).
 
 ## 10. Antagelsesindeks
 
-- §4.1 FR-2: Antall oppfølgingsspørsmål per erfaring er ikke tallfestet — se Åpent spørsmål 1.
-- §4.2 FR-4: v1 støtter én stillingsannonse per økt, ikke flere samtidig — se Åpent spørsmål 2.
+- §4.1 FR-2: ~~Antall oppfølgingsspørsmål per erfaring er ikke tallfestet~~ — besvart av gruppen 2026-11-04 (maks tre), ikke lenger en antagelse.
+- §4.2 FR-4: ~~v1 støtter én stillingsannonse per økt~~ — bekreftet av gruppen 2026-11-04, ikke lenger en antagelse.
 - §4.3 FR-6: ~~Sporbarhet mellom bevis og samtalesvar skal være synlig i selve grensesnittet~~ — bekreftet av UX 2026-11-04, ikke lenger en antagelse.
-- §4.3 FR-7: Et statisk refleksjonsforslag anses tilstrekkelig for v1 — se Åpent spørsmål 3.
+- §4.3 FR-7: ~~Et statisk refleksjonsforslag anses tilstrekkelig for v1~~ — bekreftet av gruppen 2026-11-04, ikke lenger en antagelse.
 - §2.3 UJ-1: "Mia" er en syntetisert, representativ protagonist — ikke en faktisk intervjuet bruker.
