@@ -83,7 +83,7 @@ De lagrede demosvarene inneholder **ett bevisst falskt sitat** for felle-kravet 
 
 ### 6. Én eier av tilstanden og faste regler for nullstilling (AD-4, AD-14, AD-16)
 
-Hele økten styres fra ett sted i nettsiden (en React `useReducer`). Terskler som «minst 200 tegn i annonsen» og «3 erfaringer» står i én fil og brukes av både knappene og serveren.
+Hele økten styres fra ett sted i nettsiden (en React `useReducer`). Terskler som «minst 200 tegn i annonsen», «3 erfaringer» og «maks tre oppfølgingsspørsmål per erfaring» står i én fil og brukes av både knappene og serveren. Når en erfaring har fått tre oppfølgingsspørsmål, går samtalen videre til en ny erfaring.
 
 Går studenten tilbake og endrer noe, tømmes bare det som avhenger av endringen. En endret erfaring gir ny bevistabell, og en endret annonse gir nye krav og ny bevistabell. Kommer et svar fra serveren etter at studenten har endret noe, forkastes svaret, slik at et gammelt resultat ikke vises.
 
@@ -91,7 +91,7 @@ Går studenten tilbake og endrer noe, tømmes bare det som avhenger av endringen
 
 - Svar, sitater og annonsetekst skrives aldri til logger eller feilmeldinger, bare ID-er og feilkoder.
 - Dev-serveren lytter bare på maskinen selv (127.0.0.1), slik at ingen andre på nettverket kan bruke API-nøkkelen.
-- Startsiden skal si at svarene sendes kryptert til Anthropic for behandling. Den skal ikke love noe om hva Anthropic lagrer før vi har sjekket det (Å-3).
+- Startsiden skal si at svarene sendes kryptert til Anthropic for behandling. Den skal også si at Anthropic sletter API-data innen 30 dager, og at samtaler som flagges for brudd på bruksvilkårene kan lagres i opptil 2 år (sjekket 5. november, Å-3).
 - Alle modellkall går gjennom én fil med faste grenser for svarlengde, tidsavbrudd og antall nye forsøk. Hvis noe feiler, ser studenten «Noe gikk galt. Prøv igjen.», og det hun har skrevet, beholdes.
 
 ### 8. Navn i koden

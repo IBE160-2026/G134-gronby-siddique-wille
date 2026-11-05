@@ -7,7 +7,7 @@ paradigm: 'funksjonell kjerne / tynt skall (functional core, imperative shell)'
 scope: 'Hele Erfaringsgruven v1: FR-1–FR-9, PRD §5'
 status: final
 created: '2026-11-04'
-updated: '2026-11-04'
+updated: '2026-11-05'
 binds: [FR-1, FR-2, FR-3, FR-4, FR-5, FR-6, FR-7, FR-8, FR-9, SM-4, SM-5, SM-6, SM-7, SM-C1]
 sources:
   - docs/prds/prd-G134-gronby-siddique-wille-2026-11-02/prd.md
@@ -101,7 +101,8 @@ Pilene viser lovlig avhengighetsretning. `kjerne` importerer ingenting fra `app`
 - **Rule:**
   - En erfaring er **fanget** når `rolle`, `handling` og `resultat` hver har ikke-tom `tekst` og minst én gyldig kilde. En kilde er gyldig når den peker på en eksisterende `svar`-oppføring (`erFanget()`).
   - Et krav er **dekket** når det har minst ett bevis som består AD-6, ellers er det **hull**.
-  - Modellen returnerer et `refleksjonsforslag` for hvert krav. Mangler det, setter kjernen inn en standardtekst i UX-stemmen («Tenk på: …»).
+  - **Refleksjonsforslag ved hull:** Modellen lager forslaget. `/api/bevis` ber om et `refleksjonsforslag` for hvert krav, fordi et krav kan bli hull etter sitatsjekken (AD-6), og forslaget vises bare for hull. Bare hvis modellen ikke gir noe forslag (mangler eller tom tekst), setter kjernen inn den faste standardteksten `STANDARD_REFLEKSJON` fra `kjerne/regler.ts`, i UX-stemmen («Tenk på: …»). Et hull vises derfor aldri uten forslag (SM-6).
+  - **Ingen ekstra spørsmål ved hull.** Et hull starter ingen ny samtale og ingen oppfølging. Forslaget vises som tekst i bevistabellen og eksporten, og studenten trenger ikke gjøre noe. Det er dette PRD FR-7 og Å.s. 3 mener med «statisk»: ingen aktiv oppfølging, ikke én fast tekst for alle hull.
 
 ### AD-8: Koblingen bruker rettet tekst, og sitatene bruker loggen [ADOPTED]
 
@@ -146,7 +147,7 @@ Pilene viser lovlig avhengighetsretning. `kjerne` importerer ingenting fra `app`
 - **Binds:** FR-2, FR-3, `/api/samtale`, Oppsummering
 - **Prevents:** at modellen overskriver studentens rettelser, at slettede kort kommer tilbake, og at titler får to eiere
 - **Rule:**
-  - `/api/samtale` returnerer `{ sporsmal, endringer[] }`. Mulige endringer er `opprett` (`ny`, `tittel`), `leggTilKilde` (`erfaringId | ny`, `felt`, `svarId`) og `settTekst` (`erfaringId | ny`, `felt`, `tekst`).
+  - `/api/samtale` returnerer `{ sporsmal, endringer[] }`. `sporsmal` er `{ tekst, gjelder }`, der `gjelder` er `erfaringId`, `{ ny }` eller `null` (se AD-16). Reduceren lagrer `gjelder` på `sporsmal`-oppføringen og løser `{ ny }` til `E`-ID som for endringer. Mulige endringer er `opprett` (`ny`, `tittel`), `leggTilKilde` (`erfaringId | ny`, `felt`, `svarId`) og `settTekst` (`erfaringId | ny`, `felt`, `tekst`).
   - Reduceren bruker kjernefunksjonen `brukEndringer()`. Den ignorerer endringer på slettede erfaringer (`okt.slettedeErfaringer`) og overskriver aldri `tekst` eller `tittel` som er merket `rettetAvStudent`. Modellen setter tittelen bare når kortet opprettes.
   - Feltformen er `{ tekst, kilder: svarId[], rettetAvStudent }`, samme navn som i testsett A.
 
@@ -169,15 +170,19 @@ Pilene viser lovlig avhengighetsretning. `kjerne` importerer ingenting fra `app`
 
 ### AD-16: Terskelregler står ett sted
 
-- **Binds:** FR-1, FR-3, FR-4, UI og ruter
-- **Prevents:** at knapp og rute bruker ulike terskler
-- **Rule:** `kjerne/regler.ts` eier `MIN_ANNONSE_TEGN = 200`, `MAAL_ERFARINGER = 3`, maksgrensene, `kanTrykkeFerdig()` (minst ett `sporsmal`) og `kanGaVidere()` (minst én fanget erfaring). Både UI og ruter bruker disse.
+- **Binds:** FR-1, FR-2, FR-3, FR-4, FR-7, UI og ruter
+- **Prevents:** at knapp og rute bruker ulike terskler, og at samtalen henger fast på én erfaring
+- **Rule:**
+  - `kjerne/regler.ts` eier `MIN_ANNONSE_TEGN = 200`, `MAAL_ERFARINGER = 3`, `MAKS_OPPFOLGING_PER_ERFARING = 3`, `STANDARD_REFLEKSJON` (AD-7), maksgrensene, `kanTrykkeFerdig()` (minst ett `sporsmal`), `kanGaVidere()` (minst én fanget erfaring) og `erLukket()`. Både UI og ruter bruker disse.
+  - **Maks tre oppfølgingsspørsmål per erfaring (PRD FR-2, Å.s. 1).** Et oppfølgingsspørsmål er et `sporsmal` med `gjelder` lik en erfaring. Et spørsmål om en ny erfaring har `gjelder: null` og teller ikke. `erLukket(okt, erfaringId)` er sann når antallet har nådd `MAKS_OPPFOLGING_PER_ERFARING`.
+  - `/api/samtale` sender med hvilke erfaringer som er lukket. Kjernen sjekker modellens spørsmål før svaret forlater serveren. Gjelder spørsmålet en lukket erfaring, byttes det ut med et fast overgangsspørsmål om en ny erfaring (`OVERGANGSSPORSMAL` i `regler.ts`, `gjelder: null`, ordlyden eies av UX). Samtalen går dermed alltid videre.
+  - En lukket erfaring som fortsatt mangler rolle, handling eller resultat, er ikke fanget (AD-7). Grensen stopper bare spørsmålene om den.
 
 ### AD-17: Personvernløftet sier bare det arkitekturen holder
 
 - **Binds:** Start-flaten, PRD §5
 - **Prevents:** at UI-teksten lover mer enn systemet gjør
-- **Rule:** Appen lagrer ingenting (AD-2). Svar sendes kryptert (TLS) til Anthropic API for behandling. Trafikken mellom nettleser og lokal server forlater ikke maskinen (127.0.0.1). Starteksten skal si at svarene sendes til Anthropic, og skal ikke love noe om Anthropics lagring før det er sjekket (Å-3). Ordlyden eies av UX.
+- **Rule:** Appen lagrer ingenting (AD-2). Svar sendes kryptert (TLS) til Anthropic API for behandling. Trafikken mellom nettleser og lokal server forlater ikke maskinen (127.0.0.1). Starteksten skal si at svarene sendes til Anthropic, at Anthropic sletter API-data innen 30 dager, og at samtaler som flagges for brudd på bruksvilkårene kan lagres i opptil 2 år ([kilde](https://privacy.claude.com/en/articles/7996866-how-long-do-you-store-my-organization-s-data), sjekket 5. november 2026, Å-3). Den skal ikke love mer enn dette. Ordlyden eies av UX.
 
 ## Konsistenskonvensjoner
 
@@ -206,14 +211,15 @@ Pilene viser lovlig avhengighetsretning. `kjerne` importerer ingenting fra `app`
 | `annonse` | Stillingsannonse | Én per økt |
 | `krav`, `kravuttrekk` | Krav, kravuttrekk | `K…` |
 | `bevis`, `sitat` | Bevis | Verifisert etter AD-6 |
-| `bevistabell`, `hull`, `refleksjonsforslag` | Bevistabell, hull | |
+| `sporsmal.gjelder` | Oppfølgingsspørsmål | Erfaringen spørsmålet følger opp, eller `null` (AD-16) |
+| `bevistabell`, `hull`, `refleksjonsforslag` | Bevistabell, hull | Forslaget lages av modellen, med standardtekst som reserve (AD-7) |
 | `modus: "ekte" \| "demo"` | Demomodus | |
 
 ## Stack
 
 | Navn | Versjon |
 | --- | --- |
-| Node.js LTS (må installeres) | 26.13.0 |
+| Node.js LTS | 26.13.0 |
 | Next.js (App Router, Cache Components av) | 16.4.5 |
 | React | 19.3.1 |
 | TypeScript | 5.x |
@@ -264,12 +270,12 @@ tests/kjerne/  tests/eval/
 | Krav | Ligger i | Styres av |
 | --- | --- | --- |
 | FR-1 Start samtale | Start, Samtale, `/api/samtale` | AD-2, AD-4, AD-10, AD-16 |
-| FR-2 R-H-R | `/api/samtale`, `kjerne/endringer.ts`, `fanget.ts` | AD-5, AD-7, AD-13 |
+| FR-2 R-H-R | `/api/samtale`, `kjerne/endringer.ts`, `fanget.ts`, `regler.ts` | AD-5, AD-7, AD-13, AD-16 |
 | FR-3 Avslutt og oppsummer | reducer, Oppsummering | AD-4, AD-7, AD-8, AD-13, AD-14, AD-16 |
 | FR-4 Kravuttrekk | `/api/krav` | AD-5, AD-9, AD-14, AD-16 |
 | FR-5 Kobling | `/api/bevis` | AD-6, AD-8 |
 | FR-6 Sporbarhet | `kjerne/sitat.ts`, «Vis i samtalen» | AD-5, AD-6 |
-| FR-7 Hull | `/api/bevis`, kjernen | AD-7 |
+| FR-7 Hull | `/api/bevis`, kjernen | AD-7, AD-16 |
 | FR-8 Eksport | `kjerne/eksport.ts` | AD-8, konvensjonen for eksport |
 | FR-9 Demomodus | `server/modell/demo.ts`, `fixtures/testsett-a/demo/` | AD-10, AD-11 |
 | PRD §5 Personvern og kostnad | hele skallet | AD-2, AD-3, AD-12, AD-15, AD-17 |
@@ -279,11 +285,11 @@ tests/kjerne/  tests/eval/
 - **Hosting/deploy, CI, rate limiting:** v1 kjører bare lokalt. Tas opp igjen hvis appen skal på nett.
 - **Hvordan uttrukne krav matches mot fasiten (`nokkelord`):** bestemmes når `tests/eval/` skrives.
 - **Konkrete verdier for `max_tokens`, timeout og maksgrenser:** settes i `config.ts` og `regler.ts` ved første kjøring mot testsett A. *Hvor* de står, er bundet.
-- **Promptinnhold og antall oppfølgingsspørsmål (PRD Å.s. 1):** avgjøres ved iterasjon mot testsett A.
+- **Promptinnhold:** avgjøres ved iterasjon mot testsett A. Antall oppfølgingsspørsmål er ikke lenger utsatt: maks tre per erfaring (AD-16).
 - **Flere annonser per økt (Å.s. 2), aktiv oppfølging av hull (Å.s. 3), strømming, mørk modus, mobiloptimalisering:** utenfor v1.
 - **Intern komponentstruktur og sideoppsett:** eies av koden og UX-spinen.
 
 ## Åpne spørsmål
 
-- **Å-1:** Krever IBE160 en bestemt stack? Rikke sjekker med gruppen før epics og stories. Påvirker AD-1.
-- **Å-3:** Hva lagrer Anthropic API av data, og hvor lenge? Må sjekkes før startteksten skrives (AD-17).
+- **Å-1:** Krever IBE160 en bestemt stack? Next.js står, men spørsmålet er åpent til kapittel 6 er sjekket. Påvirker AD-1.
+- ~~**Å-3:** Hva lagrer Anthropic API av data, og hvor lenge?~~ **Besvart 2026-11-05:** API-data slettes innen 30 dager, flaggede samtaler lagres i opptil 2 år. Står i AD-17.
