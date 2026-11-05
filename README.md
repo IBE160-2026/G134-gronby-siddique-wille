@@ -20,16 +20,16 @@ Planleggingsfasen. Appen er ikke bygget ennå.
 |---|---|---|
 | BMAD-installasjon, product brief og PRD-utkast | Thea | Ferdig |
 | UX | Victoria | Ferdig |
-| Arkitektur og testsett | Rikke | Arkitektur og testsett A ferdig, venter på gruppens godkjenning |
+| Arkitektur og testsett | Rikke | Ferdig, godkjent av gruppen 4. november (e-post) |
 | Arbeidsfordeling | Alle | Skriftlig bekreftet 3. november (e-post) | 
-| Gjennomgang av PRD og antagelser | Alle | Påbegynt |
+| Gjennomgang av PRD og antagelser | Alle | Ferdig (5. november) |
 | Epics og stories | Alle | Ikke startet |
 
 ## Planleggingsdokumenter
 
 - [Product brief](docs/product-brief.md)
 - [Tilbakemelding på product brief](docs/tilbakemelding-product-brief.md)
-- [PRD-utkast](docs/prds/prd-G134-gronby-siddique-wille-2026-11-02/prd.md)
+- [PRD](docs/prds/prd-G134-gronby-siddique-wille-2026-11-02/prd.md)
 - [UX: DESIGN.md](docs/ux-designs/ux-G134-gronby-siddique-wille-2026-11-04/DESIGN.md)
 - [EXPERIENCE.md](docs/ux-designs/ux-G134-gronby-siddique-wille-2026-11-04/EXPERIENCE.md)
 - [Arkitektur-spine](docs/architecture/architecture-G134-gronby-siddique-wille-2026-11-04/ARCHITECTURE-SPINE.md)
