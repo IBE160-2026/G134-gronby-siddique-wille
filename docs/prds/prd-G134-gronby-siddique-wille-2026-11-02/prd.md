@@ -123,8 +123,8 @@ Et krav uten dekkende erfaring markeres som et hull, med et forslag til studente
 
 **Konsekvenser (testbare):**
 - For et fast testsett vises hvert krav uten match som hull, hver med et refleksjonsforslag (automatisk test).
-- Refleksjonsforslaget er statisk i v1, og hullet vises med nøytral markering (gruppebeslutning, se Åpent spørsmål 3).
-
+- Refleksjonsforslaget lages av modellen, med en fast standardtekst som reserve hvis modellen ikke gir noe. Systemet stiller ingen ekstra oppfølgingsspørsmål ved hull i v1, og hullet vises med nøytral markering (gruppebeslutning, se Åpent spørsmål 3).
+     
 ### 4.4 Resultat
 
 **Beskrivelse:** Studenten tar bevistabellen med seg ut av økten som ren tekst, til bruk i søknad, CV eller intervjuforberedelse. Realiserer UJ-1.
