@@ -2,7 +2,7 @@
 name: Erfaringsgruven
 status: final
 created: 2026-11-04
-updated: 2026-11-04
+updated: 2026-11-12
 sources:
   - docs/prds/prd-G134-gronby-siddique-wille-2026-11-02/prd.md
   - docs/prds/prd-G134-gronby-siddique-wille-2026-11-02/addendum.md
@@ -21,7 +21,7 @@ Flyten er lineær, med en stegindikator øverst: **Samtale → Oppsummering → 
 
 | Flate | Nås fra | Formål | FR |
 |---|---|---|---|
-| Start | Åpne appen | Kort forklaring, personvernerklæring (ingen lagring), «Start ny økt» og «Prøv demomodus» | FR-1, FR-9, §5 |
+| Start | Åpne appen | Kort forklaring, personvernteksten med avkrysning (se Fast mikrotekst), «Start ny økt» og «Prøv demomodus» | FR-1, FR-9, §5 |
 | Samtale | Start | Chat med åpne oppfølgingsspørsmål. Sidepanelet viser erfaringskortene med R-H-R og fremdrift mot 3. Knappen «Ferdig» | FR-1, FR-2, FR-3 |
 | Oppsummering | Samtale (≥3 erfaringer eller «Ferdig») | Alle fangede erfaringer, som kan rettes. Valg: «Fortsett samtalen» eller «Gå videre» | FR-3 |
 | Annonse | Oppsummering | Lim inn tekst fra én stillingsannonse | FR-4 |
@@ -46,9 +46,20 @@ Microcopy. Merkevarestemmen er beskrevet i `DESIGN.md` under Brand & Style. Tone
 | «Dette kravet har vi ikke funnet noe på ennå.» | «Mangler erfaring.» / «Ikke kvalifisert.» |
 | «Tenk på: har du noen gang …?» (refleksjonsforslag) | Å skrive formuleringer for studenten |
 | «Dette er dine egne ord fra samtalen.» | «AI-generert bevis.» |
-| «Ingenting lagres når du lukker fanen.» | Juridisk personverntekst på startsiden |
+| Kort og ærlig personverntekst i hverdagsspråk (se Fast mikrotekst) | Juridisk personverntekst, eller å love mer enn arkitekturen holder (AD-17) |
 
 Systemet omformulerer aldri studentens ord inne i et sitat (PRD FR-5, SM-C1).
+
+### Fast mikrotekst
+
+Disse tekstene er faste og brukes ordrett. De tre siste står som konstanter i `kjerne/regler.ts` eller i Start-komponenten (arkitektur AD-7, AD-16, AD-17).
+
+| Hvor | Tekst |
+|---|---|
+| Start, personverntekst | «Svarene dine sendes kryptert til språkmodellen Claude hos Anthropic, som stiller spørsmålene og finner bevisene. Erfaringsgruven lagrer ingenting, og økten forsvinner når du lukker fanen. Anthropic sletter dataene innen 30 dager, men samtaler som flagges for brudd på bruksvilkårene kan lagres i opptil 2 år. Ikke skriv personnummer, helseopplysninger eller annet du ikke vil dele.» |
+| Start, avkrysning | «Jeg har lest dette og vil starte.» «Start ny økt» er deaktivert til boksen er krysset av. Demomodus krever ingen avkrysning, fordi ingenting sendes til Anthropic. |
+| Samtale, overgangsspørsmål (`OVERGANGSSPORSMAL`) | «Fint, da går vi videre. Fortell gjerne om noe annet du har gjort: en annen jobb, frivillig arbeid eller et prosjekt på studiet.» Brukes når en erfaring har fått tre oppfølgingsspørsmål (AD-16). Teksten sier ikke at erfaringen er fanget, fordi den kan mangle et felt. |
+| Bevistabell, standard refleksjonsforslag (`STANDARD_REFLEKSJON`) | «Tenk på: har du gjort noe lignende i en jobb, på studiet eller i fritiden, selv om du ikke tenkte på det som erfaring da?» Brukes bare når modellen ikke gir noe forslag (AD-7). |
 
 ## Component Patterns
 
@@ -65,7 +76,7 @@ Atferd. Den visuelle spesifikasjonen står i `DESIGN.md` under Components.
 | Annonsefelt | Annonse | Stor `Textarea` med plassholderen «Lim inn teksten fra stillingsannonsen». «Finn krav» er aktiv når feltet har minst 200 tegn. |
 | Kravliste | Krav | Nummerert, skrivebeskyttet liste med kravene. «Bygg bevistabell» går videre, og «Tilbake» lar studenten lime inn på nytt. Krav kan ikke redigeres i v1. |
 | Kravrad (dekket) | Bevistabell | Viser kravet, navnet på erfaringen eller erfaringene som dekker det, ett bevissitat og «Vis i samtalen». Har kravet flere bevis, vises «+N bevis til», som kan foldes ut. |
-| Kravrad (hull) | Bevistabell | Viser kravet, merket «Ikke dekket ennå» og ett statisk refleksjonsforslag (FR-7, PRD Å.s. 3). Ingen handling er påkrevd. |
+| Kravrad (hull) | Bevistabell | Viser kravet, merket «Ikke dekket ennå» og ett refleksjonsforslag (FR-7, PRD Å.s. 3). Forslaget lages av modellen, med `STANDARD_REFLEKSJON` som reserve (AD-7). Systemet stiller ingen ekstra spørsmål, og ingen handling er påkrevd. |
 | Bevissitat | Bevistabell, Eksport | Kort, ordrett utdrag av studentens samtalesvar. Det hentes alltid fra samtaleloggen, også når erfaringen er rettet på Oppsummering. Det skal aldri omformuleres. Det skal alltid ha en sporbar henvisning (FR-6, SM-5). |
 | «Vis i samtalen» | Bevistabell | Åpner `Sheet` fra høyre med hele samtaleloggen. Visningen ruller til svaret beviset bygger på, og svaret markeres. `Esc` lukker, og fokus går tilbake til lenken. |
 | Eksportdialog | Bevistabell | Viser en forhåndsvisning av ren tekst: krav, bevis eller «Ikke dekket ennå» med refleksjonsforslag, og deretter oppsummeringen av erfaringene. «Kopier» bekreftes med en `Toast`: «Kopiert. Lim inn hvor du vil.» «Last ned .txt» er et valg nummer to. |
@@ -76,7 +87,7 @@ Atferd. Den visuelle spesifikasjonen står i `DESIGN.md` under Components.
 
 | Tilstand | Flate | Behandling |
 |---|---|---|
-| Første møte | Start | `display`: «Du har sannsynligvis mer erfaring enn du tror.» Én setning om hvordan det fungerer, personvernlinjen og to knapper. |
+| Første møte | Start | `display`: «Du har sannsynligvis mer erfaring enn du tror.» Én setning om hvordan det fungerer, personvernteksten, avkrysningsboksen og to knapper. «Start ny økt» er deaktivert til boksen er krysset av. |
 | Samtalen starter | Samtale | Assistenten åpner med ett åpent spørsmål. Sidepanelet viser tomt: «Erfaringene dine dukker opp her.» |
 | Venter på modellen | Samtale, Krav, Bevistabell | Skriveindikator i chatten. `Skeleton`-rader i kravlisten og bevistabellen med teksten «Leser annonsen …» / «Kobler krav til erfaringene dine …». |
 | Delvis erfaring | Samtale | Kortet viser fylte og tomme brikker, og assistenten følger opp det som mangler. |
@@ -136,7 +147,7 @@ Atferd. Visuell kontrast er beskrevet i `DESIGN.md` under Colors.
 
 Mia går siste året på bachelor, har jobbet deltid i butikk i tre år og har nesten latt være å søke. Hun bruker den bærbare datamaskinen sin en kveld.
 
-1. Mia åpner Erfaringsgruven. Start: «Du har sannsynligvis mer erfaring enn du tror.» Hun leser «Ingenting lagres når du lukker fanen» og trykker **Start ny økt** (FR-1).
+1. Mia åpner Erfaringsgruven. Start: «Du har sannsynligvis mer erfaring enn du tror.» Hun leser personvernteksten, krysser av for «Jeg har lest dette og vil starte» og trykker **Start ny økt** (FR-1).
 2. Assistenten spør: «Fortell om noe du har gjort de siste årene.» Hun nevner butikkjobben i en bisetning. Et kort, «Butikkjobb», dukker opp i sidepanelet med tre tomme brikker.
 3. Assistenten følger opp: «Hva gjorde *du* konkret da det ble travelt?» Brikkene Rolle og Handling fylles. Etter «Hvordan gikk det?» fylles Resultat, og måleren viser «1 av 3» (FR-2).
 4. På samme måte fanges gruppeoppgaven og utvekslingen. Måleren viser «3 av 3», og «Gå videre til oppsummering» dukker opp (FR-3).
@@ -164,6 +175,5 @@ Sensor har klonet repoet, fulgt README og har ingen API-nøkkel.
 
 ## Åpne punkter for UX
 
-- [NOTE FOR PM] PRD FR-3 sier at samtalen *avsluttes* ved ≥3 fangede erfaringer. UX lar studenten fortsette, og viser i stedet «Gå videre til oppsummering». Overgangen skjer aldri automatisk. FR-3 bør justeres tilsvarende.
-- [NOTE FOR PM] PRD UJ-1 viser til FR-8 for hull og FR-9 for eksport, mens FR-listen har FR-7 = hull, FR-8 = eksport og FR-9 = demomodus. Denne spinen følger FR-listen.
-- PRD Å.s. 5 (synlig sporbarhet) er besvart av UX: sitat inline og «Vis i samtalen».
+- Løst: PRD FR-3 og FR-numrene i UJ-1 er rettet etter denne spinen, og PRD Å.s. 5 er besvart (sitat inline og «Vis i samtalen»).
+- Personvernteksten og avkrysningen på Start følger lærerens tilbakemelding på PRD-en (punkt 4.4). PRD-en skal få et eget krav for dette.
