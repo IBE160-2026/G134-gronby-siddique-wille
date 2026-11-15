@@ -12,7 +12,7 @@ Gruppeprosjekt i **IBE160 Programmering med KI** ved Høgskolen i Molde, høsten
 
 ## Status
 
-Planleggingsfasen. Appen er ikke bygget ennå.
+Planleggingen er ferdig. Neste steg er sprint planning og bygging av appen.
 
 ## Arbeidsfordeling
 
@@ -23,7 +23,7 @@ Planleggingsfasen. Appen er ikke bygget ennå.
 | Arkitektur og testsett | Rikke | Ferdig, godkjent av gruppen 4. november (e-post) |
 | Arbeidsfordeling | Alle | Skriftlig bekreftet 3. november (e-post) | 
 | Gjennomgang av PRD og antagelser | Alle | Ferdig (5. november) |
-| Epics og stories | Alle | Ikke startet |
+| Epics og stories | Alle | Ferdig (final) |
 
 ## Planleggingsdokumenter
 

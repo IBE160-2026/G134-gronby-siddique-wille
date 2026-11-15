@@ -1,5 +1,5 @@
 ---
-status: draft
+status: final
 stepsCompleted: [step-01-validate-prerequisites, step-02-design-epics, step-03-create-stories]
 inputDocuments:
   - docs/prds/prd-G134-gronby-siddique-wille-2026-11-02/prd.md
@@ -15,6 +15,8 @@ inputDocuments:
 ## Overview
 
 Dette dokumentet dekomponerer kravene fra PRD-en, UX-spinen (DESIGN.md + EXPERIENCE.md) og arkitektur-spinen for Erfaringsgruven til implementerbare stories.
+
+Gruppen godkjente epics og stories 2026-11-15.
 
 ## Requirements Inventory
 
