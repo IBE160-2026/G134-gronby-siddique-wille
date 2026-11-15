@@ -85,6 +85,14 @@ Når minst tre erfaringer er fanget (FR-2), tilbyr systemet studenten å gå vid
 - Ved ≥3 fangede erfaringer tilbys "Gå videre til oppsummering"; overgangen til oppsummeringen skjer bare ved et aktivt valg fra studenten (gå videre eller "Ferdig"), aldri automatisk.
 - Oppsummeringen viser alle fangede erfaringer og lar studenten rette dem før kravuttrekket starter.
 
+#### FR-10: Personvernbekreftelse før samtalestart
+Før studenten stiller det første spørsmålet i samtalen, vises en personverntekst med en avkrysningsboks som studenten må krysse av før økten kan starte. Realiserer UJ-1.
+
+**Konsekvenser (testbare):**
+- Personverntekst vises på Start og sier, ordrett: «Svarene dine sendes kryptert til språkmodellen Claude hos Anthropic, som stiller spørsmålene og finner bevisene. Erfaringsgruven lagrer ingenting, og økten forsvinner når du lukker fanen. Anthropic sletter dataene innen 30 dager, men samtaler som flagges for brudd på bruksvilkårene kan lagres i opptil 2 år. Ikke skriv personnummer, helseopplysninger eller annet du ikke vil dele.»
+- «Start ny økt» er deaktivert til studenten har krysset av «Jeg har lest dette og vil starte».
+- Demomodus krever ingen avkrysning, fordi ingenting sendes til Anthropic.
+
 ### 4.2 Kravuttrekk fra stillingsannonse
 
 **Beskrivelse:** Studenten limer inn tekst fra en konkret stillingsannonse, og systemet trekker ut arbeidsgiverens krav fra teksten. Realiserer UJ-1.

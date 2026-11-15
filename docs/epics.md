@@ -40,6 +40,8 @@ FR-8: Student kan kopiere/eksportere bevistabellen og oppsummeringen som ren tek
 
 FR-9: Systemet kan startes i en demomodus som kjører hele flyten (samtale → kravuttrekk → bevistabell → eksport) med forhåndslagrede eksempelsvar, uten API-nøkkel.
 
+FR-10: Før studenten stiller det første spørsmålet i samtalen, vises en personverntekst med avkrysningsboks. Personvernteksten sier at svarene sendes til en ekstern språkmodell og at ingenting lagres etter økten. "Start ny økt" er deaktivert til studenten har krysset av "Jeg har lest dette og vil starte"; demomodus krever ingen avkrysning.
+
 ### NonFunctional Requirements
 
 NFR1: Personvern — kommunikasjon er kryptert (TLS). Ingen CV- eller personopplysninger lagres etter at økten er over. Studenten informeres om personvernmodellen før økten starter, med ordlyd som ikke lover mer enn arkitekturen holder (jf. AD-17: Anthropic sletter API-data innen 30 dager, flaggede samtaler kan lagres i opptil 2 år).
@@ -136,6 +138,7 @@ FR-6: Epic 3 - Vis sporbarhet (sitat + "Vis i samtalen")
 FR-7: Epic 3 - Marker hull med refleksjonsforslag
 FR-8: Epic 4 - Eksporter bevistabell og oppsummering som ren tekst
 FR-9: Epic 1 (grunnoppsett README/.env.example) + Epic 5 (full demoflyt) - Kjør uten API-nøkkel
+FR-10: Epic 1 - Personvernbekreftelse før samtalestart (Story 1.6)
 
 NFR1 (Personvern): Epic 1
 NFR2 (Kostnad): Epic 1
@@ -273,6 +276,18 @@ So that jeg forstår hva som skjer med svarene mine før jeg begynner (FR-1, NFR
 **When** Start-siden lastes
 **Then** jeg ser `display`-teksten «Du har sannsynligvis mer erfaring enn du tror», en kort forklaring av hvordan det fungerer, og personvernlinjen i tråd med AD-17 (kryptert til Anthropic, sletting innen 30 dager, flaggede samtaler opptil 2 år)
 **And** teksten lover ikke mer enn dette
+
+**Given** Start-siden vises
+**When** jeg ser personvernteksten
+**Then** den har en avkrysningsboks merket «Jeg har lest dette og vil starte»
+
+**Given** jeg ikke har krysset av avkrysningsboksen
+**When** jeg ser på «Start ny økt»
+**Then** knappen er deaktivert, uavhengig av om en API-nøkkel finnes
+
+**Given** jeg har krysset av avkrysningsboksen
+**When** jeg også har en gyldig API-nøkkel konfigurert
+**Then** «Start ny økt» blir aktiv
 
 **Given** jeg har en gyldig API-nøkkel konfigurert på serveren
 **When** jeg trykker «Start ny økt»
