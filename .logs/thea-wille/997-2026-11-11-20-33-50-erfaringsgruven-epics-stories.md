@@ -26,3 +26,27 @@ Kjørte `bmad-create-epics-and-stories`-skillen for å bryte ned PRD-en (`docs/p
 
 ### Åpne punkter
 - `docs/epics.md` har `status: draft` — bruker ville gjennomgå dokumentet selv før status settes til `final`. Ingen videre handling før bruker bekrefter.
+
+## 2026-11-15 kl. 15:22 — Thea Wille
+
+### Oppgave
+Fulgte opp `docs/prds/.../tilbakemelding-prd.md` punkt 4.2 (feilhåndtering/tomme tilstander) og 4.4 (grenser for annonselengde/antall erfaringer) ved å legge nye acceptance criteria til tre eksisterende stories i `docs/epics.md`, uten å endre noe annet i dokumentet.
+
+### Plan
+- Les `docs/epics.md` og tilbakemeldingens punkt 4.2/4.4.
+- Foreslå fire nye Given/When/Then-ACs (vist til bruker for godkjenning før lagring):
+  - Story 1.8: modellkall-feil («Noe gikk galt. Prøv igjen.», svar bevares, ingen halv loggoppføring) + maksgrense for antall erfaringer.
+  - Story 1.12: tom tilstand ved 0 fangede erfaringer på «Ferdig» (kan ikke gå videre til kravuttrekk).
+  - Story 2.1: maksgrense for annonselengde.
+- Bruker ba om å flytte de to nye konstantene fra forslått `config.ts` til `kjerne/regler.ts`, i tråd med AD-16 (som allerede eier `MIN_ANNONSE_TEGN`, `MAAL_ERFARINGER`, `MAKS_OPPFOLGING_PER_ERFARING`).
+
+### Resultat
+`docs/epics.md` oppdatert med fire nye ACs, eksisterende ACs/stories urørt:
+- Story 1.8: la til AC for `/api/samtale`-feil, og AC for `MAKS_ERFARINGER` (8, `kjerne/regler.ts`, AD-16).
+- Story 1.12: la til AC for tom tilstand ved 0 fangede erfaringer.
+- Story 2.1: la til AC for `MAKS_ANNONSE_TEGN` (6000, `kjerne/regler.ts`, AD-16).
+- Verdiene (8 erfaringer, 6000 tegn) er hentet fra tilbakemeldingens eget eksempel i 4.4.
+- Ikke committet ennå i denne seksjonen — kun denne loggfila og `issues.md` committes av `sesjonslogg`-skillen; `docs/epics.md`-endringen står ukommittert til bruker ber om commit.
+
+### Åpne punkter
+- Ingen nye. `docs/epics.md` har fortsatt `status: draft` (uendret fra forrige økt — se punktet over).
