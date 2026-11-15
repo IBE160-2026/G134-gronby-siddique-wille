@@ -1,0 +1,89 @@
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created, ready for development
+#   - in-progress: Developer actively working on implementation
+#   - review: Implementation complete, ready for review
+#   - done: Story completed
+
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+
+# Action Item Status:
+#   - open: Committed during a retrospective, not yet addressed
+#   - in-progress: Actively being worked on
+#   - done: Completed
+
+# WORKFLOW NOTES:
+# ===============
+# - Epic transitions to 'in-progress' automatically when its first story starts (via build's sprint sync)
+# - Stories can be worked in parallel if team capacity allows
+# - Developer typically creates the next story after the previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
+# - Retrospective appends its action items to action_items; the status view surfaces open ones
+generated: 11-15-2026 00:00
+last_updated: 11-15-2026 00:00
+project: G134-gronby-siddique-wille
+project_key: NOKEY
+tracking_system: file-system
+story_location: _bmad-output/implementation-artifacts
+development_status:
+  epic-1: backlog
+  1-1-readme-og-env-example-for-lokal-kjøring: backlog
+  1-2-prosjektgrunnlag-med-next-js-shadcn-og-dev-server: backlog
+  1-3-øktreducer-context-og-versjonering: backlog
+  1-4-api-kontrakt-zod-skjema-og-statusrute: backlog
+  1-5-modelladapter-grensesnitt-og-konfigurasjon: backlog
+  1-6-startside-med-personvernstekst-og-øktstart: backlog
+  1-7-samtale-ui-chatboble-chatinput-og-skriveindikator: backlog
+  1-8-samtalerute-som-stiller-og-mottar-oppfølgingsspørsmål: backlog
+  1-9-erfaringskort-r-h-r-brikker-og-fanget-logikk: backlog
+  1-10-terskelregler-for-oppfølgingsspørsmål: backlog
+  1-11-fremdriftsmåler-og-ferdig-knapp: backlog
+  1-12-oppsummeringsside-med-retting-av-erfaringer: backlog
+  1-13-demomodus-for-samtalen: backlog
+  1-14-beforeunload-varsel-og-ny-økt-med-bekreftelse: backlog
+  1-15-stegindikator-skall-og-tilgjengelighet-for-samtaleflaten: backlog
+  1-16-merkevaretema-og-kontrastverifisering: backlog
+  1-17-responsivt-oppsett-for-hovedflatene: backlog
+  epic-1-retrospective: optional
+
+  epic-2: backlog
+  2-1-annonsefelt-med-terskel-for-finn-krav: backlog
+  2-2-samtalerute-for-kravuttrekk: backlog
+  2-3-kravliste-side: backlog
+  2-4-demomodus-for-kravuttrekk: backlog
+  2-5-kjernetester-for-kravuttrekk-mot-testsett-a: backlog
+  2-6-feilhåndtering-ved-kravuttrekk: backlog
+  epic-2-retrospective: optional
+
+  epic-3: backlog
+  3-1-bevisrute-som-kobler-krav-til-erfaring: backlog
+  3-2-sitatverifisering-i-kjernen: backlog
+  3-3-kravrad-dekket-med-bevissitat: backlog
+  3-4-vis-i-samtalen: backlog
+  3-5-kravrad-hull-med-refleksjonsforslag: backlog
+  3-6-demomodus-for-bevistabell-med-k5-fellen: backlog
+  3-7-kjernetester-for-bevis-mot-testsett-a: backlog
+  3-8-ventetilstand-og-ingen-krav-dekket: backlog
+  epic-3-retrospective: optional
+
+  epic-4: backlog
+  4-1-eksportfunksjon-i-kjernen: backlog
+  4-2-eksportdialog-med-forhåndsvisning-og-kopiering: backlog
+  4-3-nedlasting-av-txt-og-feilhåndtering-ved-kopiering: backlog
+  epic-4-retrospective: optional
+
+  epic-5: backlog
+  5-1-sammenhengende-demoscript-gjennom-hele-flyten: backlog
+  5-2-readme-med-demomodus-og-k5-forklaring-for-sensor: backlog
+  5-3-valgfrie-evalueringstester-mot-ekte-modell: backlog
+  5-4-manglende-demodata: backlog
+  epic-5-retrospective: optional
