@@ -320,6 +320,14 @@ So that jeg blir intervjuet om erfaringer jeg selv ikke ville tenkt å nevne (FR
 **When** jeg ser på «Ferdig»-knappen
 **Then** den er nå aktiv (jf. `kanTrykkeFerdig()`, AD-16)
 
+**Given** en samtale er i gang
+**When** kallet til `/api/samtale` feiler
+**Then** «Noe gikk galt. Prøv igjen.» vises, svaret jeg nettopp skrev bevares, og loggen får ingen halv `sporsmal`- eller `svar`-oppføring for det mislykkede kallet
+
+**Given** `MAKS_ERFARINGER` (8, satt i `kjerne/regler.ts`, AD-16) fangede erfaringer er nådd
+**When** jeg nevner en ny erfaring
+**Then** samtalen går ikke videre med flere nye erfaringer, og meldingen viser grensen (f.eks. «Du har fanget maks 8 erfaringer»)
+
 ### Story 1.9: Erfaringskort, R-H-R-brikker og "fanget"-logikk
 
 As a student,
@@ -395,6 +403,10 @@ So that jeg kan rydde opp i det systemet har fanget (FR-3, AD-8, AD-13).
 **Given** jeg har fanget <3 erfaringer og trykket «Ferdig»
 **When** Oppsummering vises
 **Then** en notis viser «Du har fanget N erfaringer. Du kan fortsette samtalen eller gå videre med det du har.», med 0 fangede viser bare «Fortsett samtalen» som aktivt valg
+
+**Given** 0 fangede erfaringer ved «Ferdig»
+**When** Oppsummering vises
+**Then** en tom tilstand vises med forklarende tekst og en knapp tilbake til samtalen, og jeg kommer ikke videre til kravuttrekket
 
 ### Story 1.13: Demomodus for samtalen
 
@@ -509,6 +521,10 @@ So that jeg kan starte kravuttrekket når jeg har limt inn nok tekst (FR-4, UX-D
 **Given** jeg trykker «Finn krav» med gyldig lengde
 **When** forespørselen sendes
 **Then** `okt.versjon` følger med forespørselen (AD-14)
+
+**Given** annonseteksten er lengre enn `MAKS_ANNONSE_TEGN` (6000, satt i `kjerne/regler.ts`, AD-16)
+**When** jeg limer inn eller skriver tekst
+**Then** «Finn krav» forblir deaktivert og meldingen viser grensen (f.eks. «Annonsen er for lang. Maks 6000 tegn.»)
 
 ### Story 2.2: Samtalerute for kravuttrekk
 
