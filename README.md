@@ -12,7 +12,7 @@ Gruppeprosjekt i **IBE160 Programmering med KI** ved Høgskolen i Molde, høsten
 
 ## Status
 
-Planleggingen er ferdig. Neste steg er sprint planning og bygging av appen.
+Planleggingen er ferdig, og byggingen er i gang (Epic 1). Fremdriften står i [sprint-status.yaml](_bmad-output/implementation-artifacts/sprint-status.yaml).
 
 ## Arbeidsfordeling
 
@@ -39,6 +39,33 @@ Planleggingen er ferdig. Neste steg er sprint planning og bygging av appen.
 
 ## Kjøre appen
 
-Kommer når appen er bygget. Planen er en demomodus som virker uten API-nøkkel.
+Appen kjører bare lokalt på din egen maskin. Den har ingen innlogging, database eller hosting.
 
-Du trenger [Node.js 26 LTS](https://nodejs.org/) installert. Resten av oppskriften (npm install, API-nøkkel i `.env.local`, demomodus) skrives når appen finnes.
+1. Installer [Node.js 26 LTS](https://nodejs.org/), versjon 26.13.0 eller nyere 26.x. Sjekk med `node --version`.
+2. Klon repoet, gå inn i mappen og installer avhengighetene:
+
+   ```sh
+   npm install
+   ```
+
+3. Valgfritt: kopier `.env.example` til `.env.local` og fyll inn din egen API-nøkkel fra [Anthropic Console](https://console.anthropic.com/). Dette trengs bare for ekte modus. Bruk av API-et koster penger og krever betaling satt opp i Console.
+
+   ```sh
+   cp .env.example .env.local        # macOS/Linux
+   copy .env.example .env.local      # Windows (cmd)
+   ```
+
+   `.env.local` er gitignored og skal aldri committes. Start utviklingsserveren på nytt etter at du har endret fila, fordi Next.js leser den bare ved oppstart.
+4. Start utviklingsserveren:
+
+   ```sh
+   npm run dev
+   ```
+
+5. Åpne adressen terminalen viser, vanligvis <http://127.0.0.1:3000>. Bruk `127.0.0.1` og ikke `localhost`, fordi serveren bare lytter på den adressen.
+
+### Demomodus uten API-nøkkel
+
+Appen får en demomodus som bruker lagrede modellsvar for den fiktive studenten i [testsett A](fixtures/testsett-a/README.md) i stedet for å kalle Anthropic. Demomodus skal virke uten API-nøkkel og uten `.env.local`, og blir den enkleste måten å prøve appen på. Demomodus er ikke bygget ennå. Denne delen oppdateres i Epic 5 med hvordan du velger modus og hva demodataene viser.
+
+I ekte modus sendes svarene dine kryptert til Anthropic API. Appen selv lagrer ingenting. Anthropic sletter API-data innen 30 dager, men samtaler som flagges for brudd på bruksvilkårene kan lagres i opptil 2 år ([kilde](https://privacy.claude.com/en/articles/7996866-how-long-do-you-store-my-organization-s-data)).
