@@ -12,7 +12,10 @@
 - [ ] 2026-11-05 [arkitektur-spine](998-2026-11-04-21-55-59-arkitektur-spine.md) — Victoria skriver personvernteksten på Start: svar sendes til Anthropic, API-data slettes innen 30 dager, flaggede samtaler lagres i opptil 2 år (AD-17)
 - [ ] 2026-11-05 [arkitektur-spine](998-2026-11-04-21-55-59-arkitektur-spine.md) — Gruppen bekrefter tolkningen av «statisk refleksjonsforslag» (PRD FR-7, Å.s. 3, EXPERIENCE.md): modellen lager forslaget, standardtekst bare som reserve, ingen ekstra spørsmål ved hull
 - [ ] 2026-11-05 [arkitektur-spine](998-2026-11-04-21-55-59-arkitektur-spine.md) — UX skriver ordlyden for `OVERGANGSSPORSMAL` og `STANDARD_REFLEKSJON` (AD-7, AD-16)
-- [ ] 2026-11-23 [epic-1-prosjektgrunnlag](997-2026-11-23-22-10-48-epic-1-prosjektgrunnlag.md) — Kodegjennomgang av story 1.1 og 1.2 (status `review`) før de settes til `done`
-- [ ] 2026-11-23 [epic-1-prosjektgrunnlag](997-2026-11-23-22-10-48-epic-1-prosjektgrunnlag.md) — Gruppen bestemmer om `CLAUDE.md` skal importere `AGENTS.md` (Next 16-regelen fra `next dev`)
+- [x] 2026-11-23 [epic-1-prosjektgrunnlag](997-2026-11-23-22-10-48-epic-1-prosjektgrunnlag.md) — Kodegjennomgang av story 1.1 og 1.2 (status `review`) før de settes til `done` (løst 2026-11-23: gjennomgått, 6 patcher brukt, begge `done`; cb9acb4)
+- [x] 2026-11-23 [epic-1-prosjektgrunnlag](997-2026-11-23-22-10-48-epic-1-prosjektgrunnlag.md) — Gruppen bestemmer om `CLAUDE.md` skal importere `AGENTS.md` (Next 16-regelen fra `next dev`) (løst 2026-11-23: Rikke la til `@AGENTS.md` øverst i `CLAUDE.md`; cb9acb4)
 - [ ] 2026-11-23 [epic-1-prosjektgrunnlag](997-2026-11-23-22-10-48-epic-1-prosjektgrunnlag.md) — Oppdater shadcn når `ts-morph` med rettet `minimatch` er ute (4 moderate funn i `npm audit`, bare CLI)
 - [ ] 2026-11-23 [epic-1-prosjektgrunnlag](997-2026-11-23-22-10-48-epic-1-prosjektgrunnlag.md) — README: feilsøking for `mangler_nokkel` og ugyldig nøkkel når story 1.4/1.5 er bygget
+- [ ] 2026-11-23 [epic-1-prosjektgrunnlag](997-2026-11-23-22-10-48-epic-1-prosjektgrunnlag.md) — Automatisk test av at `dev`/`start` binder til `-H 127.0.0.1` når Vitest er på plass
+- [ ] 2026-11-23 [epic-1-prosjektgrunnlag](997-2026-11-23-22-10-48-epic-1-prosjektgrunnlag.md) — Fjern mørkt tema fra `shadcn init` i story 1.16 (appen skal bare ha lyst tema)
+- [ ] 2026-11-23 [epic-1-prosjektgrunnlag](997-2026-11-23-22-10-48-epic-1-prosjektgrunnlag.md) — Håndhev modulgrensene (`no-restricted-imports`, `server-only`) når story 1.3–1.5 legger inn kode
