@@ -29,7 +29,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 # - Retrospective appends its action items to action_items; the status view surfaces open ones
 generated: 11-15-2026 00:00
-last_updated: 11-23-2026 22:15
+last_updated: 11-23-2026 22:50
 project: G134-gronby-siddique-wille
 project_key: NOKEY
 tracking_system: file-system
@@ -37,7 +37,7 @@ story_location: _bmad-output/implementation-artifacts
 development_status:
   epic-1: in-progress
   1-1-readme-og-env-example-for-lokal-kjøring: review
-  1-2-prosjektgrunnlag-med-next-js-shadcn-og-dev-server: backlog
+  1-2-prosjektgrunnlag-med-next-js-shadcn-og-dev-server: review
   1-3-øktreducer-context-og-versjonering: backlog
   1-4-api-kontrakt-zod-skjema-og-statusrute: backlog
   1-5-modelladapter-grensesnitt-og-konfigurasjon: backlog
