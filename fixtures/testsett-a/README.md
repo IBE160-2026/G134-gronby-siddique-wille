@@ -18,8 +18,16 @@ Alt innhold er fiktivt. Brattli Sport, Fjordlys Opplevelser AS, Kari Fjordvik og
 |---|---|---|
 | **SM-4** Kravuttrekk (FR-4) | Kravuttrekket finner alle fem kravene i annonsen, og ingen andre | Hvert uttrukket krav skal matche ett av K1–K5. Linjene i `ikke_krav` (arbeidsoppgaver og «Vi tilbyr») skal ikke komme med som krav. |
 | **SM-5** Sporbarhet (FR-6) | Hvert bevis viser til minst ett konkret samtalesvar | For K1–K3 skal bevistabellen vise til minst én svar-ID fra `bevis`. |
-| **SM-6** Hull (FR-7) | Krav uten bevis vises som hull med refleksjonsforslag | K4 og K5 skal ha status hull, ingen bevis og et refleksjonsforslag som ikke er tomt. |
+| **Ordrett sitat** (FR-5, FR-6, AD-6) | Hvert bevis har et sitat som studenten faktisk har skrevet | For K1–K3 skal hvert bevis ha et sitat som finnes ordrett i teksten til svaret det viser til, etter normalisering med `normaliser()` (se `verifiserSitat()` i AD-6). Et bevis uten slikt sitat skal avvises. |
+| **SM-6** Hull (FR-7) | Krav uten bevis vises som hull med refleksjonsforslag | K4 og K5 skal ha status hull, ingen bevis og et refleksjonsforslag som ikke er tomt. Modellen lager forslaget. Standardteksten `STANDARD_REFLEKSJON` brukes bare hvis modellen ikke gir noe (AD-7). |
 | **SM-C1** Ingen oppdiktede koblinger | Bevistabellen kobler ikke krav til svar som ikke dokumenterer dem | Ingen svar-ID fra `forbudte_bevis` skal brukes. K5 er felle: den ligner på Mias erfaring, men er ikke dekket. |
+
+## Slik kjøres testene
+
+- `tests/kjerne/` kjører mot lagrede modellsvar og trenger ingen API-nøkkel. Disse testene kjøres alltid.
+- `tests/eval/` kjører mot ekte modell og trenger API-nøkkel. Disse testene er valgfrie.
+
+Begge bruker fasiten i denne mappen.
 
 ## Slik er fasiten bygget
 
@@ -52,5 +60,4 @@ Tre av fem krav er dekket og to er hull. UJ-1 nevner bare ett hull. Det andre hu
 ## Hva testsettet ikke dekker
 
 - Selve samtalen (FR-1–FR-3). Svarene i `student.json` er ferdigskrevne og tester ikke om systemet stiller gode oppfølgingsspørsmål. De kan likevel brukes som lagrede svar i demomodus (FR-9).
-- Hvilken tekst refleksjonsforslaget har. Testen sjekker bare at det finnes.
-- Om sitatet i bevistabellen er ordrett. En mulig utvidelse er å sjekke at sitatet finnes i teksten til svaret det viser til.
+- Hvilken tekst refleksjonsforslaget har. Testen sjekker bare at forslaget ikke er tomt, enten det kommer fra modellen eller fra `STANDARD_REFLEKSJON`.
