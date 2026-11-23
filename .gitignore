@@ -60,12 +60,5 @@ Thumbs.db
 *.swo
 *~
 
-# Fra create-next-app
-.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
+# Sertifikater og nøkler
 *.pem

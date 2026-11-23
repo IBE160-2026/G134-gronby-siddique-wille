@@ -108,3 +108,24 @@ Lag: Blind Hunter (BH, 12 funn), Edge Case Hunter (EC, 5 funn), Verification Gap
 - `npm run lint` -- expected: ingen feil
 - `npm run dev` i bakgrunnen, deretter `curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:3000/` -- expected: `200`, og HTML-en inneholder «Erfaringsgruven»
 - `git diff --stat HEAD -- README.md .env.example docs fixtures` -- expected: tomt
+
+### Review Findings
+
+Kodegjennomgang 2026-11-23 av story 1.1 og 1.2 (ecde956, 237e64d). Lag: Blind Hunter, Edge Case Hunter (uten claims-sjekk fordi claims-fila manglet), Verification Gap, Acceptance Auditor. 19 rå funn, 14 etter gruppering.
+
+- [x] [Review][Patch] (1.1) `.env.example` beskriver demomodus og serverlesing som om de finnes i dag, mens README sier at demomodus ikke er bygget [.env.example:5]
+- [x] [Review][Patch] (1.1) README sier at `localhost` ikke virker; det riktige er at serveren bare lytter på 127.0.0.1 og ikke kan nås fra andre maskiner [README.md:90]
+- [x] [Review][Patch] (1.1) README nevner ikke `npm run build`, `npm run lint` og `npm start` [README.md:84]
+- [x] [Review][Patch] (1.1) README-steg 2 mangler `git clone`-kommando og mappenavn [README.md:64]
+- [x] [Review][Patch] (1.2) Ingen `.nvmrc`, så nvm/fnm ikke bytter til Node 26 automatisk, og `engines` bare advarer [package.json:5]
+- [x] [Review][Patch] (1.2) `.gitignore` har Yarn/PnP-mønstre i et npm-prosjekt; bare `*.pem` er nyttig [.gitignore:63]
+- [x] [Review][Defer] (1.2) Ingen automatisk sjekk av at `dev`/`start` binder til 127.0.0.1 [package.json:9] — deferred: Vitest kommer i en senere story; legg da til en test som leser `package.json`.
+- [x] [Review][Defer] (1.2) Mørkt tema fra `shadcn init` (`.dark`-blokk, `dark:`-klasser) selv om appen bare skal ha lyst tema [src/app/globals.css:5] — deferred: ingen effekt i kjøring (ingenting setter `.dark`); fjernes når story 1.16 legger merkevaretemaet.
+- [x] [Review][Defer] (1.2) Modulgrensene (`kjerne` ↛ `app`/`klient`/`server`, `klient` ↛ `server`, `server-only`) håndheves ikke av lint eller pakker [eslint.config.mjs:5] — deferred: mappene er tomme; innføres med `server-only` når story 1.3–1.5 legger inn kode.
+
+**Rejected:**
+- (1.2) Geist i stedet for Inter/Source Serif 4 — false: specen utsetter fontvalget til story 1.16 med vilje.
+- (1.2) `AGENTS.md` utenfor Code Map — false: dokumentert i Implementation Notes og ikke i strid med noen Always/Never-regel.
+- (1.1) «(Epic 1)» i README-status blir utdatert — false: allerede vurdert i 1.1-triagen; status oppdateres fortløpende.
+- (1.2) Ingen `typecheck`-script; `tsc --noEmit` feiler uten `next typegen` — low: ingen script kjører `tsc` alene, og `next dev`/`next build` lager typene; et nytt script er mer enn en direkte rettelse.
+- (1.2) Tailwind virker ikke med `--webpack` — low: ingen script bruker `--webpack` (Turbopack er standard i Next 16); en PostCSS-reserve er ekstra oppsett for et tilfelle ingen møter.

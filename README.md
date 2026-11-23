@@ -45,8 +45,12 @@ Appen kjører bare lokalt på din egen maskin. Den har ingen innlogging, databas
 2. Klon repoet, gå inn i mappen og installer avhengighetene:
 
    ```sh
+   git clone https://github.com/IBE160-2026/G134-gronby-siddique-wille.git
+   cd G134-gronby-siddique-wille
    npm install
    ```
+
+   Bruker du nvm eller fnm, velger `nvm use` / `fnm use` riktig Node-versjon fra `.nvmrc`.
 
 3. Valgfritt: kopier `.env.example` til `.env.local` og fyll inn din egen API-nøkkel fra [Anthropic Console](https://console.anthropic.com/). Dette trengs bare for ekte modus. Bruk av API-et koster penger og krever betaling satt opp i Console.
 
@@ -62,7 +66,15 @@ Appen kjører bare lokalt på din egen maskin. Den har ingen innlogging, databas
    npm run dev
    ```
 
-5. Åpne adressen terminalen viser, vanligvis <http://127.0.0.1:3000>. Bruk `127.0.0.1` og ikke `localhost`, fordi serveren bare lytter på den adressen.
+5. Åpne adressen terminalen viser, vanligvis <http://127.0.0.1:3000>. Serveren lytter bare på `127.0.0.1`, så appen kan ikke nås fra andre maskiner. `localhost` virker vanligvis også, men `127.0.0.1` er sikrest.
+
+Andre kommandoer:
+
+| Kommando | Hva den gjør |
+|---|---|
+| `npm run lint` | Sjekker koden med ESLint |
+| `npm run build` | Lager et produksjonsbygg og sjekker TypeScript |
+| `npm start` | Kjører produksjonsbygget på `127.0.0.1` (etter `npm run build`) |
 
 ### Demomodus uten API-nøkkel
 

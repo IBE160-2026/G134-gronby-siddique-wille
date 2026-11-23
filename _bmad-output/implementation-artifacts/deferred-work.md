@@ -10,3 +10,15 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-1-2-prosjektgrunnlag-nextjs-shadcn.md`
   summary: `npm audit` viser 4 moderate sårbarheter i `minimatch` via `shadcn` 4.23.0 → `ts-morph`; følg med på en shadcn-versjon med oppdatert `ts-morph`.
   evidence: Gjelder CLI-verktøyet (appen importerer bare `shadcn/tailwind.css`) og en app som bare kjører lokalt. `npm audit fix --force` ville nedgradert til shadcn 1.0.0, og stack-tabellen låser 4.23.0.
+
+## Deferred from: code review of spec-1-2-prosjektgrunnlag-nextjs-shadcn (2026-11-23)
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-1-2-prosjektgrunnlag-nextjs-shadcn.md`
+  summary: Legg til en automatisk sjekk av at `dev` og `start` i `package.json` binder til `-H 127.0.0.1` (AD-17).
+  evidence: Verification Gap: i dag sjekkes det bare manuelt med `curl`; Vitest kommer i en senere story.
+- source_spec: `_bmad-output/implementation-artifacts/spec-1-2-prosjektgrunnlag-nextjs-shadcn.md`
+  summary: Fjern det mørke temaet fra `shadcn init` (`.dark`-blokk og `@custom-variant dark` i `globals.css`) i story 1.16.
+  evidence: Epic-konteksten sier «kun lyst tema»; blokken har ingen effekt i dag, men kan tolkes som støtte for mørk modus.
+- source_spec: `_bmad-output/implementation-artifacts/spec-1-2-prosjektgrunnlag-nextjs-shadcn.md`
+  summary: Håndhev modulgrensene (`kjerne` importerer aldri `app`/`klient`/`server`, `klient` aldri `server`, `server/` importerer `server-only`) med `no-restricted-imports` og pakken `server-only`.
+  evidence: Regelen står i epic-konteksten, men verken ESLint eller pakker håndhever den; mappene er tomme, så det er billigst å innføre når story 1.3–1.5 legger inn kode.

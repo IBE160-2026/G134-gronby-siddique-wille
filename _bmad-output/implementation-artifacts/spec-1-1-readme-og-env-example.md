@@ -42,3 +42,7 @@ Blind Hunter, 14 funn:
 12. «(Epic 1)» i Status blir utdatert, og Arbeidsfordeling mangler byggefasen — low. Avvist: Status oppdateres fortløpende, og arbeidsfordelingen er utenfor denne storyen.
 13. Modellnavn hardkodet i `.env.example` — low. Patch: fjernet.
 14. `.env.example` sier ikke hvor nøkkelen hentes eller at den ikke skal ha anførselstegn — low. Patch.
+
+### Review Findings
+
+Kodegjennomgangen 2026-11-23 dekket story 1.1 og 1.2 samlet. Funnene står i [spec-1-2-prosjektgrunnlag-nextjs-shadcn.md](spec-1-2-prosjektgrunnlag-nextjs-shadcn.md#review-findings), merket «(1.1)» for denne storyen.
