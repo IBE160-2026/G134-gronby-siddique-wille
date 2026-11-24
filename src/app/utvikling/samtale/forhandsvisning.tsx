@@ -36,12 +36,14 @@ export function Forhandsvisning() {
     const t = tellere.current;
     t.S += 1;
     setMeldinger((m) => [...m, { id: `S${t.S}`, rolle: "student", tekst }]);
-    setUtkast("");
     setVenter(true);
     tidtaker.current = setTimeout(() => {
       t.A += 1;
       const svar = SVAR[(t.A - 5) % SVAR.length];
       setMeldinger((m) => [...m, { id: `A${t.A}`, rolle: "assistent", tekst: svar }]);
+      // Utkastet tømmes først når svaret er tatt imot (kontrakten i Chatinput),
+      // så teksten ville blitt stående ved en feil.
+      setUtkast("");
       setVenter(false);
     }, VENTETID_MS);
   }

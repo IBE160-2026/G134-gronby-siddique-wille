@@ -34,7 +34,11 @@ export function Chatinput({ verdi, onEndre, onSend, venter, className }: Chatinp
   }, [verdi]);
 
   function send() {
-    if (kanSende) onSend(verdi.trim());
+    if (!kanSende) return;
+    onSend(verdi.trim());
+    // Ved klikk har Send-knappen fokus, og den blir straks deaktivert. Flytt
+    // fokus tilbake, så det ikke faller til <body> mens assistenten svarer.
+    ref.current?.focus();
   }
 
   function vedTast(e: KeyboardEvent<HTMLTextAreaElement>) {
@@ -65,8 +69,9 @@ export function Chatinput({ verdi, onEndre, onSend, venter, className }: Chatinp
         rows={1}
         // shadcn-standarden er text-base md:text-sm; begge overstyres så
         // chat-body (16px / 1.6) gjelder på alle bredder. 6lh = 6 linjer,
-        // pluss py-2 (1rem) og kantlinjen (2px).
-        className="type-chat-body max-h-[calc(6lh+1rem+2px)] resize-none rounded-sm bg-card text-base/[1.6] md:text-base/[1.6] aria-disabled:cursor-not-allowed aria-disabled:opacity-70"
+        // pluss py-2 (1rem) og kantlinjen (2px). min-h-12 (48px, som i
+        // mockupen) erstatter shadcn sin min-h-16, så feltet starter på én linje.
+        className="type-chat-body min-h-12 max-h-[calc(6lh+1rem+2px)] resize-none rounded-sm bg-card text-base/[1.6] md:text-base/[1.6] aria-disabled:cursor-not-allowed aria-disabled:opacity-70"
       />
       <Button type="submit" size="lg" disabled={!kanSende}>
         Send

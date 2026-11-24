@@ -39,14 +39,33 @@ export function Chatlogg({ meldinger, venter, className }: ChatloggProps) {
     }
   }, [meldinger, venter]);
 
+  // Loggen kan krympe uten scroll-hendelse (chatinput vokser, vinduet endres).
+  // Hold den nederst da også, hvis studenten sto der.
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new ResizeObserver(() => {
+      if (stodNederst.current) el.scrollTop = el.scrollHeight;
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // Én live-region for hele loggen (EXPERIENCE.md). Studentens egen melding
+  // leses derfor også opp; endelig løsning avgjøres i story 1.15.
+  // tabIndex: rullecontaineren må kunne få fokus for å rulles med tastatur (Safari).
   return (
     <div
       ref={ref}
       role="log"
       aria-live="polite"
       aria-label="Samtale"
+      tabIndex={0}
       onScroll={oppdaterPosisjon}
-      className={cn("flex flex-col gap-3.5 overflow-y-auto", className)}
+      className={cn(
+        "flex flex-col gap-3.5 overflow-y-auto rounded-md outline-none focus-visible:ring-3 focus-visible:ring-ring/50",
+        className,
+      )}
     >
       {meldinger.map((melding) => (
         <Chatboble key={melding.id} melding={melding} />
