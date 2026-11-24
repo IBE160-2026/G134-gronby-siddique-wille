@@ -41,3 +41,12 @@
 - source_spec: `_bmad-output/specs/spec-1-7-samtale-ui/SPEC.md`
   summary: Ingen automatiske tester for samtalekomponentene: Chatinput (Enter/Shift+Enter, IME, trim, låst mot dobbel sending), autoscroll i Chatlogg (trenger ekte layout, altså nettlesertest) og 404-vakten på `/utvikling/samtale`. Legg dem til senest med story 1.8, og fjern utviklingssiden da.
   evidence: Verification Gap. Repoet har ingen testkjører, og specen har tester som ikke-mål. Atferden ble verifisert manuelt i Chrome med et midlertidig playwright-core-script.
+
+## Deferred from: code review of spec-1-15-stegindikator (2026-11-24)
+
+- source_spec: `_bmad-output/specs/spec-1-15-stegindikator/SPEC.md`
+  summary: Ingen automatiske tester for live-regionen i Chatlogg og for Stegindikator. Live-regionen bør testes for fem ting: den er tom ved første visning, er uendret når en studentmelding legges til, viser `SKRIVER_TEKST` når `venter` er sann, kunngjør et nytt assistentsvar, og tømmes når `venter` blir sann, så et feilet kall ikke leser opp forrige svar igjen. Stegindikatoren bør testes med `aktivt="krav"`: aktivt vinner over fullført, det finnes tre knapper med «(fullført)», og kommende steg kan ikke få fokus. Den bør også sjekke at `onVelg` kalles og at fokus går til det aktive steget. Skriv testene sammen med testene for samtalekomponentene fra 1.7 (Vitest, Testing Library og jsdom).
+  evidence: Verification Gap og Blind Hunter. Repoet har ingen testkjører, og tester er ikke-mål i specen. Atferden ble verifisert manuelt i Chrome med et midlertidig playwright-core-script.
+- source_spec: `_bmad-output/specs/spec-1-15-stegindikator/SPEC.md`
+  summary: Fokus etter stegvalg forutsetter at `Appskall` står mountet mens steget byttes. Lager story 1.8 stegene som egne ruter, må skallet ligge i en felles layout og ikke i hver side. Ellers faller fokus til `<body>` etter klikk på et fullført steg (CAP-4).
+  evidence: Edge Case Hunter og Acceptance Auditor. Komponenten vet ikke om steg er ruter eller tilstand, så kontrakten står i JSDoc og må følges når 1.8 kobler til.
