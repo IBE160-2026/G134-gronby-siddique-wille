@@ -1,26 +1,32 @@
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
+import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 
 vi.mock("server-only", () => ({}));
 
-// `DEMO_MAPPE` regnes ut fra `process.cwd()` når modulen lastes, så cwd pekes
-// til en midlertidig mappe før importen. Da er testene uavhengige av repoet.
-const rot = mkdtempSync(path.join(tmpdir(), "status-rute-"));
-const demo = path.join(rot, "fixtures", "testsett-a", "demo");
-vi.spyOn(process, "cwd").mockReturnValue(rot);
+// Demomappen regnes ut fra `process.cwd()`, så cwd pekes til en midlertidig
+// mappe. Da er testene uavhengige av repoet.
+let rot: string | undefined;
+let demo: string;
+let rute: typeof import("@/app/api/status/route");
 
-const rute = await import("@/app/api/status/route");
+beforeAll(async () => {
+  rot = mkdtempSync(path.join(tmpdir(), "status-rute-"));
+  demo = path.join(rot, "fixtures", "testsett-a", "demo");
+  vi.spyOn(process, "cwd").mockReturnValue(rot);
+  vi.resetModules();
+  rute = await import("@/app/api/status/route");
+});
 
 afterEach(() => {
   vi.unstubAllEnvs();
-  rmSync(demo, { recursive: true, force: true });
+  if (demo) rmSync(demo, { recursive: true, force: true });
 });
 
 afterAll(() => {
-  rmSync(rot, { recursive: true, force: true });
   vi.restoreAllMocks();
+  if (rot) rmSync(rot, { recursive: true, force: true });
 });
 
 describe("GET /api/status", () => {

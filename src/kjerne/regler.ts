@@ -14,3 +14,6 @@ export const MAKS_LOGG_OPPFORINGER = 300;
 
 /** Maks antall elementer i øvrige lister (erfaringer, kilder, krav, …). */
 export const MAKS_LISTE = 50;
+
+/** Maks tegn i én ID (`S123`), så en ID ikke kan omgå tekstgrensene. */
+export const MAKS_ID_TEGN = 10;

@@ -5,8 +5,10 @@ import path from "node:path";
 
 import type { StatusSvar } from "@/kjerne/skjema";
 
-/** Demodata for testsett A (AD-9), adskilt fra `fasit.json`. */
-export const DEMO_MAPPE = path.join(process.cwd(), "fixtures", "testsett-a", "demo");
+/** Demodata for testsett A (AD-9), adskilt fra `fasit.json`. Regnes ut ved kall. */
+export function demoMappe(): string {
+  return path.join(process.cwd(), "fixtures", "testsett-a", "demo");
+}
 
 /**
  * Om API-nøkkelen er satt og om demodata finnes (AD-9). Returnerer bare
@@ -16,13 +18,13 @@ export const DEMO_MAPPE = path.join(process.cwd(), "fixtures", "testsett-a", "de
  */
 export async function hentStatus({
   env = process.env,
-  demoMappe = DEMO_MAPPE,
+  demoMappe: mappe = demoMappe(),
 }: {
   env?: Record<string, string | undefined>;
   demoMappe?: string;
 } = {}): Promise<StatusSvar> {
   const harNokkel = (env.ANTHROPIC_API_KEY ?? "").trim().length > 0;
-  return { harNokkel, harDemodata: await harJsonFil(demoMappe) };
+  return { harNokkel, harDemodata: await harJsonFil(mappe) };
 }
 
 async function harJsonFil(mappe: string): Promise<boolean> {

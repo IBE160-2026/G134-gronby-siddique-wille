@@ -7,7 +7,7 @@ const src = fileURLToPath(new URL("../../src/", import.meta.url));
 
 function kildefiler(mappe: string): string[] {
   return readdirSync(mappe, { withFileTypes: true, recursive: true })
-    .filter((f) => f.isFile() && /\.(ts|tsx|js|mjs)$/.test(f.name))
+    .filter((f) => f.isFile() && /\.(c|m)?(t|j)sx?$/.test(f.name) && !/\.d\.(c|m)?ts$/.test(f.name))
     .map((f) => path.join(f.parentPath, f.name));
 }
 

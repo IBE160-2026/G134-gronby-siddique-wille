@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import {
   MAKS_ANNONSE_TEGN,
+  MAKS_ID_TEGN,
   MAKS_LISTE,
   MAKS_LOGG_OPPFORINGER,
   MAKS_TEKST_TEGN,
@@ -16,6 +17,9 @@ import {
  * - Modellskjemaene (`…ModellSvar`) har ingen regex eller lengdegrenser, slik
  *   at `output_config.format` kan avledes fra dem (story 1.5). Ukjente ID-er
  *   forkastes i kjernen (AD-5), ikke her.
+ * - Ruteskjemaene (`…Svar`) har de samme grensene som forespørslene, så et
+ *   modellsvar over grensene gir `ugyldig_svar` i stedet for å havne i
+ *   klienttilstanden og få alle senere forespørsler til å feile.
  * - Svarene ekkoer ikke `versjon`; klienten sammenligner med versjonen den
  *   sendte (AD-14).
  */
@@ -28,9 +32,6 @@ const tekst = z.string().max(MAKS_TEKST_TEGN);
 const liste = <T extends z.ZodType>(element: T) => z.array(element).max(MAKS_LISTE);
 /** Prefiks per ID-type: sporsmal, svar, rettelse, erfaring, krav. */
 export type IdPrefiks = "A" | "S" | "R" | "E" | "K";
-
-/** Øvre grense for en ID-streng, så en ID ikke kan omgå tekstgrensene. */
-const MAKS_ID_TEGN = 10;
 
 const idMedPrefiks = (prefiks: IdPrefiks) =>
   z.string().max(MAKS_ID_TEGN).regex(new RegExp(`^${prefiks}[1-9]\\d*$`));
@@ -103,8 +104,8 @@ export type Bevis = z.infer<typeof Bevis>;
 
 export const BevistabellRad = z.object({
   kravId: KravId,
-  bevis: z.array(Bevis),
-  refleksjonsforslag: z.string(),
+  bevis: liste(Bevis),
+  refleksjonsforslag: tekst,
 });
 export type BevistabellRad = z.infer<typeof BevistabellRad>;
 
@@ -159,21 +160,25 @@ export type SamtaleForesporsel = z.infer<typeof SamtaleForesporsel>;
 const NyRef = z.object({ ny: z.string() });
 const ErfaringRef = z.union([z.string(), NyRef]);
 
-export const Endring = z.discriminatedUnion("type", [
-  z.object({ type: z.literal("opprett"), ny: z.string(), tittel: z.string() }),
-  z.object({
-    type: z.literal("leggTilKilde"),
-    erfaring: ErfaringRef,
-    felt: FeltNavn,
-    svarId: z.string(),
-  }),
-  z.object({
-    type: z.literal("settTekst"),
-    erfaring: ErfaringRef,
-    felt: FeltNavn,
-    tekst: z.string(),
-  }),
-]);
+/** Endringer med tekstskjemaet `t`: ubegrenset for modellen, begrenset for ruten. */
+const lagEndring = (t: z.ZodString) =>
+  z.discriminatedUnion("type", [
+    z.object({ type: z.literal("opprett"), ny: z.string(), tittel: t }),
+    z.object({
+      type: z.literal("leggTilKilde"),
+      erfaring: ErfaringRef,
+      felt: FeltNavn,
+      svarId: z.string(),
+    }),
+    z.object({
+      type: z.literal("settTekst"),
+      erfaring: ErfaringRef,
+      felt: FeltNavn,
+      tekst: t,
+    }),
+  ]);
+
+export const Endring = lagEndring(z.string());
 export type Endring = z.infer<typeof Endring>;
 
 export const SamtaleModellSvar = z.object({
@@ -185,8 +190,15 @@ export const SamtaleModellSvar = z.object({
 });
 export type SamtaleModellSvar = z.infer<typeof SamtaleModellSvar>;
 
-export const SamtaleSvar = SamtaleModellSvar;
-export type SamtaleSvar = SamtaleModellSvar;
+/** Samme form som modellsvaret, men med grensene fra forespørslene. */
+export const SamtaleSvar = z.object({
+  sporsmal: z.object({
+    tekst,
+    gjelder: ErfaringRef.nullable(),
+  }),
+  endringer: liste(lagEndring(tekst)),
+});
+export type SamtaleSvar = z.infer<typeof SamtaleSvar>;
 
 // ---------------------------------------------------------------------------
 // POST /api/krav
@@ -205,8 +217,10 @@ export const KravModellSvar = z.object({
 });
 export type KravModellSvar = z.infer<typeof KravModellSvar>;
 
-export const KravSvar = KravModellSvar;
-export type KravSvar = KravModellSvar;
+export const KravSvar = z.object({
+  krav: liste(z.object({ tekst })),
+});
+export type KravSvar = z.infer<typeof KravSvar>;
 
 // ---------------------------------------------------------------------------
 // POST /api/bevis
@@ -235,7 +249,7 @@ export const BevisModellSvar = z.object({
 export type BevisModellSvar = z.infer<typeof BevisModellSvar>;
 
 export const BevisSvar = z.object({
-  bevistabell: z.array(BevistabellRad),
+  bevistabell: liste(BevistabellRad),
 });
 export type BevisSvar = z.infer<typeof BevisSvar>;
 
@@ -243,7 +257,8 @@ export type BevisSvar = z.infer<typeof BevisSvar>;
 // GET /api/demo/manus
 // ---------------------------------------------------------------------------
 
+/** Hvert manussvar blir en `svar`-oppføring i loggen. */
 export const DemoManusSvar = z.object({
-  svar: z.array(z.string()),
+  svar: z.array(tekst).max(MAKS_LOGG_OPPFORINGER),
 });
 export type DemoManusSvar = z.infer<typeof DemoManusSvar>;

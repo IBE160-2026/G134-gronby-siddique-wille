@@ -107,6 +107,35 @@ describe("SamtaleForesporsel", () => {
       ["logg"],
     ],
     [
+      "sporsmal med gjelder uten E-prefiks",
+      { ...samtale, logg: [{ type: "sporsmal", id: "A1", tekst: "?", gjelder: "1" }] },
+      ["logg", 0, "gjelder"],
+    ],
+    [
+      "rettelse med ukjent felt",
+      { ...samtale, logg: [{ ...logg[2], felt: "navn" }] },
+      ["logg", 0, "felt"],
+    ],
+    [
+      "rettelse med ugyldig erfaringId",
+      { ...samtale, logg: [{ ...logg[2], erfaringId: "K1" }] },
+      ["logg", 0, "erfaringId"],
+    ],
+    [
+      "erfaringstittel over MAKS_TEKST_TEGN",
+      { ...samtale, erfaringer: [{ ...erfaring, tittel: "x".repeat(MAKS_TEKST_TEGN + 1) }] },
+      ["erfaringer", 0, "tittel"],
+    ],
+    [
+      "slettedeErfaringer over MAKS_LISTE",
+      {
+        ...samtale,
+        slettedeErfaringer: Array.from({ length: MAKS_LISTE + 1 }, (_, i) => `E${i + 1}`),
+      },
+      ["slettedeErfaringer"],
+    ],
+    ["versjon som ikke er heltall", { ...samtale, versjon: 1.5 }, ["versjon"]],
+    [
       "for mange erfaringer",
       { ...samtale, erfaringer: Array.from({ length: MAKS_LISTE + 1 }, () => erfaring) },
       ["erfaringer"],
@@ -173,6 +202,112 @@ describe("KravForesporsel og KravSvar", () => {
     expect(KravSvar.parse({ krav: [{ tekst: "Samarbeid", id: "K9" }] })).toEqual({
       krav: [{ tekst: "Samarbeid" }],
     });
+  });
+});
+
+describe("ruteskjemaene har grensene, modellskjemaene ikke", () => {
+  const lang = "x".repeat(MAKS_TEKST_TEGN + 1);
+  const sporsmal = { tekst: "?", gjelder: null };
+  const opprett = (i: number) => ({ type: "opprett", ny: `n${i}`, tittel: "t" });
+
+  it.each([
+    [
+      "for lang spørsmålstekst",
+      SamtaleModellSvar,
+      SamtaleSvar,
+      { sporsmal: { tekst: lang, gjelder: null }, endringer: [] },
+      ["sporsmal", "tekst"],
+    ],
+    [
+      "for lang tekst i settTekst",
+      SamtaleModellSvar,
+      SamtaleSvar,
+      {
+        sporsmal,
+        endringer: [{ type: "settTekst", erfaring: "E1", felt: "rolle", tekst: lang }],
+      },
+      ["endringer", 0, "tekst"],
+    ],
+    [
+      "for mange endringer",
+      SamtaleModellSvar,
+      SamtaleSvar,
+      { sporsmal, endringer: Array.from({ length: MAKS_LISTE + 1 }, (_, i) => opprett(i)) },
+      ["endringer"],
+    ],
+    [
+      "for mange krav",
+      KravModellSvar,
+      KravSvar,
+      { krav: Array.from({ length: MAKS_LISTE + 1 }, () => ({ tekst: "k" })) },
+      ["krav"],
+    ],
+    ["for lang kravtekst", KravModellSvar, KravSvar, { krav: [{ tekst: lang }] }, ["krav", 0, "tekst"]],
+  ] as const)("%s: modellsvar godtas, rutesvar avvises", (_navn, modell, rute, input, sti) => {
+    expect(modell.safeParse(input).success).toBe(true);
+    const resultat = rute.safeParse(input);
+    expect(resultat.success).toBe(false);
+    expect(resultat.error?.issues[0]?.path).toEqual(sti);
+  });
+
+  const rad = { kravId: "K1", bevis: [], refleksjonsforslag: "" };
+
+  it.each([
+    ["for lang refleksjon", { bevistabell: [{ ...rad, refleksjonsforslag: lang }] }, ["bevistabell", 0, "refleksjonsforslag"]],
+    [
+      "for mange bevis i en rad",
+      {
+        bevistabell: [
+          {
+            ...rad,
+            bevis: Array.from({ length: MAKS_LISTE + 1 }, () => ({
+              erfaringId: "E1",
+              svarId: "S1",
+              start: 0,
+              slutt: 1,
+            })),
+          },
+        ],
+      },
+      ["bevistabell", 0, "bevis"],
+    ],
+    ["for mange rader", { bevistabell: Array.from({ length: MAKS_LISTE + 1 }, () => rad) }, ["bevistabell"]],
+  ])("BevisSvar avviser %s", (_navn, input, sti) => {
+    const resultat = BevisSvar.safeParse(input);
+    expect(resultat.success).toBe(false);
+    expect(resultat.error?.issues[0]?.path).toEqual(sti);
+  });
+
+  it("BevisModellSvar godtar lang refleksjon og mange bevis", () => {
+    expect(
+      BevisModellSvar.safeParse({
+        bevis: Array.from({ length: MAKS_LISTE + 1 }, () => ({
+          kravId: "K1",
+          erfaringId: "E1",
+          svarId: "S1",
+          sitat: lang,
+        })),
+        refleksjonsforslag: [{ kravId: "K1", tekst: lang }],
+      }).success,
+    ).toBe(true);
+  });
+
+  it.each([
+    ["for langt svar", { svar: [lang] }, ["svar", 0]],
+    ["for mange svar", { svar: Array.from({ length: MAKS_LOGG_OPPFORINGER + 1 }, () => "ja") }, ["svar"]],
+  ])("DemoManusSvar avviser %s", (_navn, input, sti) => {
+    const resultat = DemoManusSvar.safeParse(input);
+    expect(resultat.success).toBe(false);
+    expect(resultat.error?.issues[0]?.path).toEqual(sti);
+  });
+
+  it.each([SamtaleModellSvar, SamtaleSvar])("avviser settTekst med felt \"tittel\"", (skjema) => {
+    const resultat = skjema.safeParse({
+      sporsmal,
+      endringer: [{ type: "settTekst", erfaring: "E1", felt: "tittel", tekst: "t" }],
+    });
+    expect(resultat.success).toBe(false);
+    expect(resultat.error?.issues[0]?.path).toEqual(["endringer", 0, "felt"]);
   });
 });
 
