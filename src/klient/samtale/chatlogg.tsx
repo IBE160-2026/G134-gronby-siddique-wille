@@ -25,15 +25,15 @@ type ChatloggProps = {
  * assistentmeldinger og skriveindikatoren (EXPERIENCE.md Accessibility Floor,
  * story 1.15). Studentens egen melding leses ikke opp på nytt, og rullelisten
  * selv er ikke live.
+ *
+ * Kontrakt for forelderen: meldinger som finnes når Chatlogg mountes (f.eks.
+ * når studenten kommer tilbake til Samtale), kunngjøres ikke. Mount derfor
+ * Chatlogg før åpningsspørsmålet kommer, så det leses opp.
  */
 export function Chatlogg({ meldinger, venter, className }: ChatloggProps) {
   const ref = useRef<HTMLDivElement>(null);
   const stodNederst = useRef(true);
-  // Meldinger som finnes ved første visning (f.eks. når studenten kommer
-  // tilbake til Samtale), kunngjøres ikke.
-  const [forsteSisteId] = useState(() => meldinger.at(-1)?.id);
-  const siste = meldinger.at(-1);
-  const nyttSvar = siste?.rolle === "assistent" && siste.id !== forsteSisteId ? siste : undefined;
+  const kunngjoring = useKunngjoring(meldinger, venter);
 
   function oppdaterPosisjon() {
     const el = ref.current;
@@ -80,16 +80,37 @@ export function Chatlogg({ meldinger, venter, className }: ChatloggProps) {
         {venter && <Skriveindikator />}
       </div>
       {/* Regionen står alltid i DOM-en, så innhold som settes inn kunngjøres.
-        Bare den nyeste meldingen er assistentens når svaret nettopp kom, så et
-        feilet kall (venter blir usann uten svar) leser ikke opp forrige svar
-        igjen. key = meldings-ID: to like tekster etter hverandre leses begge. */}
+        key = meldings-ID: to like tekster etter hverandre leses begge. */}
       <div aria-live="polite" className="sr-only">
         {venter ? (
           <p key="skriver">{SKRIVER_TEKST}</p>
         ) : (
-          nyttSvar && <p key={nyttSvar.id}>Erfaringsgruven: {nyttSvar.tekst}</p>
+          kunngjoring.map((melding) => <p key={melding.id}>Erfaringsgruven: {melding.tekst}</p>)
         )}
       </div>
     </>
   );
+}
+
+/**
+ * Assistentmeldingene live-regionen skal lese opp: de som er lagt til siden
+ * forrige render. Studentens meldinger endrer ikke kunngjøringen. Når et nytt
+ * modellkall starter (`venter` blir sann), tømmes den, så et feilet kall ikke
+ * leser opp forrige svar igjen. Meldinger som finnes ved mount, kunngjøres ikke.
+ */
+function useKunngjoring(meldinger: readonly Melding[], venter: boolean): readonly Melding[] {
+  const [forrige, setForrige] = useState({ meldinger, venter });
+  const [kunngjoring, setKunngjoring] = useState<readonly Melding[]>([]);
+
+  // Justert under render (React: «Adjusting some state when a prop changes»),
+  // så kunngjøringen står i DOM-en i samme commit som meldingen.
+  if (meldinger !== forrige.meldinger || venter !== forrige.venter) {
+    const kjente = new Set(forrige.meldinger.map((m) => m.id));
+    const nye = meldinger.filter((m) => m.rolle === "assistent" && !kjente.has(m.id));
+    setForrige({ meldinger, venter });
+    if (nye.length > 0) setKunngjoring(nye);
+    else if (venter && !forrige.venter) setKunngjoring([]);
+  }
+
+  return kunngjoring;
 }

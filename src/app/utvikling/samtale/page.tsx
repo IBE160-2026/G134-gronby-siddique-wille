@@ -11,5 +11,7 @@ import { Forhandsvisning } from "./forhandsvisning";
 export default async function UtviklingSamtale({ searchParams }: PageProps<"/utvikling/samtale">) {
   if (process.env.NODE_ENV === "production") notFound();
   const { steg } = await searchParams;
-  return <Forhandsvisning lengst={erSteg(steg) ? steg : "samtale"} />;
+  const lengst = erSteg(steg) ? steg : "samtale";
+  // key: et nytt ?steg uten full innlasting starter visningen på nytt.
+  return <Forhandsvisning key={lengst} lengst={lengst} />;
 }

@@ -26,13 +26,15 @@ export function Stegindikator({ aktivt, fullforte, onVelg, className }: Stegindi
   const valgt = useRef<Steg | null>(null);
 
   // Knappen studenten trykket på, blir til det aktive steget og forsvinner.
-  // Flytt fokus til det aktive steget, så det ikke faller til <body>. Bare når
-  // nettopp det valgte steget ble aktivt, så andre stegbytter ikke tar fokus.
+  // Flytt fokus til det aktive steget, så det ikke faller til <body>. Kjører
+  // etter hver render og tømmer valget, så et valg forelderen ikke fulgte opp
+  // (ingen stegbytte i samme oppdatering) ikke tar fokus ved et senere bytte.
+  // Forutsetter at skallet står mountet over stegbyttet (felles layout).
   useLayoutEffect(() => {
     const forrige = valgt.current;
     valgt.current = null;
-    if (forrige === aktivt) aktivtRef.current?.focus();
-  }, [aktivt]);
+    if (forrige !== null && forrige === aktivt) aktivtRef.current?.focus();
+  });
 
   return (
     <nav aria-label="Steg" className={className}>

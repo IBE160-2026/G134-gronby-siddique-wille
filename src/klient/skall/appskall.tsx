@@ -1,3 +1,5 @@
+"use client";
+
 import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -20,6 +22,13 @@ type AppskallProps = {
  * toppfelt med navnet til venstre, stegindikatoren og «Ny økt» til høyre, og
  * flatens innhold i `<main>`. DOM-rekkefølgen er lik den visuelle, så `Tab`
  * følger leserekkefølgen.
+ *
+ * Kontrakt for forelderen:
+ * - Skallet returnerer `<header>` og `<main>` uten egen beholder. Forelderen er
+ *   en `flex flex-col`-beholder; `<main>` fyller resten (`flex-1 min-h-0`). Gi
+ *   forelderen fast høyde (`h-dvh`) når flaten ruller internt, som Samtale.
+ * - Legg skallet i en felles layout som står over stegbyttene, ikke i hver
+ *   side. Ellers remountes det, og fokus etter stegvalg går tapt (CAP-4).
  */
 export function Appskall({
   aktivt,
