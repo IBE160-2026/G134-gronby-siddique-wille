@@ -42,7 +42,7 @@ development_status:
   1-4-api-kontrakt-zod-skjema-og-statusrute: backlog
   1-5-modelladapter-grensesnitt-og-konfigurasjon: backlog
   1-6-startside-med-personvernstekst-og-øktstart: backlog
-  1-7-samtale-ui-chatboble-chatinput-og-skriveindikator: in-progress
+  1-7-samtale-ui-chatboble-chatinput-og-skriveindikator: review
   1-8-samtalerute-som-stiller-og-mottar-oppfølgingsspørsmål: backlog
   1-9-erfaringskort-r-h-r-brikker-og-fanget-logikk: backlog
   1-10-terskelregler-for-oppfølgingsspørsmål: backlog
