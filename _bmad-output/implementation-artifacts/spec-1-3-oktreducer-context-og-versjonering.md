@@ -88,6 +88,7 @@ context:
 - Vite skriver en advarsel om at `vitest.config.ts` lastes som CommonJS (`configLoader: 'native'`). Den er ufarlig; filnavnet følger spec-en.
 
 - Etter review: `leggTilRettelse` og `slettErfaring` kjører `nullstill(…, 'erfaringEndret')` når de faktisk endrer noe, og `settKrav` tømmer bevistabellen. Dermed øker `versjon` ved rettelse og sletting, og svar som er underveis forkastes. Story 1.8 og 1.12 må sende forespørsler med versjonen *etter* slike handlinger. `leggTilSvar` øker ikke versjonen; «fortsett samtalen» dispatcher `nullstill` med `samtaleFortsatt` eksplisitt.
+- Kodegjennomgang: `vitest.config.ts` heter nå `vitest.config.mts` (fjerner CommonJS-advarselen), og `settKrav` forkastes når `krav` allerede er satt.
 - Tester av modulgrensene (`tests/oppsett/eslint-grenser.test.ts`) og av provider/hooks (`tests/klient/okt/kontekst.test.tsx`, `renderToString` i node-miljø) er lagt til.
 
 ## Spec Change Log
@@ -129,3 +130,27 @@ Typene ligger i `kjerne/okt.ts`, ikke i `klient/okt/`, fordi senere kjernefunksj
 - `npm run lint` -- expected: ingen feil
 - `npm run build` -- expected: bygger uten feil
 - midlertidig `import "@/klient/okt/reducer"` i en `src/kjerne`-fil, `npm run lint` -- expected: feil fra `no-restricted-imports`; fjern importen etterpå
+
+### Review Findings
+
+Kodegjennomgang 2026-11-24 av story 1.3 (`d9c8f1f..7ff5d92`, uten `package-lock.json`). Lag: Blind Hunter (11), Edge Case Hunter (9), Verification Gap (3), Acceptance Auditor (6, ingen AC brutt). 29 rå funn, 6 patch, 3 defer, resten avvist.
+
+- [x] [Review][Patch] Et dobbelt `settKrav` på samme versjon ga nye K-ID-er uten at versjonen økte, så en `/api/bevis`-forespørsel underveis kunne peke på K-ID-er som ikke finnes lenger. Nå forkastes `settKrav` når `krav` allerede er satt [src/klient/okt/reducer.ts:142]
+- [x] [Review][Patch] `kjerne` kunne importere Node-moduler for I/O (`node:*`, `fs`, `path`, `child_process`) [eslint.config.mjs:22]
+- [x] [Review][Patch] Relative importer gjennom `src/` (`../../src/klient/…`) gikk forbi modulgrensene [eslint.config.mjs:18]
+- [x] [Review][Patch] Grensetestene dekket ikke `react-dom`, `next/…`, `server-only`, Node-moduler eller relativ `server`-import fra `klient` [tests/oppsett/eslint-grenser.test.ts:14]
+- [x] [Review][Patch] `settAnnonse`- og `annonseEndret`-testene startet med en bevistabell som allerede var tom, så det var trivielt at den ble tømt [tests/klient/okt/reducer.test.ts:301]
+- [x] [Review][Patch] Vite advarte på hver testkjøring om at `vitest.config.ts` ble lastet som CommonJS. Fila heter nå `vitest.config.mts` [vitest.config.mts:1]
+- [x] [Review][Defer] Ingen automatisk nullstilling når samtalen fortsetter (`leggTilSvar`, `opprettErfaring`) [src/klient/okt/reducer.ts:62] — deferred: en automatisk versjonsøkning midt i et samtalesvar ville forkastet spørsmålet. UI-et for «Fortsett samtalen» må dispatche `nullstill('samtaleFortsatt')` eksplisitt.
+- [x] [Review][Defer] `opprettErfaring` har ingen `versjon` [src/klient/okt/reducer.ts:27] — deferred: ingen asynkron kaller ennå. Story 1.8 må lage én samlet, versjonert handling for samtalesvaret.
+- [x] [Review][Defer] Ingen test viser at en dispatch gjennom `OktProvider` faktisk endrer `useOkt()` [tests/klient/okt/kontekst.test.tsx:1] — deferred: krever et DOM-testmiljø (jsdom/happy-dom); innføres med første komponent som dispatcher (1.6/1.7).
+
+**Rejected:**
+- Spec-bokføring (status `done` mot `review`, `include`-tekst i Tasks, tom Spec Change Log, ekstra ESLint-mønstre er ikke loggført) — rettelsen er å endre specen. Status synkes i dette steget.
+- Lockfila mangler i diffen — false: den ble utelatt fra review-diffen med vilje og er committet i `a72fc4d`.
+- `deferred-work.md` viser lukkede punkter som åpne — false som kodefeil; punktene lukkes i fila i dette steget.
+- Rettelse av tittel tømmer bevistabellen — false: AD-14 skiller ikke mellom felt, og tittelen er en del av erfaringen koblingen bruker (AD-8).
+- Samme `leggTilSporsmal` dispatchet to ganger — low: forutsetter en feil i klientkoden; rettelsen krever forespørsels-ID.
+- `felt` utenfor unionen ved kjøretid — false: alle kallere er typet; ingen vei dit.
+- `settAnnonse` med tekst som bare skiller seg i mellomrom — low: annonsen sendes bare ved «Finn krav», og da vil studenten ha nye krav.
+- `klient/<undermappe>/../server` gir falsk treff — low: usannsynlig mappenavn; rettelsen krever en ny ESLint-plugin.

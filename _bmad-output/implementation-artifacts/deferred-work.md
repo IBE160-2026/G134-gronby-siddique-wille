@@ -22,3 +22,20 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-1-2-prosjektgrunnlag-nextjs-shadcn.md`
   summary: Håndhev modulgrensene (`kjerne` importerer aldri `app`/`klient`/`server`, `klient` aldri `server`, `server/` importerer `server-only`) med `no-restricted-imports` og pakken `server-only`.
   evidence: Regelen står i epic-konteksten, men verken ESLint eller pakker håndhever den; mappene er tomme, så det er billigst å innføre når story 1.3–1.5 legger inn kode.
+
+## Lukket av story 1.3 (2026-11-24)
+
+- Modulgrensene for `kjerne` og `klient` håndheves nå med `no-restricted-imports` og testes i `tests/oppsett/eslint-grenser.test.ts`. `server-only` for `src/server/` gjenstår til story 1.5.
+- `dev`/`start` sin `-H 127.0.0.1` testes i `tests/oppsett/package.test.ts`.
+
+## Deferred from: code review of spec-1-3-oktreducer-context-og-versjonering (2026-11-24)
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-1-3-oktreducer-context-og-versjonering.md`
+  summary: UI-et for «Fortsett samtalen» må dispatche `nullstill('samtaleFortsatt')` eksplisitt, ellers blir bevistabellen stående etter nye svar og erfaringer.
+  evidence: Reduceren nullstiller ikke automatisk ved `leggTilSvar`/`opprettErfaring`, fordi en versjonsøkning midt i et samtalesvar ville forkastet spørsmålet.
+- source_spec: `_bmad-output/implementation-artifacts/spec-1-3-oktreducer-context-og-versjonering.md`
+  summary: Story 1.8 må legge samtalesvaret (spørsmål + endringer + nye erfaringer) inn som én versjonert handling, ikke som løse `opprettErfaring`-dispatcher. Forespørsler må sendes med versjonen etter rettelse eller sletting.
+  evidence: `opprettErfaring` har ingen `versjon`; i dag finnes ingen asynkron kaller.
+- source_spec: `_bmad-output/implementation-artifacts/spec-1-3-oktreducer-context-og-versjonering.md`
+  summary: Legg til en DOM-test (jsdom/happy-dom) som viser at en dispatch gjennom `OktProvider` oppdaterer `useOkt()`.
+  evidence: `renderToString` kan ikke rendre på nytt etter en dispatch; en provider koblet til feil reducer ville bestått dagens tester.
