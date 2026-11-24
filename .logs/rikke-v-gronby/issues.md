@@ -22,4 +22,8 @@
 - [ ] 2026-11-24 [story-1-3-oktreducer](996-2026-11-24-22-07-18-story-1-3-oktreducer.md) — UI-et for «Fortsett samtalen» må dispatche `nullstill('samtaleFortsatt')` eksplisitt
 - [ ] 2026-11-24 [story-1-3-oktreducer](996-2026-11-24-22-07-18-story-1-3-oktreducer.md) — Story 1.8: samtalesvaret som én versjonert handling; forespørsler sendes med versjonen etter rettelse/sletting
 - [ ] 2026-11-24 [story-1-3-oktreducer](996-2026-11-24-22-07-18-story-1-3-oktreducer.md) — DOM-test av dispatch gjennom `OktProvider` ved første komponent som dispatcher (1.6/1.7)
-- [ ] 2026-11-24 [story-1-3-oktreducer](996-2026-11-24-22-07-18-story-1-3-oktreducer.md) — `server-only` i alle `src/server/`-moduler (story 1.5)
+- [x] 2026-11-24 [story-1-3-oktreducer](996-2026-11-24-22-07-18-story-1-3-oktreducer.md) — `server-only` i alle `src/server/`-moduler (story 1.5) (løst 2026-11-24: håndheves av tests/oppsett/server-only.test.ts i story 1.4)
+- [ ] 2026-11-24 [story-1-4-api-kontrakt](995-2026-11-24-22-35-05-story-1-4-api-kontrakt.md) — Klienten må holde seg innenfor forespørselsgrensene (chatinput `maxLength` i 1.7, full logg og `MAKS_ERFARINGER` i 1.8/1.10)
+- [ ] 2026-11-24 [story-1-4-api-kontrakt](995-2026-11-24-22-35-05-story-1-4-api-kontrakt.md) — Story 1.8: gjør `sporsmal.gjelder: { ny }` om til den nye `E`-ID-en før spørsmålet legges i loggen (AD-13)
+- [ ] 2026-11-24 [story-1-4-api-kontrakt](995-2026-11-24-22-35-05-story-1-4-api-kontrakt.md) — Sjekk de foreløpige grenseverdiene i `regler.ts` og feilmeldingene i `FEILKODER` mot testsett A
+- [ ] 2026-11-24 [story-1-4-api-kontrakt](995-2026-11-24-22-35-05-story-1-4-api-kontrakt.md) — Stram inn `harDemodata` til en liste over påkrevde demofiler (1.13/5.1)
