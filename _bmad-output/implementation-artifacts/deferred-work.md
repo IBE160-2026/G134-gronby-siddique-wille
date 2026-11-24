@@ -31,3 +31,12 @@
 - source_spec: `_bmad-output/specs/spec-1-16-merkevaretema/SPEC.md`
   summary: Bevisst avvik, ingen handling. Mockupen `mockups/samtale.html` viser chatteksten i Inter, mens `chat-body` er Source Serif 4 i DESIGN.md og i koden.
   evidence: Blind Hunter og Acceptance Auditor. Victoria valgte serif (som i story-AC), og DESIGN.md-tokenet fikk `fontFamily: 'Source Serif 4'` 2026-11-24. Mockupen endres ikke, fordi spines vinner ved konflikt.
+
+## Deferred from: code review of spec-1-7-samtale-ui (2026-11-24)
+
+- source_spec: `_bmad-output/specs/spec-1-7-samtale-ui/SPEC.md`
+  summary: Bevisst valg som story 1.15 avgjør endelig. Hele chatloggen er én `aria-live="polite"`-region, så skjermleseren leser også studentens egen melding («Du: …») rett etter sending. Alternativet er en egen skjult live-region som bare kunngjør assistentmeldinger og skriveindikatoren.
+  evidence: Blind Hunter. EXPERIENCE.md sier at regionen finnes «slik at nye assistentmeldinger leses opp», og akseptkriteriet i story 1.15 gjelder nye assistentsvar. Victoria valgte én region nå, og at 1.15 avgjør.
+- source_spec: `_bmad-output/specs/spec-1-7-samtale-ui/SPEC.md`
+  summary: Ingen automatiske tester for samtalekomponentene: Chatinput (Enter/Shift+Enter, IME, trim, låst mot dobbel sending), autoscroll i Chatlogg (trenger ekte layout, altså nettlesertest) og 404-vakten på `/utvikling/samtale`. Legg dem til senest med story 1.8, og fjern utviklingssiden da.
+  evidence: Verification Gap. Repoet har ingen testkjører, og specen har tester som ikke-mål. Atferden ble verifisert manuelt i Chrome med et midlertidig playwright-core-script.

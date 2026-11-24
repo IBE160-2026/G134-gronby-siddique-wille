@@ -35,13 +35,15 @@ Visjon og krav: samtalen skal kjennes som en prat med en rolig veileder, ikke so
 - Komponentene importerer ingenting fra `klient/okt`, `kjerne` eller API-rutene. Data og hendelser kommer som props (`meldinger`, `venter`, `verdi`, `onEndre`, `onSend`), så story 1.3/1.8 kan koble dem til reduceren uten å endre dem.
 - Meldingsformen er en lokal visningstype `{ id, rolle: "assistent" | "student", tekst }`. Adapteren fra loggoppføringer (`sporsmal` → assistent, `svar` → student, `rettelse` vises ikke) lages når reduceren finnes.
 - Chatinput er kontrollert (`verdi`/`onEndre`). Forelderen eier utkastet og tømmer det først når svaret er tatt imot, så teksten kan bevares ved API-feil.
-- Låst betyr `readOnly` og `aria-disabled` på feltet og `disabled` på Send-knappen, ikke `disabled` på feltet, så fokus blir stående mens assistenten svarer.
+- Låst betyr `readOnly` og `aria-disabled` på feltet og `disabled` på Send-knappen, ikke `disabled` på feltet, så fokus blir stående mens assistenten svarer. Etter sending flyttes fokus tilbake til feltet, også når studenten klikket Send.
 - shadcn `Textarea` legges til med shadcn-CLI og brukes uendret. Merkevaren gis via `className`: `rounded-sm` (DESIGN.md: `rounded.sm` på input) og `type-chat-body`.
-- Vekst til 6 linjer bruker `field-sizing: content` (fra shadcn) og `max-height` = 6 × linjehøyde + padding, med en JS-reserve som måler `scrollHeight` når `CSS.supports("field-sizing", "content")` er usann.
+- Feltet starter på 48px (`min-h-12`, som i mockupen). Vekst til 6 linjer bruker `field-sizing: content` (fra shadcn) og `max-height` = 6 × linjehøyde + padding, med en JS-reserve som måler `scrollHeight` når `CSS.supports("field-sizing", "content")` er usann.
 - `Enter` sender ikke mens en IME-komposisjon pågår (`isComposing` / `keyCode 229`).
 - Meldingstekst rendres som ren tekst: ingen HTML, ingen markdown, ingen `dangerouslySetInnerHTML`.
 - Hver boble har en skjult avsender for skjermleser («Erfaringsgruven:» / «Du:»), fordi plassering og farge alene ikke sier hvem som snakker (WCAG 1.3.1).
 - Skriveindikatoren ligger inne i loggregionen, så skjermleser kunngjør den. Statisk tekst, ingen animasjon.
+- Hele loggen er én live-region, så også studentens egen melding leses opp. Det er et bevisst valg nå. Story 1.15 avgjør den endelige løsningen.
+- Loggen holdes nederst også når den krymper uten scroll-hendelse (skrivefeltet vokser, vinduet endres), og den kan få fokus (`tabIndex={0}`), så den kan rulles med tastatur.
 - Send-knappen er shadcn `Button` (primær) med teksten «Send». Plassholder «Skriv svaret ditt …», `aria-label` «Ditt svar».
 
 ## Non-goals
