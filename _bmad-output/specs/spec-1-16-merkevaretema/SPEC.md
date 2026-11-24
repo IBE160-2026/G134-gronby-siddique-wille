@@ -29,8 +29,8 @@ Visjon og krav: appen bruker shadcn-standarden (kalde gråtoner, Geist, mørkt t
   - **intent:** Det mørke temaet fra `shadcn init` er borte, og `dark:`-klasser i shadcn-komponenter slår aldri inn, heller ikke når operativsystemet er i mørk modus.
   - **success:** Bygd CSS har ingen `.dark`-regler og ingen `prefers-color-scheme: dark`-regler, og `:root` har `color-scheme: light`.
 - **CAP-5** Kontrastverifisering
-  - **intent:** Kontrasten i de seks fargeparene fra DESIGN.md sjekkes automatisk mot verdiene i `globals.css`.
-  - **success:** `npm run kontrast` skriver forholdstallet for hvert par og avslutter med feilkode hvis ett par er under målet: `foreground`/`background` ≥7:1, `primary-foreground`/`primary`, `covered-foreground`/`covered`, `gap-foreground`/`gap`, `muted-foreground`/`background` og `muted-foreground`/`muted` ≥4,5:1.
+  - **intent:** Kontrasten i de seks fargeparene fra DESIGN.md, og i tekstparene komponentene bruker, sjekkes automatisk mot verdiene i `globals.css` hver gang appen bygges.
+  - **success:** `npm run kontrast` (som også kjøres før `npm run build`) skriver forholdstallet for hvert par og avslutter med feilkode hvis ett par er under målet: `foreground`/`background` ≥7:1, `primary-foreground`/`primary`, `covered-foreground`/`covered`, `gap-foreground`/`gap`, `muted-foreground`/`background` og `muted-foreground`/`muted` ≥4,5:1, og `card-foreground`/`card`, `foreground`/`muted`, `muted-foreground`/`card`, `primary`/`background` og `primary`/`card` ≥4,5:1. Den feiler også hvis en sjekket farge mangler `--color-<navn>: var(--<navn>)` i `@theme inline`.
 
 ## Constraints
 
@@ -41,6 +41,7 @@ Visjon og krav: appen bruker shadcn-standarden (kalde gråtoner, Geist, mørkt t
 - Serif brukes bare i de fire rollene. `--font-heading` peker til sans, fordi shadcn bruker `font-heading` på titler.
 - Kontrastsjekken legger ikke til avhengigheter. Den er et rent Node-script, siden Vitest kommer i en senere story.
 - Primærknappen har `rounded-md` (10px), som DESIGN.md sier. Ellers er `button.tsx` uendret.
+- `rounded-xl` og større avledes fra shadcn-standarden `--radius`, som er uendret. Bare sm, md og lg settes direkte.
 
 ## Non-goals
 
@@ -58,7 +59,3 @@ Visjon og krav: appen bruker shadcn-standarden (kalde gråtoner, Geist, mørkt t
 - Placeholder-siden tar i bruk `type-display` og `muted-foreground` for å vise temaet. Ingen nye flater lages.
 - `type-quote` setter ikke kursiv. Kursiven hører til komponenten `evidence-quote` (story 3.3).
 - Kanter og flater med lav kontrast med vilje (`gap-border` mot `gap`, studentboble, tom brikke) er ikke med i kontrastsjekken, slik DESIGN.md sier.
-
-## Open Questions
-
-- DESIGN.md-tokenet `chat-body` og mockupen `samtale.html` mangler Source Serif 4, mens story-AC og DESIGN.md-prosaen har den. Victoria valgte Source Serif 4. Skal tokenet og mockupen i DESIGN.md rettes, slik at kildene stemmer?

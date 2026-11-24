@@ -3,7 +3,7 @@ name: Erfaringsgruven
 description: Samtalebasert verktøy som hjelper studenter finne egen erfaring og koble den, krav for krav, til en stillingsannonse. shadcn/ui + Tailwind; denne DESIGN.md beskriver bare merkevarelaget som legges oppå.
 status: final
 created: 2026-11-04
-updated: 2026-11-04
+updated: 2026-11-24
 sources:
   - docs/prds/prd-G134-gronby-siddique-wille-2026-11-02/prd.md
   - docs/prds/prd-G134-gronby-siddique-wille-2026-11-02/addendum.md
@@ -49,6 +49,7 @@ typography:
     fontWeight: '400'
     lineHeight: '1.5'
   chat-body:
+    fontFamily: 'Source Serif 4'
     fontSize: 16px
     fontWeight: '400'
     lineHeight: '1.6'
