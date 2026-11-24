@@ -7,10 +7,12 @@
   },
   "scripts": {
     "dev": "next dev -H 127.0.0.1",
+    "prebuild": "npm run kontrast",
     "build": "next build",
     "start": "next start -H 127.0.0.1",
     "lint": "eslint",
-    "test": "vitest run"
+    "test": "vitest run",
+    "kontrast": "node scripts/kontrast.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
