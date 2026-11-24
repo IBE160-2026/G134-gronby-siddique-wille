@@ -38,6 +38,35 @@ describe("modulgrenser i ESLint", () => {
     },
   );
 
+  it.each([
+    "src/klient/okt/sjekk.ts",
+    "src/app/sjekk.tsx",
+    "src/app/api/status/route.ts",
+    "src/server/sjekk.ts",
+    "src/components/sjekk.tsx",
+    "src/lib/sjekk.ts",
+    "src/kjerne/okt.ts",
+  ])("%s kan ikke importere zod", async (fil) => {
+    expect(await begrensedeImporter(`import { z } from "zod";\n`, fil)).toBe(1);
+    expect(await begrensedeImporter(`import "zod/mini";\n`, fil)).toBe(1);
+  });
+
+  it("src/kjerne/skjema.ts kan importere zod, men har fortsatt kjernegrensene", async () => {
+    expect(
+      await begrensedeImporter(`import { z } from "zod";\n`, "src/kjerne/skjema.ts"),
+    ).toBe(0);
+    expect(
+      await begrensedeImporter(`import "@/klient/okt/reducer";\n`, "src/kjerne/skjema.ts"),
+    ).toBe(1);
+    expect(await begrensedeImporter(`import "node:fs";\n`, "src/kjerne/skjema.ts")).toBe(1);
+  });
+
+  it("src/klient kan fortsatt ikke importere server", async () => {
+    expect(
+      await begrensedeImporter(`import "@/server/status";\n`, "src/klient/okt/sjekk.ts"),
+    ).toBe(1);
+  });
+
   it("src/kjerne kan importere ./okt", async () => {
     expect(await begrensedeImporter(`import "./okt";\n`, "src/kjerne/sjekk.ts")).toBe(0);
   });
