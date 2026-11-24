@@ -73,8 +73,9 @@ Andre kommandoer:
 | Kommando | Hva den gjør |
 |---|---|
 | `npm run lint` | Sjekker koden med ESLint |
-| `npm run build` | Lager et produksjonsbygg og sjekker TypeScript |
+| `npm run build` | Kjører kontrastsjekken, lager et produksjonsbygg og sjekker TypeScript |
 | `npm start` | Kjører produksjonsbygget på `127.0.0.1` (etter `npm run build`) |
+| `npm run kontrast` | Sjekker at fargeparene i temaet oppfyller WCAG 2.2 AA-kontrast |
 
 ### Demomodus uten API-nøkkel
 
