@@ -53,10 +53,11 @@
   --color-gap-foreground: var(--gap-foreground);
   --color-gap-border: var(--gap-border);
   --color-quote-mark: var(--quote-mark);
-  /* rounded (DESIGN.md): sm 6px, md 10px, lg 14px; full er Tailwinds egen. */
+  /* rounded (DESIGN.md): sm 6px, md 10px, lg 14px; full er Tailwinds egen.
+     xl og større avledes fra shadcn-standarden --radius, som er uendret. */
   --radius-sm: 6px;
   --radius-md: 10px;
-  --radius-lg: var(--radius);
+  --radius-lg: 14px;
   --radius-xl: calc(var(--radius) * 1.4);
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
@@ -141,7 +142,7 @@
   --chart-3: oklch(0.439 0 0);
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
-  --radius: 14px;
+  --radius: 0.625rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
