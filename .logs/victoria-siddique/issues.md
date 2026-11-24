@@ -10,3 +10,7 @@
 - [ ] 2026-11-12 [ux-personvern-og-mikrotekst](998-2026-11-12-13-20-00-ux-personvern-og-mikrotekst.md) — Story 1.6 i epics.md må få avkrysningen og teksten fra «Fast mikrotekst»
 - [ ] 2026-11-24 [story-1-16-merkevaretema](997-2026-11-24-21-10-58-story-1-16-merkevaretema.md) — Fokusringen (arvet `--ring`) har 2,44:1 (1,50:1 med `/50`) mot bakgrunnen, mens WCAG 1.4.11 krever 3:1; gruppen bestemmer
 - [ ] 2026-11-24 [story-1-16-merkevaretema](997-2026-11-24-21-10-58-story-1-16-merkevaretema.md) — Gi Rikke beskjed om at hennes punkt «Fjern mørkt tema … i story 1.16» kan lukkes (løst i 24dea10)
+- [ ] 2026-11-24 [story-1-7-samtale-ui](996-2026-11-24-21-38-00-story-1-7-samtale-ui.md) — Chatloggen er én live-region, så studentens egen melding leses opp; story 1.15 avgjør endelig løsning
+- [ ] 2026-11-24 [story-1-7-samtale-ui](996-2026-11-24-21-38-00-story-1-7-samtale-ui.md) — Automatiske tester for Chatinput, autoscroll i Chatlogg og 404-vakten, senest med story 1.8
+- [ ] 2026-11-24 [story-1-7-samtale-ui](996-2026-11-24-21-38-00-story-1-7-samtale-ui.md) — Fjern `/utvikling/samtale` når samtaleruten (1.8) kobler komponentene til reduceren
+- [ ] 2026-11-24 [story-1-7-samtale-ui](996-2026-11-24-21-38-00-story-1-7-samtale-ui.md) — Adapter fra loggoppføringer til `Melding` når reduceren (1.3) finnes; gi Rikke beskjed om props-kontrakten
