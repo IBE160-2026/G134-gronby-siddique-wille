@@ -135,3 +135,33 @@ BevisSvar = { bevistabell: BevistabellRad[] };  DemoManusSvar = { svar: string[]
 - `npm run lint` -- expected: ingen feil
 - `npm run build` -- expected: bygger, `/api/status` er dynamisk (ƒ)
 - `npm run dev` + `curl -s http://127.0.0.1:3000/api/status` -- expected: `{"harNokkel":…,"harDemodata":false}`
+
+### Review Findings
+
+Kodegjennomgang 2026-11-24 av story 1.4 (`b5c8679..656a4ac`, uten `package-lock.json`). Lag:
+- Blind Hunter: 13 funn
+- Edge Case Hunter: 9 funn
+- Verification Gap: ingen hull, 2 andre funn
+- Acceptance Auditor: 3 funn, ingen AC brutt
+
+27 rå funn: 6 patcher, 2 utsatt, 11 avvist.
+
+- [x] [Review][Patch] Svarskjemaene for rutene var bare aliaser for modellskjemaene og hadde ingen grenser. Modellsvar over grensene ville havnet i klienttilstanden og gjort alle senere forespørsler ugyldige. Svarskjemaene defineres nå for seg, med grensene fra forespørslene [src/kjerne/skjema.ts]
+- [x] [Review][Patch] `DEMO_MAPPE` ble regnet ut fra `process.cwd()` når modulen lastes. Den regnes nå ut ved kall [src/server/status.ts:9]
+- [x] [Review][Patch] Rutetesten endret `cwd` og importerte på toppnivå. Oppsettet er flyttet til `beforeAll` [tests/app/api/status.test.ts:10]
+- [x] [Review][Patch] server-only-testen hoppet over `.jsx`/`.cjs`/`.mts`/`.cts` og ville krevd `server-only` i `.d.ts`-filer [tests/oppsett/server-only.test.ts:862]
+- [x] [Review][Patch] `MAKS_ID_TEGN` lå i `skjema.ts` i stedet for i `regler.ts` (AD-15) [src/kjerne/skjema.ts:33]
+- [x] [Review][Patch] Det manglet avvisningstester for `gjelder` uten prefiks, ukjent `felt` i `rettelse`, `tittel`/`slettedeErfaringer` over grensen, `versjon` som ikke er et heltall, og ugyldig `felt` i `Endring` [tests/kjerne/skjema.test.ts]
+- [x] [Review][Defer] Klienten følger ikke grensene i forespørslene [src/klient/okt/reducer.ts] — deferred: et svar over `MAKS_TEKST_TEGN`, eller den 301. loggoppføringen, gjør at alle senere forespørsler avvises. Chatinput (1.7) må ha `maxLength`, og 1.8/1.10 må håndtere en full logg og `MAKS_ERFARINGER` før forespørselen sendes.
+- [x] [Review][Defer] Ingen steg gjør `sporsmal.gjelder: { ny }` om til en `E`-ID i loggen [src/klient/okt/reducer.ts:48] — deferred: AD-13 legger dette til `brukEndringer()` i 1.8. I dag lagrer `leggTilSporsmal` `null` for alt som ikke er en aktiv erfaring, så loggen blir ikke ugyldig, men koblingen går tapt til 1.8 er på plass.
+
+**Rejected:**
+- Like ID-er i `kilder`/`slettedeErfaringer` (EC5) — low: reduceren lager ikke duplikater. Rettelsen er en `refine`-vakt.
+- `._*.json` eller ugyldig JSON i demomappen (EC6) — low: fixtures committes via git. Innholdet valideres av demo-rutene i 1.13.
+- server-only-testen sjekker ikke at importen er først (BH10) — low: en konvensjonssjekk. Rettelsen krever en parser.
+- Spec `done` mens sprint-status står på `review`; `review_loop_iteration: 0` (AA1/BH1) — false: bmad-build setter `done`/`review` per arbeidsflyten, og denne gjennomgangen avslutter med `done`. Det var ingen loopback, så telleren skal stå på 0.
+- `FeilSvar.melding` er ikke knyttet til koden (AA3/BH11) — low: allerede vurdert som BH2 i triageloggen. Ingen rute lager feilsvar ennå.
+- Specen beskriver `ErfaringRef` som `ErfaringId | { ny }` (BH2) — rettelsen er å endre specen.
+- Verifiseringen forventer `harDemodata: false` (BH9) — rettelsen er å endre specen. Den stemmer til 1.13.
+- zod-forbudet gjelder bare `src/` (BH12) — false: specen sier «resten av `src/`», og det finnes ingen kode utenfor `src/` som bruker skjemaene.
+- Lockfila kunne ikke sjekkes (BH13) — false: `package-lock.json` låser `zod` 4.6.7 og `server-only` 0.0.1.
