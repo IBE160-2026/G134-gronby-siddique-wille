@@ -142,13 +142,16 @@ export function oktReducer(okt: Okt, handling: Handling): Okt {
 
     case "settKrav": {
       if (handling.versjon !== okt.versjon) return okt;
+      // Krav settes én gang per versjon. Et dobbelt svar (f.eks. dobbeltklikk)
+      // forkastes, så K-ID-ene og en bevistabell underveis ikke blir utdatert.
+      // Ny uttrekking krever nullstilling (`annonseEndret`), som setter krav til null.
+      if (okt.krav !== null) return okt;
       let tellere = okt.tellere;
       const krav = handling.krav.map((k) => {
         const neste = nesteId(tellere, "K");
         tellere = neste.tellere;
         return { ...k, id: neste.id };
       });
-      // Nye K-ID-er gjør en eventuell bevistabell utdatert.
       return { ...okt, tellere, krav, bevistabell: null };
     }
 

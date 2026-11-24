@@ -18,16 +18,25 @@ describe("modulgrenser i ESLint", () => {
     "@/server/modell",
     "@/app/layout",
     "@/components/ui/button",
+    "../../src/klient/okt/reducer",
     "react",
+    "react-dom",
+    "next/font/google",
+    "server-only",
+    "node:fs",
+    "fs",
   ])("src/kjerne kan ikke importere %s", async (modul) => {
     expect(await begrensedeImporter(`import "${modul}";\n`, "src/kjerne/sjekk.ts")).toBe(1);
   });
 
-  it("src/klient kan ikke importere @/server", async () => {
-    expect(
-      await begrensedeImporter(`import "@/server/modell";\n`, "src/klient/okt/sjekk.ts"),
-    ).toBe(1);
-  });
+  it.each(["@/server/modell", "../../server/modell", "../../src/server/modell"])(
+    "src/klient kan ikke importere %s",
+    async (modul) => {
+      expect(
+        await begrensedeImporter(`import "${modul}";\n`, "src/klient/okt/sjekk.ts"),
+      ).toBe(1);
+    },
+  );
 
   it("src/kjerne kan importere ./okt", async () => {
     expect(await begrensedeImporter(`import "./okt";\n`, "src/kjerne/sjekk.ts")).toBe(0);

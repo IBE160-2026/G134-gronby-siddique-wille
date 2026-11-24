@@ -255,18 +255,28 @@ describe("oktReducer – versjon og sene svar", () => {
     expect(ny).toBe(okt);
   });
 
-  it("settKrav to ganger på samme versjon gir K3/K4 og tømmer bevistabellen", () => {
+  it("settKrav tømmer en gammel bevistabell", () => {
     const start: Okt = {
       ...tomOkt(2),
       bevistabell: [{ kravId: "K1", bevis: [], refleksjonsforslag: "Tenk på …" }],
     };
-    const okt = kjor(
-      start,
-      { type: "settKrav", versjon: 2, krav: [{ tekst: "A" }, { tekst: "B" }] },
-      { type: "settKrav", versjon: 2, krav: [{ tekst: "C" }, { tekst: "D" }] },
-    );
-    expect(okt.krav?.map((k) => k.id)).toEqual(["K3", "K4"]);
+    const okt = kjor(start, { type: "settKrav", versjon: 2, krav: [{ tekst: "A" }] });
     expect(okt.bevistabell).toBeNull();
+  });
+
+  it("et dobbelt settKrav på samme versjon forkastes", () => {
+    const okt = kjor(tomOkt(2), {
+      type: "settKrav",
+      versjon: 2,
+      krav: [{ tekst: "A" }, { tekst: "B" }],
+    });
+    const ny = oktReducer(okt, {
+      type: "settKrav",
+      versjon: 2,
+      krav: [{ tekst: "C" }, { tekst: "D" }],
+    });
+    expect(ny).toBe(okt);
+    expect(ny.krav?.map((k) => k.id)).toEqual(["K1", "K2"]);
   });
 
   it("krav etter nullstilling avvises hvis forespørselen kom fra før", () => {
@@ -289,7 +299,7 @@ describe("oktReducer – nullstilling og ny økt", () => {
   }
 
   it("nullstill annonseEndret tømmer krav og bevistabell, beholder annonsen", () => {
-    const okt = oktMedKrav();
+    const okt = medBevistabell(oktMedKrav());
     const ny = kjor(okt, { type: "nullstill", arsak: "annonseEndret" });
     expect(ny.krav).toBeNull();
     expect(ny.bevistabell).toBeNull();
@@ -299,10 +309,11 @@ describe("oktReducer – nullstilling og ny økt", () => {
   });
 
   it("settAnnonse med ny tekst nullstiller krav og øker versjon", () => {
-    const okt = oktMedKrav();
+    const okt = medBevistabell(oktMedKrav());
     const ny = kjor(okt, { type: "settAnnonse", tekst: "Annen annonse" });
     expect(ny.annonse).toBe("Annen annonse");
     expect(ny.krav).toBeNull();
+    expect(ny.bevistabell).toBeNull();
     expect(ny.versjon).toBe(okt.versjon + 1);
   });
 

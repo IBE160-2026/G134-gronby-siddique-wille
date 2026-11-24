@@ -15,14 +15,14 @@ const eslintConfig = defineConfig([
         {
           patterns: [
             {
-              regex: "^(@/|(\\.\\.?/)+)(app|klient|server|components)(/|$)",
+              regex: "^(@/|(\\.\\.?/)+(src/)?)(app|klient|server|components)(/|$)",
               message:
                 "src/kjerne er rene funksjoner og kan ikke importere app, klient, server eller components.",
             },
             {
-              regex: "^(react|react-dom|next|server-only)(/|$)",
+              regex: "^(react|react-dom|next|server-only|fs|path|child_process)(/|$)|^node:",
               message:
-                "src/kjerne er rene funksjoner og kan ikke importere React, Next.js eller server-only.",
+                "src/kjerne er rene funksjoner og kan ikke importere React, Next.js, server-only eller Node-moduler for I/O.",
             },
           ],
         },
@@ -38,7 +38,7 @@ const eslintConfig = defineConfig([
         {
           patterns: [
             {
-              regex: "^(@/|(\\.\\.?/)+)server(/|$)",
+              regex: "^(@/|(\\.\\.?/)+(src/)?)server(/|$)",
               message: "src/klient kan ikke importere fra src/server.",
             },
           ],
