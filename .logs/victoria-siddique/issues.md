@@ -8,3 +8,5 @@
 - [ ] 2026-11-12 [ux-personvern-og-mikrotekst](998-2026-11-12-13-20-00-ux-personvern-og-mikrotekst.md) — PRD trenger eget krav for personverntekst og avkrysning på Start (lærerens FR-11)
 - [ ] 2026-11-12 [ux-personvern-og-mikrotekst](998-2026-11-12-13-20-00-ux-personvern-og-mikrotekst.md) — «statisk refleksjonsforslag» står fortsatt i PRD §9/§10 og epics.md FR-7
 - [ ] 2026-11-12 [ux-personvern-og-mikrotekst](998-2026-11-12-13-20-00-ux-personvern-og-mikrotekst.md) — Story 1.6 i epics.md må få avkrysningen og teksten fra «Fast mikrotekst»
+- [ ] 2026-11-24 [story-1-16-merkevaretema](997-2026-11-24-21-10-58-story-1-16-merkevaretema.md) — Fokusringen (arvet `--ring`) har 2,44:1 (1,50:1 med `/50`) mot bakgrunnen, mens WCAG 1.4.11 krever 3:1; gruppen bestemmer
+- [ ] 2026-11-24 [story-1-16-merkevaretema](997-2026-11-24-21-10-58-story-1-16-merkevaretema.md) — Gi Rikke beskjed om at hennes punkt «Fjern mørkt tema … i story 1.16» kan lukkes (løst i 24dea10)
