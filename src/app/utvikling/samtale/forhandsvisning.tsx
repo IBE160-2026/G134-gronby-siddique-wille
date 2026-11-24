@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { Chatinput } from "@/klient/samtale/chatinput";
 import { Chatlogg } from "@/klient/samtale/chatlogg";
 import type { Melding } from "@/klient/samtale/melding";
+import { Appskall } from "@/klient/skall/appskall";
+import { STEG, type Steg } from "@/klient/skall/steg";
 
 // Eksempelsamtalen fra mockups/samtale.html. Simulert, ingen modellkall.
 const START: Melding[] = [
@@ -23,7 +25,17 @@ const SVAR = [
 
 const VENTETID_MS = 1500;
 
-export function Forhandsvisning() {
+/** Stegene før `lengst` er fullført, som om studenten har vært der. */
+function fullfortFor(lengst: Steg): Steg[] {
+  const slutt = STEG.findIndex((s) => s.id === lengst);
+  return STEG.slice(0, slutt).map((s) => s.id);
+}
+
+export function Forhandsvisning({ lengst }: { lengst: Steg }) {
+  // Å gå tilbake uten å endre noe beholder senere steg (EXPERIENCE.md), så
+  // `lengst` og stegene før det forblir fullført når studenten velger et av dem.
+  const [aktivt, setAktivt] = useState<Steg>(lengst);
+  const [nyOktTrykket, setNyOktTrykket] = useState(false);
   const [meldinger, setMeldinger] = useState<Melding[]>(START);
   const [utkast, setUtkast] = useState("");
   const [venter, setVenter] = useState(false);
@@ -48,13 +60,25 @@ export function Forhandsvisning() {
     }, VENTETID_MS);
   }
 
+  const fullforte = [...fullfortFor(lengst), lengst];
+
   return (
-    <main className="mx-auto flex h-dvh w-full max-w-chat-max flex-col gap-5 px-6 py-6">
-      <p className="text-sm text-muted-foreground">
-        Utviklingsside for story 1.7. Svarene er simulert.
-      </p>
-      <Chatlogg meldinger={meldinger} venter={venter} className="min-h-0 flex-1" />
-      <Chatinput verdi={utkast} onEndre={setUtkast} onSend={send} venter={venter} />
-    </main>
+    <div className="flex h-dvh flex-col">
+      <Appskall
+        aktivt={aktivt}
+        fullforte={fullforte}
+        onVelgSteg={setAktivt}
+        onNyOkt={() => setNyOktTrykket(true)}
+        className="mx-auto w-full max-w-chat-max gap-5 px-6 py-6"
+      >
+        <p className="text-sm text-muted-foreground">
+          Utviklingsside for story 1.7 og 1.15. Svarene er simulert, og flaten er
+          alltid Samtale. Velg steg med <code>?steg=krav</code>.
+          {nyOktTrykket && " «Ny økt» ble trykket (dialogen kommer i story 1.14)."}
+        </p>
+        <Chatlogg meldinger={meldinger} venter={venter} className="min-h-0 flex-1" />
+        <Chatinput verdi={utkast} onEndre={setUtkast} onSend={send} venter={venter} />
+      </Appskall>
+    </div>
   );
 }
