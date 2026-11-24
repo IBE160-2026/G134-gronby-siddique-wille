@@ -117,7 +117,7 @@ Mus og tastatur er likeverdige. Det er ingen egne hurtigtaster utover:
 Atferd. Visuell kontrast er beskrevet i `DESIGN.md` under Colors.
 
 - WCAG 2.2 AA.
-- Chatloggen er en `aria-live="polite"`-region, slik at nye assistentmeldinger leses opp.
+- Chatloggen har en `aria-live="polite"`-region, slik at nye assistentmeldinger og skriveindikatoren leses opp. Studentens egen melding leses ikke opp på nytt.
 - Fremdriften kunngjøres når den endres: «2 av 3 erfaringer fanget.»
 - Dekket og hull skilles med tekst («Dekket» / «Ikke dekket ennå»), ikke bare med farge.
 - Bevissitater er merket som sitat (`<blockquote>` eller `<q>`) og leses opp som «Ditt svar: …».
