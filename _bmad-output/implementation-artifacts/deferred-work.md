@@ -22,3 +22,12 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-1-2-prosjektgrunnlag-nextjs-shadcn.md`
   summary: Håndhev modulgrensene (`kjerne` importerer aldri `app`/`klient`/`server`, `klient` aldri `server`, `server/` importerer `server-only`) med `no-restricted-imports` og pakken `server-only`.
   evidence: Regelen står i epic-konteksten, men verken ESLint eller pakker håndhever den; mappene er tomme, så det er billigst å innføre når story 1.3–1.5 legger inn kode.
+
+## Deferred from: code review of spec-1-16-merkevaretema (2026-11-24)
+
+- source_spec: `_bmad-output/specs/spec-1-16-merkevaretema/SPEC.md`
+  summary: Fokusringen har for lav kontrast (WCAG 2.2 SC 1.4.11 krever 3:1). Arvet `--ring` (`oklch(0.708 0 0)`) gir 2,44:1 mot `background` og 1,50:1 med `ring-ring/50` i `button.tsx`. Vurder `--ring` fra `primary` og et par `ring`/`background` ≥3:1 i `scripts/kontrast.mjs`.
+  evidence: Blind Hunter og Edge Case Hunter. Fantes før story 1.16 (2,58:1 mot hvitt), og specen sier at `ring` arves fra shadcn. Gruppen bør bestemme det, fordi det endrer en arvet shadcn-token.
+- source_spec: `_bmad-output/specs/spec-1-16-merkevaretema/SPEC.md`
+  summary: Bevisst avvik, ingen handling. Mockupen `mockups/samtale.html` viser chatteksten i Inter, mens `chat-body` er Source Serif 4 i DESIGN.md og i koden.
+  evidence: Blind Hunter og Acceptance Auditor. Victoria valgte serif (som i story-AC), og DESIGN.md-tokenet fikk `fontFamily: 'Source Serif 4'` 2026-11-24. Mockupen endres ikke, fordi spines vinner ved konflikt.
