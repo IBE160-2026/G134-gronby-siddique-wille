@@ -357,3 +357,96 @@ describe("oktReducer – nullstilling og ny økt", () => {
     expect(oktReducer(okt, { type: "startOkt", modus: "demo" })).toBe(okt);
   });
 });
+
+describe("oktReducer – mottaSamtaleSvar (story 1.8)", () => {
+  const startet = () => kjor(tomOkt(), { type: "startOkt", modus: "ekte" });
+
+  const apning = (versjon = 0): Handling => ({
+    type: "mottaSamtaleSvar",
+    versjon,
+    svar: null,
+    sporsmal: { tekst: "Hei! Fortell om noe du har gjort.", gjelder: null },
+    endringer: [],
+  });
+
+  it("åpningsspørsmålet i tom logg gir A1", () => {
+    const okt = kjor(startet(), apning());
+    expect(okt.logg).toEqual([
+      { type: "sporsmal", id: "A1", tekst: "Hei! Fortell om noe du har gjort.", gjelder: null },
+    ]);
+    expect(okt.tellere.A).toBe(1);
+  });
+
+  it("et dobbelt åpningsspørsmål (StrictMode) forkastes", () => {
+    const okt = kjor(startet(), apning());
+    expect(oktReducer(okt, apning())).toBe(okt);
+  });
+
+  it("svar: S1, endringene og A2 i den rekkefølgen", () => {
+    const okt = kjor(startet(), apning(), {
+      type: "mottaSamtaleSvar",
+      versjon: 0,
+      svar: { id: "S1", tekst: "Jeg jobbet på kafé." },
+      sporsmal: { tekst: "Hva gjorde du der?", gjelder: { ny: "n1" } },
+      endringer: [
+        { type: "opprett", ny: "n1", tittel: "Kafé" },
+        { type: "settTekst", erfaring: { ny: "n1" }, felt: "rolle", tekst: "Servitør" },
+        { type: "leggTilKilde", erfaring: { ny: "n1" }, felt: "rolle", svarId: "S1" },
+      ],
+    });
+    expect(okt.logg.map((o) => o.id)).toEqual(["A1", "S1", "A2"]);
+    expect(okt.logg[1]).toEqual({ type: "svar", id: "S1", tekst: "Jeg jobbet på kafé." });
+    expect(okt.logg[2]).toEqual({
+      type: "sporsmal",
+      id: "A2",
+      tekst: "Hva gjorde du der?",
+      gjelder: "E1",
+    });
+    expect(okt.erfaringer).toHaveLength(1);
+    expect(okt.erfaringer[0].rolle).toEqual({
+      tekst: "Servitør",
+      kilder: ["S1"],
+      rettetAvStudent: false,
+    });
+    expect(okt.tellere).toEqual({ A: 2, S: 1, R: 0, E: 1, K: 0 });
+  });
+
+  it("ukjent { ny } og ukjent ID i gjelder blir null", () => {
+    const base = kjor(startet(), apning());
+    for (const gjelder of [{ ny: "n9" }, "E4"]) {
+      const okt = kjor(base, {
+        type: "mottaSamtaleSvar",
+        versjon: 0,
+        svar: { id: "S1", tekst: "Svar" },
+        sporsmal: { tekst: "Neste?", gjelder },
+        endringer: [],
+      });
+      expect(okt.logg.at(-1)).toMatchObject({ id: "A2", gjelder: null });
+    }
+  });
+
+  it("forkastes ved annen versjon", () => {
+    const okt = kjor(startet(), apning());
+    const svar: Handling = {
+      type: "mottaSamtaleSvar",
+      versjon: 1,
+      svar: { id: "S1", tekst: "Svar" },
+      sporsmal: { tekst: "Neste?", gjelder: null },
+      endringer: [],
+    };
+    expect(oktReducer(okt, svar)).toBe(okt);
+    expect(oktReducer(tomOkt(1), apning(0))).toEqual(tomOkt(1));
+  });
+
+  it("forkastes når svarId ikke lenger er neste S-ID", () => {
+    const okt = kjor(startet(), apning(), { type: "leggTilSvar", tekst: "Et annet svar" });
+    const utdatert: Handling = {
+      type: "mottaSamtaleSvar",
+      versjon: 0,
+      svar: { id: "S1", tekst: "Svar" },
+      sporsmal: { tekst: "Neste?", gjelder: null },
+      endringer: [],
+    };
+    expect(oktReducer(okt, utdatert)).toBe(okt);
+  });
+});

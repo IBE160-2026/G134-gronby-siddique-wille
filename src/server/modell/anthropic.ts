@@ -33,9 +33,15 @@ export class AnthropicModell implements Modell {
       : undefined;
   }
 
-  async kall<S extends Steg>({ steg, system, melding }: ModellForesporsel<S>): Promise<ModellSvarFor[S]> {
+  async kall<S extends Steg>({
+    steg,
+    system,
+    melding,
+    signal,
+  }: ModellForesporsel<S>): Promise<ModellSvarFor[S]> {
     if (!this.klient) throw new ModellFeil("mangler_nokkel");
 
+    const frist = AbortSignal.timeout(FRIST_MS);
     let svar;
     try {
       svar = await this.klient.messages.parse(
@@ -49,8 +55,9 @@ export class AnthropicModell implements Modell {
             effort: EFFORT,
           },
         },
-        // Avbrudd gir `APIUserAbortError`, som er en `APIError` → `modell_feil`.
-        { signal: AbortSignal.timeout(FRIST_MS) },
+        // Avbrudd (fristen eller kallerens `signal`) gir `APIUserAbortError`,
+        // som er en `APIError` → `modell_feil`.
+        { signal: signal ? AbortSignal.any([signal, frist]) : frist },
       );
     } catch (error) {
       throw tilModellFeil(error);

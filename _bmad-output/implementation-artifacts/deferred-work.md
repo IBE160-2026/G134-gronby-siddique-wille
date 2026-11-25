@@ -80,3 +80,6 @@
 ## Lukket av story 1.4 (2026-11-24)
 
 - `server-only` håndheves for `src/server/` med `tests/oppsett/server-only.test.ts` (rest fra 1.2/1.3).
+- source_spec: `_bmad-output/implementation-artifacts/spec-1-8-samtalerute-som-stiller-og-mottar-oppfolgingssporsmal.md`
+  summary: `Flytskall` (omdirigering til `/` uten startet økt, aktivt steg fra stien) og den midlertidige Start-knappen i `src/app/page.tsx` har ingen automatiske tester.
+  evidence: Verification Gap i bmad-build for 1.8. Ingen test importerer `Flytskall` eller `page.tsx`, og Vitest kjører uten DOM. Dekkes når repoet får DOM-tester, eller ved å flytte avgjørelsen til en ren hjelper. Start-knappen erstattes i 1.6.

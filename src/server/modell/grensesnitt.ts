@@ -32,6 +32,8 @@ export type ModellForesporsel<S extends Steg> = {
   melding: string;
   /** Antall `svar`-oppføringer i loggen. */
   antallSvar: number;
+  /** Avbryter kallet, f.eks. `request.signal` når klienten går. Gir `modell_feil`. */
+  signal?: AbortSignal;
 };
 
 export interface Modell {
