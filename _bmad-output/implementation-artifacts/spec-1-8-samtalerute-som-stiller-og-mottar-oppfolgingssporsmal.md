@@ -154,3 +154,40 @@ Forespørselen bygges uten å endre økten: `logg = [...okt.logg, { type: "svar"
 
 **Manual checks (if no CLI):**
 - `npm run dev` med nøkkel: «Start samtalen» → åpningsspørsmål → svar → nytt spørsmål; uten nettverk → toast og utkastet står.
+
+### Review Findings
+
+Kodegjennomgang 2026-11-25 av story 1.8 (`c35eda2..761f73b`, uten `package-lock.json`). Lag:
+- Blind Hunter: 13 funn
+- Edge Case Hunter: 5 funn
+- Verification Gap: 2 hull og 1 annet funn
+- Acceptance Auditor: ingen AC brutt, 7 funn
+
+28 rå funn: 6 patcher (8 funn), 1 utsatt (3 funn), 17 avvist.
+
+- [x] [Review][Patch] Ingen test viser at `FRIST_MS` fortsatt gjelder når kalleren sender et levende signal; ruten sender alltid `request.signal`, så en regresjon til `signal ?? frist` ville fjernet fristen i produksjon (VG1). Mutasjonen er sjekket: testen feiler. [tests/server/modell/anthropic.test.ts]
+- [x] [Review][Patch] Studenten endrer utkastet mens feiltoasten står, og «Prøv igjen» sender den gamle teksten (EC2). Toasten fjernes nå når utkastet endres. [src/klient/samtale/samtaleflate.tsx]
+- [x] [Review][Patch] Sonner kunngjør den engelske standardetiketten «Notifications» i en `nb`-app (BH5). `containerAriaLabel="Varsler"`. [src/components/ui/sonner.tsx]
+- [x] [Review][Patch] Ingen reducertest for grensen gjennom `mottaSamtaleSvar`, og ingen test av at handlingen ikke endrer `versjon` (BH12). [tests/klient/okt/reducer.test.ts]
+- [x] [Review][Patch] `afterEach` i rutetesten rydder ikke spioner og stubber når konsollsjekken feiler (EC5). [tests/app/api/samtale.test.ts]
+- [x] [Review][Patch] deferred-work.md: 1.8-oppføringen lå under «Lukket av story 1.4», og punktene 1.8 løser (fra 1.3, 1.4 og 1.15) sto som åpne (AA3/BH1/BH2). [_bmad-output/implementation-artifacts/deferred-work.md]
+- [x] [Review][Defer] `Samtaleflate` har ingen komponenttester (send-vakten, tømming av utkast, «Prøv igjen», avbrudd ved unmount) (VG2/AA6/BH13) [src/klient/samtale/samtaleflate.tsx] — deferred: repoet har ingen DOM-tester ennå; `sendSamtale` er testet som ren funksjon.
+
+**Rejected:**
+- «Ferdig» er alltid synlig, mens beslutningen sier «vises og er aktiv etter» (AA1) — false: EXPERIENCE.md sier «Alltid synlig, men deaktivert til minst ett oppfølgingsspørsmål er stilt», og valget Rikke tok sa det samme.
+- Oppgavelisten sier «etter svar på spørsmål 1» (AA2) — rettelsen er å endre specen. Koden følger AC3.
+- Specen står på `done` mens sprint-status står på `review` (AA4/BH4) — false: bmad-build setter `review`, og denne gjennomgangen avslutter med `done`.
+- epic-1-context.md er endret i diffen (AA5) — false: bmad-build bygde den på nytt fordi DESIGN.md og EXPERIENCE.md var nyere.
+- «Trykk Ferdig» ved full logg, men knappen gjør ingenting (AA7) — low: beslutning fra Rikke, og full logg er 150 svar.
+- Punktet i Victorias issues.md om `/utvikling/samtale` er ikke krysset av (BH3) — low: det er Victorias fil; hun får beskjed via sesjonsloggen.
+- Verifiseringsresultatene står ikke i specen (BH4) — low: resultatene står i sesjonsloggen.
+- Låst input har ingen tilgjengelig forklaring (BH6) — low: før første spørsmål kunngjøres skriveindikatoren eller feiltoasten; full logg er sjelden. Rettelsen er nye ARIA-koblinger.
+- `maxLength` kutter innlimt tekst uten beskjed (BH7) — low: 5000 tegn i ett svar er usannsynlig.
+- Prompten er strengere enn `brukEndringer` for felt med `rettetAvStudent` (BH8) — false: en strengere prompt gir ingen skade, og tittelen settes bare ved `opprett`.
+- Ingen test av manglende prompt i ruten (BH9) — low: å feile høyt ved feilkonfigurasjon er riktig (som i bmad-build).
+- Prompttestene har misvisende navn og leser den ekte prompten (BH10) — low: testen av den ekte prompten er bevisst; standardmappen er testet.
+- `hentSporsmal` gir `nettverk` ved avbrudd, og resultattypene kan gli fra hverandre (BH11) — low: `sendSamtale` er eneste kaller og skiller dem.
+- Åpningsspørsmålet forkastes hvis `versjon` endres underveis (EC1) — low: ingen handling som endrer `versjon`, kan nås på Samtale før første spørsmål. «Ny økt» (1.14) må nullstille `apnet`.
+- `mottaSamtaleSvar` på en økt som ikke er startet (EC3) — low: `Flytskall` viser ikke flaten uten startet økt.
+- Reduceren håndhever ikke `MAKS_LOGG_OPPFORINGER` (EC4) — low: samme vurdering som BH14 i bmad-build.
+- Signalet i rutetesten avhenger av undici (VGo1) — low: det virker i Node 26, og avbrudd → `modell_feil` er testet i adapteret.
