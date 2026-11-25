@@ -8,6 +8,7 @@ import {
   type Modus,
   type Okt,
 } from "@/kjerne/okt";
+import type { Endring } from "@/kjerne/skjema";
 
 /**
  * Alle endringer av økten (AD-4). Handlinger som bærer et serversvar har
@@ -28,6 +29,7 @@ export type Handling =
   | { type: "slettErfaring"; erfaringId: string }
   | { type: "settAnnonse"; tekst: string }
   | { type: "settKrav"; versjon: number; krav: Omit<Krav, "id">[] }
+  | { type: "brukEndringer"; versjon: number; endringer: Endring[] }
   | { type: "nullstill"; arsak: NullstillArsak }
   | { type: "nyOkt" };
 
@@ -153,6 +155,72 @@ export function oktReducer(okt: Okt, handling: Handling): Okt {
         return { ...k, id: neste.id };
       });
       return { ...okt, tellere, krav, bevistabell: null };
+    }
+
+    case "brukEndringer": {
+      if (handling.versjon !== okt.versjon) return okt;
+
+      // Pass 1: tildel E-ID-er for alle `opprett`-endringer og bygg ref-kart.
+      const refKart = new Map<string, string>(); // "n1" → "E3"
+      let tellere = okt.tellere;
+      let erfaringer = okt.erfaringer;
+
+      for (const endring of handling.endringer) {
+        if (endring.type !== "opprett") continue;
+        const { id, tellere: neste } = nesteId(tellere, "E");
+        tellere = neste;
+        refKart.set(endring.ny, id);
+        const nyErfaring: Erfaring = {
+          id,
+          tittel: endring.tittel,
+          tittelRettetAvStudent: false,
+          rolle: tomtFelt(),
+          handling: tomtFelt(),
+          resultat: tomtFelt(),
+        };
+        erfaringer = [...erfaringer, nyErfaring];
+      }
+
+      // Løser opp en ErfaringRef til faktisk E-ID, eller null ved ukjent ref.
+      const losRef = (ref: string | { ny: string }): string | null =>
+        typeof ref === "string" ? ref : (refKart.get(ref.ny) ?? null);
+
+      // Pass 2: anvend `settTekst` og `leggTilKilde`.
+      for (const endring of handling.endringer) {
+        if (endring.type === "opprett") continue;
+        const erfaringId = losRef(endring.erfaring);
+        if (!erfaringId) continue;
+        // Endringer på slettede erfaringer ignoreres stille (AD-5).
+        if (okt.slettedeErfaringer.includes(erfaringId)) continue;
+
+        const idx = erfaringer.findIndex((e) => e.id === erfaringId);
+        if (idx === -1) continue;
+
+        if (endring.type === "settTekst") {
+          // Overskrives aldri felt som studenten har rettet (AD-13).
+          if (erfaringer[idx][endring.felt].rettetAvStudent) continue;
+          erfaringer = erfaringer.map((e, i) =>
+            i === idx
+              ? { ...e, [endring.felt]: { ...e[endring.felt], tekst: endring.tekst } }
+              : e,
+          );
+        } else if (endring.type === "leggTilKilde") {
+          // Kun gyldige svar-ID-er (AD-5).
+          if (!okt.logg.some((o) => o.type === "svar" && o.id === endring.svarId)) continue;
+          const felt = erfaringer[idx][endring.felt];
+          if (felt.kilder.includes(endring.svarId)) continue;
+          erfaringer = erfaringer.map((e, i) =>
+            i === idx
+              ? {
+                  ...e,
+                  [endring.felt]: { ...e[endring.felt], kilder: [...e[endring.felt].kilder, endring.svarId] },
+                }
+              : e,
+          );
+        }
+      }
+
+      return { ...okt, tellere, erfaringer };
     }
 
     case "nullstill":
