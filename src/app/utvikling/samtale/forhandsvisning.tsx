@@ -1,10 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Chatinput } from "@/klient/samtale/chatinput";
 import { Chatlogg } from "@/klient/samtale/chatlogg";
 import type { Melding } from "@/klient/samtale/melding";
+import { useOktDispatch } from "@/klient/okt/kontekst";
+import { useBeforeUnload } from "@/klient/okt/useBeforeUnload";
 import { Appskall } from "@/klient/skall/appskall";
+import { NyOktDialog } from "@/klient/skall/nyoktdialog";
 import { STEG, type Steg } from "@/klient/skall/steg";
 
 // Eksempelsamtalen fra mockups/samtale.html. Simulert, ingen modellkall.
@@ -32,10 +36,14 @@ function fullfortFor(lengst: Steg): Steg[] {
 }
 
 export function Forhandsvisning({ lengst }: { lengst: Steg }) {
+  const router = useRouter();
+  const dispatch = useOktDispatch();
+  useBeforeUnload();
+
   // Å gå tilbake uten å endre noe beholder senere steg (EXPERIENCE.md), så
   // `lengst` og stegene før det forblir fullført når studenten velger et av dem.
   const [aktivt, setAktivt] = useState<Steg>(lengst);
-  const [nyOktTrykket, setNyOktTrykket] = useState(false);
+  const [dialogApen, setDialogApen] = useState(false);
   const [meldinger, setMeldinger] = useState<Melding[]>(START);
   const [utkast, setUtkast] = useState("");
   const [venter, setVenter] = useState(false);
@@ -62,23 +70,28 @@ export function Forhandsvisning({ lengst }: { lengst: Steg }) {
 
   const fullforte = [...fullfortFor(lengst), lengst];
 
+  function nyOkt() {
+    dispatch({ type: "nyOkt" });
+    router.push("/");
+  }
+
   return (
     <div className="flex h-dvh flex-col">
       <Appskall
         aktivt={aktivt}
         fullforte={fullforte}
         onVelgSteg={setAktivt}
-        onNyOkt={() => setNyOktTrykket(true)}
+        onNyOkt={() => setDialogApen(true)}
         className="mx-auto w-full max-w-chat-max gap-5 px-6 py-6"
       >
         <p className="text-sm text-muted-foreground">
           Utviklingsside for story 1.7 og 1.15. Svarene er simulert, og flaten er
           alltid Samtale. Velg steg med <code>?steg=krav</code>.
-          {nyOktTrykket && " «Ny økt» ble trykket (dialogen kommer i story 1.14)."}
         </p>
         <Chatlogg meldinger={meldinger} venter={venter} className="min-h-0 flex-1" />
         <Chatinput verdi={utkast} onEndre={setUtkast} onSend={send} venter={venter} />
       </Appskall>
+      <NyOktDialog open={dialogApen} onOpenChange={setDialogApen} onBekreft={nyOkt} />
     </div>
   );
 }
