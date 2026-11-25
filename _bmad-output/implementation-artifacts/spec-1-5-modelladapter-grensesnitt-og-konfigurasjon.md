@@ -131,3 +131,34 @@ Andre API-feil (400/401/403/404) gir også `modell_feil`. Klienten viser uansett
 - `npm run lint` -- expected: ingen feil
 - `npx tsc --noEmit` -- expected: ingen feil
 - `npm run build` -- expected: bygger
+
+### Review Findings
+
+Kodegjennomgang 2026-11-25 av story 1.5 (`88dcf22..4cd7450`, uten `package-lock.json`). Lag:
+- Blind Hunter: 11 funn
+- Edge Case Hunter: 6 funn
+- Verification Gap: 2 hull
+- Acceptance Auditor: ingen AC brutt, 6 funn
+
+25 rå funn: 3 patcher, 0 utsatt, 18 avvist (noen funn ble slått sammen).
+
+- [x] [Review][Patch] Ingen samlet frist for et kall. SDK 1.5.0 venter så lenge `retry-after` på et 429/529 sier, uten øvre grense, før det nye forsøket. Ett kall kan derfor henge mye lenger enn `(MAX_RETRIES + 1) × TIMEOUT_MS`. Legg til `FRIST_MS` i `config.ts` og send `AbortSignal.timeout(FRIST_MS)` med `parse` (EC1/BH7) [src/server/modell/anthropic.ts]
+- [x] [Review][Patch] Ingen test viser at `velgModell("ekte")` sender nøkkelen videre, eller at `x-api-key` er den trimmede nøkkelen (VG1/BH3) [tests/server/modell/velg.test.ts]
+- [x] [Review][Patch] Loggtesten ville bestått uten `logLevel: "off"`, fordi SDK-ens standardnivå `warn` uansett ikke logger noe på feilveien. Testen må kjøres med `ANTHROPIC_LOG=debug` (VG2) [tests/server/modell/anthropic.test.ts]
+
+**Rejected:**
+- Specen sier at ukjente feil kastes videre, mens koden gjør dem til `modell_feil` (AA1/BH1/EC3). Rettelsen er å endre specen. Koden følger patchen EC1/EC7 fra bmad-build: å kaste feilen videre ville sluppet ut en rå `SyntaxError` som kan sitere teksten i svaret.
+- Et 2xx-svar med ødelagt JSON gir `modell_feil` og ikke `ugyldig_svar` (AA2) — false: matriseraden gjelder modellens tekst. En ødelagt HTTP-body er en transportfeil.
+- `effort` ligger i `output_config` (AA3) — false: `OutputConfig.effort` finnes i typene for SDK 1.5.0, og `tsc` er grønn.
+- Specen står på `done` mens sprint-status står på `review` (AA4/BH2) — false: bmad-build setter disse statusene, og denne gjennomgangen avslutter med `done`.
+- Nøkkelen trimmes to steder (AA5/BH4) — low: å trimme to ganger er ufarlig, og det er ingen konkret skade.
+- Ingen test med tenkeblokker (BH5) — false: SDK-ens `parseMessage` leser bare tekstblokker, så tenkeblokker hoppes over.
+- `stop_reason` `max_tokens`/`refusal` er ikke testet (BH6) — false: et avkortet svar er tekst som ikke er JSON, og et tomt svar har ingen tekstblokk. Begge tilfellene er testet og gir `ugyldig_svar`.
+- Timeout-testen tester ikke en ekte timeout (BH8) — low: det er SDK-atferd, og testen viser at `TIMEOUT_MS` sendes til klienten.
+- `demo.ts` importerer fra `../status` (BH9) — low: det er ingen sirkel og ingen konkret skade (samme vurdering som i bmad-build).
+- Ordlyden «element nr. 2» i matrisen (BH10) — rettelsen er å endre specen. Implementation Notes forklarer at det er indeks 2.
+- `feil.test.ts` sjekker ikke `ugyldig_foresporsel` mot en fast status (BH11) — false: `tests/kjerne/skjema.test.ts:47` låser den til 400.
+- `zodOutputFormat` bygges inne i `try` (EC2) — low: skjemaene kan representeres (testene bruker den ekte hjelperen), så feilen dukker ikke opp i vanlig bruk.
+- En `AnthropicError` fra klienten selv, ikke fra `parse`, gir `ugyldig_svar` (EC4) — low: konfigurasjonen er fast, og nøkkelen sendes alltid med. Rettelsen er en ekstra gren.
+- `process.cwd()` kaster når mappen er slettet (EC5) — low: usannsynlig, og rettelsen er en ekstra vakt.
+- Søsterpakker under `@anthropic-ai/` er ikke forbudt (EC6) — low: ingen av dem er installert, og de er ikke i stacken.

@@ -3,7 +3,7 @@ import "server-only";
 import Anthropic, { AnthropicError, APIError } from "@anthropic-ai/sdk";
 import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
 
-import { EFFORT, MAX_RETRIES, MAX_TOKENS, MODELL_ID, TIMEOUT_MS } from "./config";
+import { EFFORT, FRIST_MS, MAX_RETRIES, MAX_TOKENS, MODELL_ID, TIMEOUT_MS } from "./config";
 import {
   MODELLSKJEMA,
   ModellFeil,
@@ -38,16 +38,20 @@ export class AnthropicModell implements Modell {
 
     let svar;
     try {
-      svar = await this.klient.messages.parse({
-        model: MODELL_ID,
-        max_tokens: MAX_TOKENS[steg],
-        system,
-        messages: [{ role: "user", content: melding }],
-        output_config: {
-          format: zodOutputFormat(MODELLSKJEMA[steg]),
-          effort: EFFORT,
+      svar = await this.klient.messages.parse(
+        {
+          model: MODELL_ID,
+          max_tokens: MAX_TOKENS[steg],
+          system,
+          messages: [{ role: "user", content: melding }],
+          output_config: {
+            format: zodOutputFormat(MODELLSKJEMA[steg]),
+            effort: EFFORT,
+          },
         },
-      });
+        // Avbrudd gir `APIUserAbortError`, som er en `APIError` → `modell_feil`.
+        { signal: AbortSignal.timeout(FRIST_MS) },
+      );
     } catch (error) {
       throw tilModellFeil(error);
     }

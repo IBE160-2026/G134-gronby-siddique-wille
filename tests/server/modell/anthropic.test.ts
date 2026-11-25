@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 vi.mock("server-only", () => ({}));
 
 const { AnthropicModell, tilModellFeil } = await import("@/server/modell/anthropic");
-const { MAX_RETRIES, MAX_TOKENS, MODELL_ID, TIMEOUT_MS, EFFORT } = await import(
+const { MAX_RETRIES, MAX_TOKENS, MODELL_ID, TIMEOUT_MS, EFFORT, FRIST_MS } = await import(
   "@/server/modell/config"
 );
 const { ModellFeil } = await import("@/server/modell/grensesnitt");
@@ -72,6 +72,7 @@ function forventModellFeil(feil: unknown, kode: string) {
 
 afterEach(() => {
   vi.restoreAllMocks();
+  vi.unstubAllEnvs();
 });
 
 describe("AnthropicModell", () => {
@@ -197,7 +198,19 @@ describe("AnthropicModell", () => {
     expect(JSON.stringify(modellFeil)).not.toContain("hemmelig");
   });
 
+  it("samlet frist: avbrudd via AbortSignal.timeout(FRIST_MS) gir modell_feil", async () => {
+    const timeout = vi.spyOn(AbortSignal, "timeout").mockReturnValue(AbortSignal.abort());
+    const { fetch } = falskFetch(() => tekst(JSON.stringify(gyldigSamtale)));
+    const feil = await fangFeil(
+      new AnthropicModell({ apiKey: "sk-ant-test", fetch }).kall(foresporsel),
+    );
+    expect(timeout).toHaveBeenCalledWith(FRIST_MS);
+    forventModellFeil(feil, "modell_feil");
+  });
+
   it("SDK-en logger ingenting, heller ikke ved feil", async () => {
+    // Med `ANTHROPIC_LOG=debug` ville SDK-en logget uten `logLevel: "off"`.
+    vi.stubEnv("ANTHROPIC_LOG", "debug");
     const spioner = (["log", "info", "warn", "error", "debug"] as const).map((m) =>
       vi.spyOn(console, m).mockImplementation(() => {}),
     );

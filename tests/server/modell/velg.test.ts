@@ -23,6 +23,34 @@ describe("velgModell", () => {
     );
   });
 
+  it("ekte sender den trimmede nøkkelen videre", async () => {
+    const fetch = vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      Response.json({
+        id: "msg_test",
+        type: "message",
+        role: "assistant",
+        model: "claude-haiku-5-5",
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify({ sporsmal: { tekst: "Hei", gjelder: null }, endringer: [] }),
+          },
+        ],
+        stop_reason: "end_turn",
+        stop_sequence: null,
+        usage: { input_tokens: 1, output_tokens: 1 },
+      }),
+    );
+    const modell = velgModell("ekte", { env: { ANTHROPIC_API_KEY: "  sk-ant-test \n" } });
+    await modell.kall(foresporsel);
+    expect(fetch).toHaveBeenCalled();
+    const init = fetch.mock.calls[0][1];
+    // SDK 1.5.0 sender nøkkelen som `Authorization: Bearer …`, ikke `x-api-key`.
+    const headere = new Headers(init?.headers);
+    expect(headere.get("authorization")).toBe("Bearer sk-ant-test");
+    expect(headere.get("x-api-key")).toBeNull();
+  });
+
   it.each([undefined, "", "  \n"])(
     "ekte med nøkkel %j gir mangler_nokkel uten nettverkskall",
     async (nokkel) => {

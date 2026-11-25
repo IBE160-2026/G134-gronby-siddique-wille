@@ -23,4 +23,7 @@ export const TIMEOUT_MS = 30_000;
 /** SDK-ens egne nye forsøk. Rutene prøver aldri på nytt selv. */
 export const MAX_RETRIES = 1;
 
+/** Samlet frist per kall: SDK-en venter ukritisk på `retry-after` før nye forsøk. */
+export const FRIST_MS = (MAX_RETRIES + 1) * TIMEOUT_MS + 10_000;
+
 export const EFFORT = "low" as const;
