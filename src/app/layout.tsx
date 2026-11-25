@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Source_Serif_4 } from "next/font/google";
 import "./globals.css";
+import { OktProvider } from "@/klient/okt/kontekst";
 
 // Selvhostet av next/font: nettleseren sender ingen forespørsler til Google (AD-17).
 const inter = Inter({
@@ -26,7 +27,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="nb"
       className={`${inter.variable} ${sourceSerif.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <OktProvider>{children}</OktProvider>
+      </body>
     </html>
   );
 }

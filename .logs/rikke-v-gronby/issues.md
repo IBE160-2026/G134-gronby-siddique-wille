@@ -16,6 +16,10 @@
 - [x] 2026-11-23 [epic-1-prosjektgrunnlag](997-2026-11-23-22-10-48-epic-1-prosjektgrunnlag.md) — Gruppen bestemmer om `CLAUDE.md` skal importere `AGENTS.md` (Next 16-regelen fra `next dev`) (løst 2026-11-23: Rikke la til `@AGENTS.md` øverst i `CLAUDE.md`; cb9acb4)
 - [ ] 2026-11-23 [epic-1-prosjektgrunnlag](997-2026-11-23-22-10-48-epic-1-prosjektgrunnlag.md) — Oppdater shadcn når `ts-morph` med rettet `minimatch` er ute (4 moderate funn i `npm audit`, bare CLI)
 - [ ] 2026-11-23 [epic-1-prosjektgrunnlag](997-2026-11-23-22-10-48-epic-1-prosjektgrunnlag.md) — README: feilsøking for `mangler_nokkel` og ugyldig nøkkel når story 1.4/1.5 er bygget
-- [ ] 2026-11-23 [epic-1-prosjektgrunnlag](997-2026-11-23-22-10-48-epic-1-prosjektgrunnlag.md) — Automatisk test av at `dev`/`start` binder til `-H 127.0.0.1` når Vitest er på plass
+- [x] 2026-11-23 [epic-1-prosjektgrunnlag](997-2026-11-23-22-10-48-epic-1-prosjektgrunnlag.md) — Automatisk test av at `dev`/`start` binder til `-H 127.0.0.1` når Vitest er på plass (løst 2026-11-24: tests/oppsett/package.test.ts i story 1.3)
 - [ ] 2026-11-23 [epic-1-prosjektgrunnlag](997-2026-11-23-22-10-48-epic-1-prosjektgrunnlag.md) — Fjern mørkt tema fra `shadcn init` i story 1.16 (appen skal bare ha lyst tema)
-- [ ] 2026-11-23 [epic-1-prosjektgrunnlag](997-2026-11-23-22-10-48-epic-1-prosjektgrunnlag.md) — Håndhev modulgrensene (`no-restricted-imports`, `server-only`) når story 1.3–1.5 legger inn kode
+- [x] 2026-11-23 [epic-1-prosjektgrunnlag](997-2026-11-23-22-10-48-epic-1-prosjektgrunnlag.md) — Håndhev modulgrensene (`no-restricted-imports`, `server-only`) når story 1.3–1.5 legger inn kode (løst 2026-11-24 for kjerne/klient i story 1.3; `server-only` er eget punkt)
+- [ ] 2026-11-24 [story-1-3-oktreducer](996-2026-11-24-22-07-18-story-1-3-oktreducer.md) — UI-et for «Fortsett samtalen» må dispatche `nullstill('samtaleFortsatt')` eksplisitt
+- [ ] 2026-11-24 [story-1-3-oktreducer](996-2026-11-24-22-07-18-story-1-3-oktreducer.md) — Story 1.8: samtalesvaret som én versjonert handling; forespørsler sendes med versjonen etter rettelse/sletting
+- [ ] 2026-11-24 [story-1-3-oktreducer](996-2026-11-24-22-07-18-story-1-3-oktreducer.md) — DOM-test av dispatch gjennom `OktProvider` ved første komponent som dispatcher (1.6/1.7)
+- [ ] 2026-11-24 [story-1-3-oktreducer](996-2026-11-24-22-07-18-story-1-3-oktreducer.md) — `server-only` i alle `src/server/`-moduler (story 1.5)
