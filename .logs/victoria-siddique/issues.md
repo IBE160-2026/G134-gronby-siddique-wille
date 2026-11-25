@@ -18,3 +18,6 @@
 - [ ] 2026-11-24 [story-1-15-stegindikator](995-2026-11-24-22-13-19-story-1-15-stegindikator.md) — Story 1.8: `Appskall` må ligge i en felles layout hvis stegene blir ruter (ellers går fokus tapt), og Chatlogg må mountes før åpningsspørsmålet
 - [ ] 2026-11-24 [story-1-15-stegindikator](995-2026-11-24-22-13-19-story-1-15-stegindikator.md) — Gi Rikke beskjed om `Steg`/`STEG` i `src/klient/skall/steg.ts` og props-kontrakten (`aktivt`, `fullforte`, `onVelg`, `onNyOkt`)
 - [ ] 2026-11-24 [story-1-15-stegindikator](995-2026-11-24-22-13-19-story-1-15-stegindikator.md) — Gruppen bekrefter endringen i EXPERIENCE.md (chatloggen *har* en live-region for assistentsvar); NFR5 i epics.md bruker gammel ordlyd
+- [ ] 2026-11-25 [story-1-9-erfaringskort](994-2026-11-25-20-57-00-story-1-9-erfaringskort.md) — Ingen automatiske tester for `RHRBrikke` og `Erfaringskort`; tas med story 1.8
+- [ ] 2026-11-25 [story-1-9-erfaringskort](994-2026-11-25-20-57-00-story-1-9-erfaringskort.md) — Story 1.8 kobler `brukEndringer`-dispatch til `/api/samtale`-svar og fjerner hardkodet eksempeldata fra dev-siden
+- [ ] 2026-11-25 [story-1-9-erfaringskort](994-2026-11-25-20-57-00-story-1-9-erfaringskort.md) — Story 1.8 må løse `sporsmal.gjelder: { ny }` → E-ID-mapping og bekrefte at `brukEndringer` ikke kan double-applies
