@@ -59,3 +59,19 @@ Studenten ser ingen visuell fremgang mens hun forteller om erfaringene sine. Ute
 
 - shadcn `Popover` har ikke breaking changes i den installerte shadcn-versjonen (4.23.0).
 - `tw-animate-css` som allerede er importert i `globals.css` leverer `animate-pulse` via Tailwind-klassen.
+
+## Review Findings
+
+### Defer
+
+- [x] [Review][Defer] `RHRBrikke` og `Erfaringskort` mangler Vitest-tester [`src/klient/samtale/rhrbrikke.tsx`, `src/klient/samtale/erfaringskort.tsx`] — deferred: spec-suksesssignalet krever bare `fanget.test.ts`; UI-komponentene verifiseres visuelt via `/utvikling/samtale`.
+
+### Rejected
+
+- `false` — `erFanget()` ikke brukt i produksjonskode: eksplisitt non-goal (story 1.8 kobler mot API).
+- `false` — Komponenter bruker props i stedet for `useOkt()`: constraints ånd er oppfylt (bare lesing, ingen dispatch); props er arkitektonisk bedre for dev-preview.
+- `low` — Liste-semantikk (`<ul>`/`<li>`) mangler i `Sidepanel`: strukturell endring utenfor scope; nav-sannsynlighet lav.
+- `low` — Redundant `max-w-72` i `PopoverContent`-kallet: rent kosmetisk, ingen funksjonell effekt.
+- `low` — Tomt `endringer`-array lager nytt tilstandsobjekt: identisk med `leggTilSporsmal`-mønsteret.
+- `low` — Dupliserte `ny`-refs i samme batch kan orphane erfaringer: modellens ansvar, ingen brukersti.
+- `false` — `max-w-chat-max` fjernet fra chat-kolonne: bevisst for to-kolonners oppsett; `flex-1` tar over breddekontrollen.
