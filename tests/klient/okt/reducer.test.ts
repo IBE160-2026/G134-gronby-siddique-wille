@@ -411,6 +411,47 @@ describe("oktReducer – mottaSamtaleSvar (story 1.8)", () => {
     expect(okt.tellere).toEqual({ A: 2, S: 1, R: 0, E: 1, K: 0 });
   });
 
+  it("endrer ikke versjon (nullstilling er opp til «Fortsett samtalen»)", () => {
+    const okt = kjor(startet(), apning(), {
+      type: "mottaSamtaleSvar",
+      versjon: 0,
+      svar: { id: "S1", tekst: "Svar" },
+      sporsmal: { tekst: "Neste?", gjelder: null },
+      endringer: [],
+    });
+    expect(okt.versjon).toBe(0);
+  });
+
+  it("ved MAKS_ERFARINGER fangede: opprett forkastes og gjelder { ny } blir null", () => {
+    const felt = { tekst: "t", kilder: ["S1"], rettetAvStudent: false };
+    const fangede = Array.from({ length: 8 }, (_, i) => ({
+      id: `E${i + 1}`,
+      tittel: `E${i + 1}`,
+      tittelRettetAvStudent: false,
+      rolle: felt,
+      handling: felt,
+      resultat: felt,
+    }));
+    const base = kjor(startet(), apning(), {
+      type: "mottaSamtaleSvar",
+      versjon: 0,
+      svar: { id: "S1", tekst: "Svar" },
+      sporsmal: { tekst: "Neste?", gjelder: null },
+      endringer: [],
+    });
+    const fylt: Okt = { ...base, erfaringer: fangede, tellere: { ...base.tellere, E: 8 } };
+    const okt = kjor(fylt, {
+      type: "mottaSamtaleSvar",
+      versjon: 0,
+      svar: { id: "S2", tekst: "En ny ting" },
+      sporsmal: { tekst: "Fortell om den nye?", gjelder: { ny: "n1" } },
+      endringer: [{ type: "opprett", ny: "n1", tittel: "Ny" }],
+    });
+    expect(okt.erfaringer).toHaveLength(8);
+    expect(okt.tellere.E).toBe(8);
+    expect(okt.logg.at(-1)).toMatchObject({ id: "A3", gjelder: null });
+  });
+
   it("ukjent { ny } og ukjent ID i gjelder blir null", () => {
     const base = kjor(startet(), apning());
     for (const gjelder of [{ ny: "n9" }, "E4"]) {

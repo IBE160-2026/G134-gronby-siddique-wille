@@ -115,7 +115,12 @@ export function Samtaleflate() {
       )}
       <Chatinput
         verdi={utkast}
-        onEndre={setUtkast}
+        onEndre={(verdi) => {
+          setUtkast(verdi);
+          // Endret utkast: «Prøv igjen» ville sendt den gamle teksten. Send
+          // sender det nye. (Før første spørsmål er feltet låst.)
+          toast.dismiss(FEIL_TOAST);
+        }}
         onSend={send}
         // Låst mens modellen svarer, før første spørsmål og når loggen er full.
         venter={venter || !harSporsmal || loggFull}

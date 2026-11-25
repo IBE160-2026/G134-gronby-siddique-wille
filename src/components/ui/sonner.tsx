@@ -9,6 +9,8 @@ function Toaster(props: ToasterProps) {
     <Sonner
       theme="light"
       className="toaster group"
+      // Sonner har engelsk standard («Notifications»); appen har lang="nb".
+      containerAriaLabel="Varsler"
       style={
         {
           "--normal-bg": "var(--popover)",

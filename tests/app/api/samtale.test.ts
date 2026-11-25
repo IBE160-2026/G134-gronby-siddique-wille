@@ -48,10 +48,14 @@ beforeEach(() => {
 
 afterEach(() => {
   // AD-12: ruten logger aldri.
-  for (const spion of konsoll) expect(spion).not.toHaveBeenCalled();
-  for (const spion of konsoll) spion.mockRestore();
-  falskModell = undefined;
-  vi.unstubAllEnvs();
+  try {
+    for (const spion of konsoll) expect(spion).not.toHaveBeenCalled();
+  } finally {
+    // Ryddes også når sjekken feiler, så spionene ikke lekker til neste test.
+    for (const spion of konsoll) spion.mockRestore();
+    falskModell = undefined;
+    vi.unstubAllEnvs();
+  }
 });
 
 afterAll(() => {

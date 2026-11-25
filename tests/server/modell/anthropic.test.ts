@@ -254,6 +254,18 @@ describe("AnthropicModell – signal fra kalleren", () => {
     forventModellFeil(feil, "modell_feil");
   });
 
+  it("fristen gjelder også når kalleren sender et levende signal", async () => {
+    vi.spyOn(AbortSignal, "timeout").mockReturnValue(AbortSignal.abort());
+    const { fetch } = falskFetch(() => tekst(JSON.stringify(gyldigSamtale)));
+    const feil = await fangFeil(
+      new AnthropicModell({ apiKey: "sk-ant-test", fetch }).kall({
+        ...foresporsel,
+        signal: new AbortController().signal,
+      }),
+    );
+    forventModellFeil(feil, "modell_feil");
+  });
+
   it("et signal som ikke avbrytes, påvirker ikke svaret", async () => {
     const { fetch } = falskFetch(() => tekst(JSON.stringify(gyldigSamtale)));
     const modell = new AnthropicModell({ apiKey: "sk-ant-test", fetch });
