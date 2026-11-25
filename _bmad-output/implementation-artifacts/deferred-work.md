@@ -77,6 +77,18 @@
   summary: Story 1.8 må gjøre `sporsmal.gjelder: { ny }` om til den nye `E`-ID-en før spørsmålet legges i loggen (AD-13, `brukEndringer()`).
   evidence: `leggTilSporsmal` lagrer i dag `null` for alt som ikke er en aktiv erfaring. Spørsmålet mister da koblingen til erfaringen det gjelder.
 
+## Deferred from: code review of spec-story-1-9-erfaringskort (2026-11-25)
+
+- source_spec: `_bmad-output/specs/spec-story-1-9-erfaringskort/SPEC.md`
+  summary: Ingen automatiske tester for `RHRBrikke` og `Erfaringskort`. CAP-4 sine visuelle tilstander (tom/fylt/puls) og Popover-oppførselen verifiseres bare visuelt via `/utvikling/samtale`.
+  evidence: Verification Gap. Spec-suksesssignalet krever bare `fanget.test.ts`; komponenttesting med jsdom og Base UI-popover krever ikke-triviell oppsett.
+- source_spec: `_bmad-output/specs/spec-story-1-9-erfaringskort/SPEC.md`
+  summary: To `opprett`-endringer med samme `ny`-nøkkel i ett `brukEndringer`-kall vil sidesporet den første E-ID-en — `refKart.set(endring.ny, id)` overskriver og den første erfaringen blir hengende uten referanse i pass 2.
+  evidence: Blind Hunter + Edge Case Hunter. API-et (story 1.8) har ansvaret for å generere unike `ny`-nøkler; server-side-garantien er ikke på plass ennå.
+- source_spec: `_bmad-output/specs/spec-story-1-9-erfaringskort/SPEC.md`
+  summary: `brukEndringer` nullstiller ikke `bevistabell`, så tabellen kan bli foreldet hvis den er satt når erfaringstekst endres. Pre-eksisterende mønster (andre handlinger gjør heller ikke dette).
+  evidence: Edge Case Hunter. `BevistabellRad`-typen er ukjent uten story 1.11 som kontekst; den mulige konsekvensen verifiseres der.
+
 ## Lukket av story 1.4 (2026-11-24)
 
 - `server-only` håndheves for `src/server/` med `tests/oppsett/server-only.test.ts` (rest fra 1.2/1.3).

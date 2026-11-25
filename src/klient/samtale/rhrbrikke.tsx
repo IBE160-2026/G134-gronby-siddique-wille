@@ -33,9 +33,10 @@ export function RHRBrikke({ felt, feltNavn, logg }: Props) {
 
   useEffect(() => {
     if (!forrigeErFylt.current && erFylt) {
+      forrigeErFylt.current = true;
       setPulserer(true);
       const tid = setTimeout(() => setPulserer(false), 600);
-      return () => clearTimeout(tid);
+      return () => { clearTimeout(tid); setPulserer(false); };
     }
     forrigeErFylt.current = erFylt;
   }, [erFylt]);
