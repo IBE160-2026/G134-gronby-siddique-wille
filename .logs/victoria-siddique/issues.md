@@ -26,4 +26,7 @@
 - [ ] 2026-11-26 [story-1-10-terskelregler](994-2026-11-26-20-48-33-story-1-10-terskelregler.md) — Demomanuset (1.13) må holde seg innenfor 3 oppfølgingsspørsmål per erfaring
 - [ ] 2026-11-26 [story-1-11-fremdrift](993-2026-11-26-21-01-42-story-1-11-fremdrift.md) — Fremdriftsmåleren står under chatinput; avgjør om den flyttes til sidepanelet når PR #7 (1.9) er merget
 - [ ] 2026-11-26 [story-1-11-fremdrift](993-2026-11-26-21-01-42-story-1-11-fremdrift.md) — epics.md story 1.11 AC sier «full ved N>3»; rett til N ≥ 3 (som UX-DR7/EXPERIENCE.md) etter at gruppen har bekreftet
-- [ ] 2026-11-26 [story-1-11-fremdrift](993-2026-11-26-21-01-42-story-1-11-fremdrift.md) — Sjekk fremdriftsmåleren i nettleser og med skjermleser (`role="status"`); ingen DOM-tester for Fremdriftsmaler/Samtalehandlinger
+- [ ] 2026-11-26 [story-1-11-fremdrift](993-2026-11-26-21-01-42-story-1-11-fremdrift.md) — Sjekk fremdriftsmåleren i nettleser og med skjermleser (`role="status"`). Render-testene kom i aad0396, men klikk og navigasjon er fortsatt ikke testet
+- [ ] 2026-11-26 [story-1-11-fremdrift](993-2026-11-26-21-01-42-story-1-11-fremdrift.md) — Merge 1.11 til main bare sammen med eller etter 1.12 (`/oppsummering` gir 404 til da)
+- [ ] 2026-11-26 [story-1-11-fremdrift](993-2026-11-26-21-01-42-story-1-11-fremdrift.md) — UX: tilleggstekst i statusregionen når «Gå videre til oppsummering» dukker opp
+- [ ] 2026-11-26 [story-1-11-fremdrift](993-2026-11-26-21-01-42-story-1-11-fremdrift.md) — Gruppen avgjør om «Ferdig» aktiveres etter åpningsspørsmålet eller etter første oppfølgingsspørsmål (UX-DR8 vs `kanTrykkeFerdig()`)
