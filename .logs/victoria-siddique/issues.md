@@ -34,3 +34,5 @@
 - [ ] 2026-11-26 [story-1-11-fremdrift](993-2026-11-26-21-01-42-story-1-11-fremdrift.md) — Merge 1.11 til main bare sammen med eller etter 1.12 (`/oppsummering` gir 404 til da)
 - [ ] 2026-11-26 [story-1-11-fremdrift](993-2026-11-26-21-01-42-story-1-11-fremdrift.md) — UX: tilleggstekst i statusregionen når «Gå videre til oppsummering» dukker opp
 - [ ] 2026-11-26 [story-1-11-fremdrift](993-2026-11-26-21-01-42-story-1-11-fremdrift.md) — Gruppen avgjør om «Ferdig» aktiveres etter åpningsspørsmålet eller etter første oppfølgingsspørsmål (UX-DR8 vs `kanTrykkeFerdig()`)
+- [ ] 2026-11-26 [story-1-11-fremdrift](993-2026-11-26-21-01-42-story-1-11-fremdrift.md) — To loggfiler har løpenummer 994 (1.9 og 1.10, laget på hver sin branch); gi én av dem nytt nummer etter merge
+- [ ] 2026-11-26 [story-1-11-fremdrift](993-2026-11-26-21-01-42-story-1-11-fremdrift.md) — Sjekk samtaleflaten i nettleser etter merge av 1.9 inn i 1.11 (sidepanel + fremdriftsmåler under chatinput)
