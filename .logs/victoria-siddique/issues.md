@@ -37,7 +37,10 @@
 - [ ] 2026-11-26 [story-1-11-fremdrift](993-2026-11-26-21-01-42-story-1-11-fremdrift.md) — To loggfiler har løpenummer 994 (1.9 og 1.10, laget på hver sin branch); gi én av dem nytt nummer etter merge
 - [x] 2026-11-26 [story-1-11-fremdrift](993-2026-11-26-21-01-42-story-1-11-fremdrift.md) — Sjekk samtaleflaten i nettleser etter merge av 1.9 inn i 1.11 (sidepanel + fremdriftsmåler under chatinput) (løst 2026-11-26: Chrome, 1440 og 1024 px)
 - [ ] 2026-11-26 [story-1-11-fremdrift](993-2026-11-26-21-01-42-story-1-11-fremdrift.md) — UX: tomme segmenter i fremdriftsmåleren (`bg-muted` på bakgrunnen) er nesten usynlige; vurder sterkere spor
-- [ ] 2026-11-26 [story-1-12-oppsummering](992-2026-11-26-21-37-07-story-1-12-oppsummering.md) — Kjør kodegjennomgang (bmad-code-review) av story 1.12
+- [x] 2026-11-26 [story-1-12-oppsummering](992-2026-11-26-21-37-07-story-1-12-oppsummering.md) — Kjør kodegjennomgang (bmad-code-review) av story 1.12 (løst 2026-11-26 i 98d2052)
 - [ ] 2026-11-26 [story-1-12-oppsummering](992-2026-11-26-21-37-07-story-1-12-oppsummering.md) — `/annonse` gir 404 til story 2.1; merge 1.12 sammen med eller før 2.1
 - [ ] 2026-11-26 [story-1-12-oppsummering](992-2026-11-26-21-37-07-story-1-12-oppsummering.md) — UX: sletting på Oppsummering har ingen angre eller bekreftelse; vurder om det trengs
 - [ ] 2026-11-26 [story-1-12-oppsummering](992-2026-11-26-21-37-07-story-1-12-oppsummering.md) — epics.md story 1.12 AC 3: skill 0 (tom tilstand) fra 1–2 (notis) og bruk entall ved 1; gruppen bekrefter
+- [ ] 2026-11-26 [story-1-12-oppsummering](992-2026-11-26-21-37-07-story-1-12-oppsummering.md) — DOM-tester (jsdom/testing-library) av blur → leggTilRettelse og fokus etter sletting på Oppsummering
+- [ ] 2026-11-26 [story-1-12-oppsummering](992-2026-11-26-21-37-07-story-1-12-oppsummering.md) — Epic 2: advarsel eller angre på Oppsummering, fordi retting og sletting nullstiller krav og bevistabell (AD-14)
+- [ ] 2026-11-26 [story-1-12-oppsummering](992-2026-11-26-21-37-07-story-1-12-oppsummering.md) — Samtale-siden mangler egen sidetittel (metadata.title, WCAG 2.4.2)
