@@ -18,3 +18,6 @@
 - [ ] 2026-11-24 [story-1-15-stegindikator](995-2026-11-24-22-13-19-story-1-15-stegindikator.md) — Story 1.8: `Appskall` må ligge i en felles layout hvis stegene blir ruter (ellers går fokus tapt), og Chatlogg må mountes før åpningsspørsmålet
 - [ ] 2026-11-24 [story-1-15-stegindikator](995-2026-11-24-22-13-19-story-1-15-stegindikator.md) — Gi Rikke beskjed om `Steg`/`STEG` i `src/klient/skall/steg.ts` og props-kontrakten (`aktivt`, `fullforte`, `onVelg`, `onNyOkt`)
 - [ ] 2026-11-24 [story-1-15-stegindikator](995-2026-11-24-22-13-19-story-1-15-stegindikator.md) — Gruppen bekrefter endringen i EXPERIENCE.md (chatloggen *har* en live-region for assistentsvar); NFR5 i epics.md bruker gammel ordlyd
+- [ ] 2026-11-26 [story-1-10-terskelregler](994-2026-11-26-20-48-33-story-1-10-terskelregler.md) — `kanGaVidere()` er ≥3 fangede, men ARCHITECTURE-SPINE sier «minst én fanget»; oppdater arkitekturen og lag egen sperre for kravuttrekk ved 0 fangede (1.12)
+- [ ] 2026-11-26 [story-1-10-terskelregler](994-2026-11-26-20-48-33-story-1-10-terskelregler.md) — `MAKS_ANNONSE_TEGN` er 20000 i `regler.ts`, men 6000 i epics.md (story 2.1); gruppen avklarer
+- [ ] 2026-11-26 [story-1-10-terskelregler](994-2026-11-26-20-48-33-story-1-10-terskelregler.md) — Kodegjennomgang av story 1.10 før den settes til done
