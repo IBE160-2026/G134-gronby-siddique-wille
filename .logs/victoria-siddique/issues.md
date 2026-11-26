@@ -18,6 +18,12 @@
 - [x] 2026-11-24 [story-1-15-stegindikator](995-2026-11-24-22-13-19-story-1-15-stegindikator.md) — Story 1.8: `Appskall` må ligge i en felles layout hvis stegene blir ruter (ellers går fokus tapt), og Chatlogg må mountes før åpningsspørsmålet (løst 2026-11-26: `Flytskall` i `(flyt)/layout.tsx` fra 1.8)
 - [ ] 2026-11-24 [story-1-15-stegindikator](995-2026-11-24-22-13-19-story-1-15-stegindikator.md) — Gi Rikke beskjed om `Steg`/`STEG` i `src/klient/skall/steg.ts` og props-kontrakten (`aktivt`, `fullforte`, `onVelg`, `onNyOkt`)
 - [ ] 2026-11-24 [story-1-15-stegindikator](995-2026-11-24-22-13-19-story-1-15-stegindikator.md) — Gruppen bekrefter endringen i EXPERIENCE.md (chatloggen *har* en live-region for assistentsvar); NFR5 i epics.md bruker gammel ordlyd
+- [ ] 2026-11-26 [story-1-10-terskelregler](994-2026-11-26-20-48-33-story-1-10-terskelregler.md) — `kanGaVidere()` er ≥3 fangede, men ARCHITECTURE-SPINE sier «minst én fanget»; oppdater arkitekturen og lag egen sperre for kravuttrekk ved 0 fangede (1.12)
+- [ ] 2026-11-26 [story-1-10-terskelregler](994-2026-11-26-20-48-33-story-1-10-terskelregler.md) — `MAKS_ANNONSE_TEGN` er 20000 i `regler.ts`, men 6000 i epics.md (story 2.1); gruppen avklarer
+- [x] 2026-11-26 [story-1-10-terskelregler](994-2026-11-26-20-48-33-story-1-10-terskelregler.md) — Kodegjennomgang av story 1.10 før den settes til done (løst 2026-11-26 i cb90d77)
+- [ ] 2026-11-26 [story-1-10-terskelregler](994-2026-11-26-20-48-33-story-1-10-terskelregler.md) — UX: egen eller varierende tekst når overgangsspørsmålet gjentas, og når maks er nådd og erfaringen er lukket
+- [ ] 2026-11-26 [story-1-10-terskelregler](994-2026-11-26-20-48-33-story-1-10-terskelregler.md) — Håndhev `MIN_ANNONSE_TEGN` i `/api/krav` (Epic 2)
+- [ ] 2026-11-26 [story-1-10-terskelregler](994-2026-11-26-20-48-33-story-1-10-terskelregler.md) — Demomanuset (1.13) må holde seg innenfor 3 oppfølgingsspørsmål per erfaring
 - [x] 2026-11-26 [story-1-6-startside](994-2026-11-26-19-45-13-story-1-6-startside.md) — Ved merge av PR #8: behold Start fra 1.6 i `src/app/page.tsx` (samme kontrakt: `startOkt` + `router.push("/samtale")`) (løst 2026-11-26 i ceb7292)
 - [ ] 2026-11-26 [story-1-6-startside](994-2026-11-26-19-45-13-story-1-6-startside.md) — DOM-test av Start-klikk gjennom `OktProvider` (`nyOkt`/`startOkt` og navigering) når jsdom er på plass
 - [x] 2026-11-26 [story-1-6-startside](994-2026-11-26-19-45-13-story-1-6-startside.md) — Kodegjennomgang av story 1.6 før `done` (løst 2026-11-26 i 70367cb)

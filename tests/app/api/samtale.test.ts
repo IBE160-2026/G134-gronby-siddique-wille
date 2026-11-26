@@ -3,7 +3,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { MAKS_ERFARINGER_SPORSMAL } from "@/kjerne/regler";
+import { MAKS_ERFARINGER_SPORSMAL, OVERGANGSSPORSMAL } from "@/kjerne/regler";
 import type { Erfaring, SamtaleForesporsel } from "@/kjerne/skjema";
 
 vi.mock("server-only", () => ({}));
@@ -131,6 +131,7 @@ describe("POST /api/samtale", () => {
       logg: medSvar.logg,
       erfaringer: [fanget("E1")],
       maksNadd: false,
+      lukkede: [],
     });
     expect(kall[0].signal).toBeInstanceOf(AbortSignal);
     kontroller.abort();
@@ -231,5 +232,64 @@ describe("POST /api/samtale", () => {
     const svar = await rute.POST(post({ ...medSvar, erfaringer, slettedeErfaringer: ["E8"] }));
     expect(JSON.parse(kall[0].melding).maksNadd).toBe(false);
     expect(await svar.json()).toEqual(modellsvar);
+  });
+
+  describe("oppfølgingsgrensen (AD-16)", () => {
+    const tom = (id: string): Erfaring => {
+      const felt = { tekst: "", kilder: [], rettetAvStudent: false };
+      return { id, tittel: id, tittelRettetAvStudent: false, rolle: felt, handling: felt, resultat: felt };
+    };
+    const oppfolging = (n: number) =>
+      foresporsel({
+        logg: [
+          { type: "sporsmal", id: "A1", tekst: "Hei?", gjelder: null },
+          { type: "svar", id: "S1", tekst: "Jeg jobbet på kafé." },
+          ...Array.from({ length: n }, (_, i) => ({
+            type: "sporsmal" as const,
+            id: `A${i + 2}`,
+            tekst: "Hva gjorde du der?",
+            gjelder: "E1",
+          })),
+        ],
+        erfaringer: [tom("E1"), tom("E2")],
+      });
+    const endringer = [{ type: "settTekst", erfaring: "E1", felt: "resultat", tekst: "Flere kunder" }];
+
+    it("et fjerde spørsmål om samme erfaring byttes med OVERGANGSSPORSMAL før svaret sendes", async () => {
+      const kall = svarer({ sporsmal: { tekst: "Og hva mer?", gjelder: "E1" }, endringer });
+      const svar = await rute.POST(post(oppfolging(3)));
+      expect(svar.status).toBe(200);
+      expect(await svar.json()).toEqual({
+        sporsmal: { tekst: OVERGANGSSPORSMAL, gjelder: null },
+        endringer,
+      });
+      expect(JSON.parse(kall[0].melding).lukkede).toEqual(["E1"]);
+    });
+
+    it("under grensen og for andre erfaringer går modellens spørsmål uendret gjennom", async () => {
+      const om = (gjelder: string) => ({ sporsmal: { tekst: "Og hva mer?", gjelder }, endringer });
+      const kall = svarer(om("E1"));
+      expect(await (await rute.POST(post(oppfolging(2)))).json()).toEqual(om("E1"));
+      expect(JSON.parse(kall[0].melding).lukkede).toEqual([]);
+      svarer(om("E2"));
+      expect(await (await rute.POST(post(oppfolging(3)))).json()).toEqual(om("E2"));
+    });
+
+    it("en slettet lukket erfaring sendes ikke i lukkede", async () => {
+      const kall = svarer({ sporsmal, endringer: [] });
+      await rute.POST(post({ ...oppfolging(3), slettedeErfaringer: ["E1"] }));
+      expect(JSON.parse(kall[0].melding).lukkede).toEqual([]);
+    });
+
+    it("maks nådd og lukket: spørsmålet byttes med MAKS_ERFARINGER_SPORSMAL", async () => {
+      svarer({ sporsmal: { tekst: "Og hva mer?", gjelder: "E1" }, endringer });
+      const f = oppfolging(3);
+      const erfaringer = Array.from({ length: 8 }, (_, i) => fanget(`E${i + 1}`));
+      const svar = await rute.POST(post({ ...f, erfaringer }));
+      expect(await svar.json()).toEqual({
+        sporsmal: { tekst: MAKS_ERFARINGER_SPORSMAL, gjelder: null },
+        endringer,
+      });
+    });
   });
 });

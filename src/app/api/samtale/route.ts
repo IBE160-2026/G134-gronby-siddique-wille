@@ -1,5 +1,5 @@
-import { begrensSamtaleSvar } from "@/kjerne/endringer";
-import { erMaksNadd } from "@/kjerne/regler";
+import { begrensOppfolging, begrensSamtaleSvar } from "@/kjerne/endringer";
+import { erLukket, erMaksNadd } from "@/kjerne/regler";
 import { SamtaleForesporsel, SamtaleSvar } from "@/kjerne/skjema";
 import { feilsvar } from "@/server/feil";
 import { ModellFeil } from "@/server/modell/grensesnitt";
@@ -18,6 +18,7 @@ export const dynamic = "force-dynamic";
  * 2. Modellen kalles med prompten fra `prompts/samtale.md` (ikke i demo).
  * 3. Svaret valideres mot `SamtaleSvar` → ellers `ugyldig_svar`.
  * 4. Grensen for fangede erfaringer håndheves (`begrensSamtaleSvar`).
+ * 5. Grensen for oppfølgingsspørsmål håndheves (`begrensOppfolging`).
  */
 export async function POST(request: Request): Promise<Response> {
   let data: unknown;
@@ -36,6 +37,7 @@ export async function POST(request: Request): Promise<Response> {
     erfaringer: foresporsel.erfaringer.filter((e) => !slettede.has(e.id)),
   };
   const maksNadd = erMaksNadd(tilstand);
+  const lukkede = tilstand.erfaringer.filter((e) => erLukket(tilstand, e.id)).map((e) => e.id);
 
   let modellSvar: unknown;
   try {
@@ -44,7 +46,7 @@ export async function POST(request: Request): Promise<Response> {
     modellSvar = await velgModell(foresporsel.modus).kall({
       steg: "samtale",
       system,
-      melding: JSON.stringify({ ...tilstand, maksNadd }),
+      melding: JSON.stringify({ ...tilstand, maksNadd, lukkede }),
       antallSvar: foresporsel.logg.filter((o) => o.type === "svar").length,
       signal: request.signal,
     });
@@ -56,7 +58,8 @@ export async function POST(request: Request): Promise<Response> {
   const svar = SamtaleSvar.safeParse(modellSvar);
   if (!svar.success) return feilsvar("ugyldig_svar");
 
-  return Response.json(begrensSamtaleSvar(svar.data, tilstand), {
+  const begrenset = begrensOppfolging(begrensSamtaleSvar(svar.data, tilstand), tilstand);
+  return Response.json(begrenset, {
     headers: { "Cache-Control": "no-store" },
   });
 }

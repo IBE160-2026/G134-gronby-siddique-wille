@@ -1,0 +1,18 @@
+# Review Findings: story 1.10
+
+Kodegjennomgang (`bmad-code-review`) 2026-11-26 av `main...story-1-10-terskelregler`. Fire lag: Blind Hunter, Edge Case Hunter, Verification Gap og Acceptance Auditor. Gruppert ga det 12 funn: 3 patch, 4 defer og 5 avvist. Acceptance Auditor fant at begge AC og CAP-1–CAP-5 er oppfylt. Victoria ba om at funnene ble triagert uten spørsmål. Funnet om `kanGaVidere` er derfor lagt som defer, ikke som decision. Patchene er tatt med, og `npm test` (314), `npm run lint` og `npm run build` er grønne.
+
+- [x] [Review][Patch] Testhull: `lukkede` er ikke testet for slettede erfaringer, det er ikke testet at maks + lukket gir `MAKS_ERFARINGER_SPORSMAL` gjennom ruten, «under grensen» sjekker ikke `lukkede: []`, maks-testen i kjernen sjekker ikke at endringene beholdes, og CAP-5 («endringer kan fortsatt fylle feltene») er bare vist indirekte [tests/app/api/samtale.test.ts, tests/kjerne/endringer.test.ts]. Alle tilfellene er lagt til. Testen for slettede erfaringer feiler når filteret fjernes (sjekket ved mutasjon).
+- [x] [Review][Patch] Prompten motsier seg selv når en erfaring er lukket og `maksNadd` er `true`: «spør om en ny erfaring» står mot «ikke opprett nye» [prompts/samtale.md]. Regelen sier nå hva modellen skal gjøre i begge tilfellene, og at den skal vise til «Ferdig» når alle er lukket og maks er nådd.
+- [x] [Review][Patch] «Ordrett fra EXPERIENCE.md» var bare en kopi i testen, så ordlyden kunne gli fra UX uten at noe feilet [tests/kjerne/regler.test.ts]. Testen leser nå EXPERIENCE.md og krever begge tekstene i anførselstegn.
+- [x] [Review][Defer] `kanGaVidere()` ≥ 3 er i konflikt med ARCHITECTURE-SPINE og EXPERIENCE.md («minst 1 fanget erfaring for å gå videre» fra Oppsummering). ≥ 3 gjelder å *tilby* «Gå videre til oppsummering» i samtalen [src/kjerne/regler.ts] — deferred: implementert slik Victoria ba om. Funksjonen har ingen kallere ennå. Gruppen velger før 1.11/1.12, for eksempel to regler (`kanTilbyOppsummering` ≥ 3, `kanGaVidere` ≥ 1), og oppdaterer arkitekturen.
+- [x] [Review][Defer] Det samme faste spørsmålet kan gjentas tur etter tur når modellen holder seg på en lukket erfaring. Med maks nådd inviterer `MAKS_ERFARINGER_SPORSMAL` til mer om erfaringer som er lukket [src/kjerne/endringer.ts] — deferred: krever ny ordlyd, som UX eier (variasjon eller en egen tekst for maks + lukket). Promptregelen gjør det sjeldnere.
+- [x] [Review][Defer] `MIN_ANNONSE_TEGN` skal også håndheves i `/api/krav` (`ugyldig_foresporsel`), ikke bare i UI (review-reconcile.md) [src/kjerne/regler.ts] — deferred: ruten kommer i Epic 2.
+- [x] [Review][Defer] Demo går også gjennom `begrensOppfolging`. Et manusspørsmål nummer fire om samme erfaring blir byttet stille [src/app/api/samtale/route.ts] — deferred: demodata kommer i story 1.13, og manuset må holde seg innenfor grensen.
+
+**Rejected:**
+- Modellen kan omgå grensen ved å sette `gjelder: null` eller `{ ny }` på et spørsmål om en lukket erfaring — low: kan ikke skilles fra et ekte spørsmål om en ny erfaring uten å tolke teksten. Prompten sender `lukkede` og har regelen.
+- Overskriftskommentaren i `regler.ts` er endret — false: bare den utdaterte setningen «Oppfølgingsgrensen kommer i story 1.10» er byttet. Ingen eksporter eller logikk er endret.
+- `lukkede` og byttet behandler slettede erfaringer ulikt — false: begge følger specen (constraint og assumption).
+- Det byttede spørsmålet kan motsi en `opprett` i samme svar — low: krever at modellen oppretter en ny erfaring og samtidig spør om en annen, lukket erfaring. Rettelsen krever ny logikk for å omdirigere `gjelder`.
+- `sources: []` i SPEC.md — avvist: rettelsen endrer specen under gjennomgang. Formatet er det samme som i de tidligere specene.

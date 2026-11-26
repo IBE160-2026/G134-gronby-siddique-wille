@@ -1,8 +1,9 @@
 import { describe, expect, it } from "vitest";
 
-import { begrensSamtaleSvar, brukEndringer, losGjelder } from "@/kjerne/endringer";
+import { begrensOppfolging, begrensSamtaleSvar, brukEndringer, losGjelder } from "@/kjerne/endringer";
+import { erFanget } from "@/kjerne/fanget";
 import { tomOkt, type Okt } from "@/kjerne/okt";
-import { MAKS_ERFARINGER_SPORSMAL, MAKS_LISTE } from "@/kjerne/regler";
+import { MAKS_ERFARINGER_SPORSMAL, MAKS_LISTE, OVERGANGSSPORSMAL } from "@/kjerne/regler";
 import type { Endring, SamtaleSvar } from "@/kjerne/skjema";
 
 import { erfaring, fangede, felt, sporsmal, svar, tomErfaring } from "./hjelpere";
@@ -170,5 +171,64 @@ describe("begrensSamtaleSvar (maks nådd)", () => {
     const resultat = begrensSamtaleSvar(svarMed("E3"), { erfaringer: fangede(8), logg });
     expect(resultat.sporsmal).toEqual({ tekst: "Fortell om noe nytt!", gjelder: "E3" });
     expect(resultat.endringer).toHaveLength(1);
+  });
+});
+
+describe("begrensOppfolging (AD-16)", () => {
+  const lukketE1 = [sporsmal("A1", "E1"), svar("S1"), sporsmal("A2", "E1"), sporsmal("A3", "E1")];
+  const modellsvar = (gjelder: SamtaleSvar["sporsmal"]["gjelder"]): SamtaleSvar => ({
+    sporsmal: { tekst: "Hva mer gjorde du?", gjelder },
+    endringer: [{ type: "settTekst", erfaring: "E1", felt: "resultat", tekst: "Flere kunder" }],
+  });
+
+  it("spørsmål om en lukket erfaring byttes med OVERGANGSSPORSMAL, og endringene beholdes", () => {
+    const tilstand = { erfaringer: [tomErfaring("E1")], logg: lukketE1 };
+    expect(begrensOppfolging(modellsvar("E1"), tilstand)).toEqual({
+      sporsmal: { tekst: OVERGANGSSPORSMAL, gjelder: null },
+      endringer: modellsvar("E1").endringer,
+    });
+  });
+
+  it("under grensen, om andre erfaringer og om nye erfaringer er svaret uendret", () => {
+    const tilstand = { erfaringer: [tomErfaring("E1"), tomErfaring("E2")], logg: lukketE1 };
+    const toSporsmal = { ...tilstand, logg: lukketE1.slice(0, 3) };
+    for (const [svarFra, t] of [
+      [modellsvar("E1"), toSporsmal],
+      [modellsvar("E2"), tilstand],
+      [modellsvar(null), tilstand],
+      [modellsvar({ ny: "n1" }), tilstand],
+    ] as const) {
+      expect(begrensOppfolging(svarFra, t)).toBe(svarFra);
+    }
+  });
+
+  it("når maks også er nådd, brukes MAKS_ERFARINGER_SPORSMAL", () => {
+    const erfaringer = fangede(8);
+    const logg = [svar("S1"), sporsmal("A1", "E1"), sporsmal("A2", "E1"), sporsmal("A3", "E1")];
+    expect(begrensOppfolging(modellsvar("E1"), { erfaringer, logg })).toEqual({
+      sporsmal: { tekst: MAKS_ERFARINGER_SPORSMAL, gjelder: null },
+      endringer: modellsvar("E1").endringer,
+    });
+  });
+
+  it("endringene som beholdes, kan fortsatt fylle en lukket erfaring til den er fanget (AD-7)", () => {
+    const logg = [...lukketE1, svar("S2")];
+    const start = okt({
+      logg,
+      erfaringer: [erfaring("E1", { resultat: felt("") })],
+    });
+    const begrenset = begrensOppfolging(
+      {
+        sporsmal: { tekst: "Hva ble resultatet?", gjelder: "E1" },
+        endringer: [
+          { type: "settTekst", erfaring: "E1", felt: "resultat", tekst: "Flere kunder" },
+          { type: "leggTilKilde", erfaring: "E1", felt: "resultat", svarId: "S2" },
+        ],
+      },
+      { erfaringer: start.erfaringer, logg },
+    );
+    expect(begrenset.sporsmal).toEqual({ tekst: OVERGANGSSPORSMAL, gjelder: null });
+    const { okt: etter } = brukEndringer(start, begrenset.endringer);
+    expect(erFanget(etter.erfaringer[0], logg)).toBe(true);
   });
 });
