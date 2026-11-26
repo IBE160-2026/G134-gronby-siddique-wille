@@ -18,7 +18,7 @@
 - [ ] 2026-11-24 [story-1-15-stegindikator](995-2026-11-24-22-13-19-story-1-15-stegindikator.md) — Story 1.8: `Appskall` må ligge i en felles layout hvis stegene blir ruter (ellers går fokus tapt), og Chatlogg må mountes før åpningsspørsmålet
 - [ ] 2026-11-24 [story-1-15-stegindikator](995-2026-11-24-22-13-19-story-1-15-stegindikator.md) — Gi Rikke beskjed om `Steg`/`STEG` i `src/klient/skall/steg.ts` og props-kontrakten (`aktivt`, `fullforte`, `onVelg`, `onNyOkt`)
 - [ ] 2026-11-24 [story-1-15-stegindikator](995-2026-11-24-22-13-19-story-1-15-stegindikator.md) — Gruppen bekrefter endringen i EXPERIENCE.md (chatloggen *har* en live-region for assistentsvar); NFR5 i epics.md bruker gammel ordlyd
-- [ ] 2026-11-26 [story-1-6-startside](994-2026-11-26-19-45-13-story-1-6-startside.md) — Ved merge av PR #8: behold Start fra 1.6 i `src/app/page.tsx` (samme kontrakt: `startOkt` + `router.push("/samtale")`)
+- [x] 2026-11-26 [story-1-6-startside](994-2026-11-26-19-45-13-story-1-6-startside.md) — Ved merge av PR #8: behold Start fra 1.6 i `src/app/page.tsx` (samme kontrakt: `startOkt` + `router.push("/samtale")`) (løst 2026-11-26 i ceb7292)
 - [ ] 2026-11-26 [story-1-6-startside](994-2026-11-26-19-45-13-story-1-6-startside.md) — DOM-test av Start-klikk gjennom `OktProvider` (`nyOkt`/`startOkt` og navigering) når jsdom er på plass
 - [x] 2026-11-26 [story-1-6-startside](994-2026-11-26-19-45-13-story-1-6-startside.md) — Kodegjennomgang av story 1.6 før `done` (løst 2026-11-26 i 70367cb)
 - [ ] 2026-11-26 [story-1-6-startside](994-2026-11-26-19-45-13-story-1-6-startside.md) — Story 1.14: bekreftelse også når Start tømmer en påbegynt økt
