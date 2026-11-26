@@ -21,7 +21,7 @@
 - [ ] 2026-11-25 [story-1-9-erfaringskort](994-2026-11-25-20-57-00-story-1-9-erfaringskort.md) — Ingen automatiske tester for `RHRBrikke` og `Erfaringskort`; tas med story 1.8
 - [x] 2026-11-25 [story-1-9-erfaringskort](994-2026-11-25-20-57-00-story-1-9-erfaringskort.md) — Story 1.8 kobler `brukEndringer`-dispatch til `/api/samtale`-svar og fjerner hardkodet eksempeldata fra dev-siden (løst 2026-11-26 i 2bd7356: Sidepanel i samtaleflate.tsx, oppdateres via `mottaSamtaleSvar`)
 - [x] 2026-11-25 [story-1-9-erfaringskort](994-2026-11-25-20-57-00-story-1-9-erfaringskort.md) — Story 1.8 må løse `sporsmal.gjelder: { ny }` → E-ID-mapping og bekrefte at `brukEndringer` ikke kan double-applies (løst 2026-11-26: `losGjelder()` og versjon/S-ID-sjekk i `mottaSamtaleSvar` fra 1.8)
-- [ ] 2026-11-26 [story-1-9-erfaringskort](994-2026-11-25-20-57-00-story-1-9-erfaringskort.md) — Sidepanelet i `/samtale` er ikke sjekket visuelt i nettleser etter merge med 1.8 (bare test, lint og build)
+- [x] 2026-11-26 [story-1-9-erfaringskort](994-2026-11-25-20-57-00-story-1-9-erfaringskort.md) — Sidepanelet i `/samtale` er ikke sjekket visuelt i nettleser etter merge med 1.8 (bare test, lint og build) (løst 2026-11-26: sjekket i Chrome på story-1-11-fremdrift)
 - [ ] 2026-11-26 [story-1-10-terskelregler](994-2026-11-26-20-48-33-story-1-10-terskelregler.md) — `kanGaVidere()` er ≥3 fangede, men ARCHITECTURE-SPINE sier «minst én fanget»; oppdater arkitekturen og lag egen sperre for kravuttrekk ved 0 fangede (1.12)
 - [ ] 2026-11-26 [story-1-10-terskelregler](994-2026-11-26-20-48-33-story-1-10-terskelregler.md) — `MAKS_ANNONSE_TEGN` er 20000 i `regler.ts`, men 6000 i epics.md (story 2.1); gruppen avklarer
 - [x] 2026-11-26 [story-1-10-terskelregler](994-2026-11-26-20-48-33-story-1-10-terskelregler.md) — Kodegjennomgang av story 1.10 før den settes til done (løst 2026-11-26 i cb90d77)
@@ -30,9 +30,10 @@
 - [ ] 2026-11-26 [story-1-10-terskelregler](994-2026-11-26-20-48-33-story-1-10-terskelregler.md) — Demomanuset (1.13) må holde seg innenfor 3 oppfølgingsspørsmål per erfaring
 - [ ] 2026-11-26 [story-1-11-fremdrift](993-2026-11-26-21-01-42-story-1-11-fremdrift.md) — Fremdriftsmåleren står under chatinput; avgjør om den flyttes til sidepanelet når PR #7 (1.9) er merget
 - [ ] 2026-11-26 [story-1-11-fremdrift](993-2026-11-26-21-01-42-story-1-11-fremdrift.md) — epics.md story 1.11 AC sier «full ved N>3»; rett til N ≥ 3 (som UX-DR7/EXPERIENCE.md) etter at gruppen har bekreftet
-- [ ] 2026-11-26 [story-1-11-fremdrift](993-2026-11-26-21-01-42-story-1-11-fremdrift.md) — Sjekk fremdriftsmåleren i nettleser og med skjermleser (`role="status"`). Render-testene kom i aad0396, men klikk og navigasjon er fortsatt ikke testet
+- [ ] 2026-11-26 [story-1-11-fremdrift](993-2026-11-26-21-01-42-story-1-11-fremdrift.md) — Sjekk fremdriftsmåleren med skjermleser (VoiceOver, `role="status"`). Nettleser, klikk og navigasjon er sjekket i Chrome 2026-11-26
 - [ ] 2026-11-26 [story-1-11-fremdrift](993-2026-11-26-21-01-42-story-1-11-fremdrift.md) — Merge 1.11 til main bare sammen med eller etter 1.12 (`/oppsummering` gir 404 til da)
 - [ ] 2026-11-26 [story-1-11-fremdrift](993-2026-11-26-21-01-42-story-1-11-fremdrift.md) — UX: tilleggstekst i statusregionen når «Gå videre til oppsummering» dukker opp
 - [ ] 2026-11-26 [story-1-11-fremdrift](993-2026-11-26-21-01-42-story-1-11-fremdrift.md) — Gruppen avgjør om «Ferdig» aktiveres etter åpningsspørsmålet eller etter første oppfølgingsspørsmål (UX-DR8 vs `kanTrykkeFerdig()`)
 - [ ] 2026-11-26 [story-1-11-fremdrift](993-2026-11-26-21-01-42-story-1-11-fremdrift.md) — To loggfiler har løpenummer 994 (1.9 og 1.10, laget på hver sin branch); gi én av dem nytt nummer etter merge
-- [ ] 2026-11-26 [story-1-11-fremdrift](993-2026-11-26-21-01-42-story-1-11-fremdrift.md) — Sjekk samtaleflaten i nettleser etter merge av 1.9 inn i 1.11 (sidepanel + fremdriftsmåler under chatinput)
+- [x] 2026-11-26 [story-1-11-fremdrift](993-2026-11-26-21-01-42-story-1-11-fremdrift.md) — Sjekk samtaleflaten i nettleser etter merge av 1.9 inn i 1.11 (sidepanel + fremdriftsmåler under chatinput) (løst 2026-11-26: Chrome, 1440 og 1024 px)
+- [ ] 2026-11-26 [story-1-11-fremdrift](993-2026-11-26-21-01-42-story-1-11-fremdrift.md) — UX: tomme segmenter i fremdriftsmåleren (`bg-muted` på bakgrunnen) er nesten usynlige; vurder sterkere spor
