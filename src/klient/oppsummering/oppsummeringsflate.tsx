@@ -9,6 +9,7 @@ import {
   fangedeErfaringer,
   kanGaTilKravuttrekk,
   oppsummeringsnotis,
+  visningsnavn,
 } from "@/kjerne/oppsummering";
 import { useOkt, useOktDispatch } from "@/klient/okt/kontekst";
 import type { Steg } from "@/klient/skall/steg";
@@ -30,7 +31,8 @@ export function Oppsummeringsflate() {
   const dispatch = useOktDispatch();
   const router = useRouter();
   const overskrift = useRef<HTMLHeadingElement>(null);
-  const [kunngjoring, setKunngjoring] = useState("");
+  // Teller i `key`, så to like kunngjøringer etter hverandre også leses opp.
+  const [kunngjoring, setKunngjoring] = useState({ tekst: "", nr: 0 });
 
   const fangede = fangedeErfaringer(okt);
   const notis = oppsummeringsnotis(fangede.length);
@@ -42,7 +44,11 @@ export function Oppsummeringsflate() {
     <div className="min-h-0 flex-1 overflow-y-auto">
       <div className="mx-auto flex w-full max-w-column-max flex-col gap-section-gap px-6 py-10">
         <div className="flex flex-col gap-2">
-          <h1 ref={overskrift} tabIndex={-1} className="type-display-sm outline-none">
+          <h1
+            ref={overskrift}
+            tabIndex={-1}
+            className="type-display-sm rounded-sm outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+          >
             Oppsummering
           </h1>
           {fangede.length > 0 && (
@@ -54,7 +60,10 @@ export function Oppsummeringsflate() {
         </div>
 
         {notis?.type === "notis" && (
-          <Alert>
+          // Fast innhold, ikke et varsel: `status` (polite) i stedet for
+          // shadcn-standarden `alert`, så den ikke avbryter kunngjøringen av
+          // en sletting når notisen dukker opp (3 → 2 fangede).
+          <Alert role="status">
             <AlertDescription className="text-foreground">{notis.tekst}</AlertDescription>
           </Alert>
         )}
@@ -78,7 +87,10 @@ export function Oppsummeringsflate() {
                   }
                   onSlett={() => {
                     dispatch({ type: "slettErfaring", erfaringId: erfaring.id });
-                    setKunngjoring(`Erfaringen «${erfaring.tittel}» er slettet.`);
+                    setKunngjoring((k) => ({
+                      tekst: `Erfaringen «${visningsnavn(erfaring.tittel)}» er slettet.`,
+                      nr: k.nr + 1,
+                    }));
                     // Knappen forsvinner med kortet; fokus skal ikke falle til <body>.
                     overskrift.current?.focus();
                   }}
@@ -103,7 +115,7 @@ export function Oppsummeringsflate() {
         </div>
 
         <p role="status" className="sr-only">
-          {kunngjoring}
+          <span key={kunngjoring.nr}>{kunngjoring.tekst}</span>
         </p>
       </div>
     </div>

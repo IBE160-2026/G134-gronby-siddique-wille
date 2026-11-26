@@ -1,4 +1,5 @@
 import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 
 import { describe, expect, it } from "vitest";
 
@@ -8,6 +9,7 @@ import {
   kanGaTilKravuttrekk,
   oppsummeringsnotis,
   rettetTekst,
+  visningsnavn,
 } from "@/kjerne/oppsummering";
 import { MAAL_ERFARINGER } from "@/kjerne/regler";
 
@@ -27,6 +29,16 @@ describe("rettetTekst (AD-5: rettelse bare ved faktisk endring)", () => {
   it("gir null når bare mellomrom foran eller bak er endret", () => {
     expect(rettetTekst("Skiftleder", " Skiftleder  ")).toBeNull();
     expect(rettetTekst(" Skiftleder ", "Skiftleder")).toBeNull();
+  });
+
+  it("gir null når bare mellomrom eller linjeskift inne i teksten er endret", () => {
+    expect(rettetTekst("Skift leder", "Skift  leder")).toBeNull();
+    expect(rettetTekst("Skift leder", "Skift\nleder")).toBeNull();
+    expect(rettetTekst("Skift\t leder", "Skift leder")).toBeNull();
+  });
+
+  it("beholder linjeskift inne i en tekst som faktisk er endret", () => {
+    expect(rettetTekst("Skiftleder", "Skiftleder\npå helg")).toBe("Skiftleder\npå helg");
   });
 
   it("gir null for tom tekst, så forrige tekst står", () => {
@@ -97,13 +109,30 @@ describe("oppsummeringsnotis (EXPERIENCE.md State Patterns)", () => {
   });
 
   it("tekstene står i EXPERIENCE.md", () => {
+    // Uavhengig av arbeidsmappen Vitest kjøres fra.
     const experience = readFileSync(
-      "docs/ux-designs/ux-G134-gronby-siddique-wille-2026-11-04/EXPERIENCE.md",
+      fileURLToPath(
+        new URL(
+          "../../docs/ux-designs/ux-G134-gronby-siddique-wille-2026-11-04/EXPERIENCE.md",
+          import.meta.url,
+        ),
+      ),
       "utf8",
     );
     expect(experience).toContain(`«${TOM_OPPSUMMERING}»`);
     expect(experience).toContain(
       "Du kan fortsette samtalen eller gå videre med det du har.»",
     );
+  });
+});
+
+describe("visningsnavn", () => {
+  it("gir tittelen, trimmet", () => {
+    expect(visningsnavn("  Butikkjobb ")).toBe("Butikkjobb");
+  });
+
+  it("gir en reserve for tom tittel, så tilgjengelige navn aldri er tomme", () => {
+    expect(visningsnavn("")).toBe("Erfaring uten tittel");
+    expect(visningsnavn("   ")).toBe("Erfaring uten tittel");
   });
 });

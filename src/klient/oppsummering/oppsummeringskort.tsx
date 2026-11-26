@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import type { Erfaring, FeltNavn } from "@/kjerne/okt";
+import { visningsnavn } from "@/kjerne/oppsummering";
 
 import { RedigerbartFelt } from "./redigerbartfelt";
 
@@ -23,9 +24,10 @@ type OppsummeringskortProps = {
  * endres aldri her, så rettet tekst blir aldri et sitat (AD-8).
  */
 export function Oppsummeringskort({ erfaring, onRett, onSlett }: OppsummeringskortProps) {
+  const navn = visningsnavn(erfaring.tittel);
   return (
     <article
-      aria-label={erfaring.tittel}
+      aria-label={navn}
       className="flex flex-col gap-4 rounded-md border border-border bg-card p-5"
     >
       <div className="flex items-end gap-3">
@@ -40,7 +42,7 @@ export function Oppsummeringskort({ erfaring, onRett, onSlett }: Oppsummeringsko
         />
         <Button
           variant="ghost"
-          aria-label={`Slett erfaringen «${erfaring.tittel}»`}
+          aria-label={`Slett erfaringen «${navn}»`}
           onClick={onSlett}
         >
           Slett

@@ -25,8 +25,8 @@ Studenten skal se erfaringene systemet har fanget, og kunne rette dem før kravu
   - **intent:** Studenten kan redigere tittel og R-H-R-tekst direkte, og endringen lagres når feltet forlates.
   - **success:**
     - Blur med tekst som faktisk er endret, gir én `leggTilRettelse`, som lager en `R…`-oppføring og setter `rettetAvStudent`.
-    - Blur uten endring, eller med bare mellomrom endret, gir ingen dispatch.
-    - Tom tekst lagres ikke, og feltet får tilbake forrige tekst. `Esc` angrer utkastet.
+    - Blur uten endring, eller med bare mellomrom og linjeskift endret, gir ingen dispatch.
+    - Tom tekst lagres ikke, og feltet får tilbake forrige tekst. `Esc` angrer utkastet, og `Enter` lagrer tittelen.
     - Kildene (svar-ID-er) endres ikke, så rettet tekst blir aldri et sitat (AD-8).
 - **CAP-3** Sletting
   - **intent:** Studenten kan slette en erfaring.

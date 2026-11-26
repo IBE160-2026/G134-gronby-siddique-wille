@@ -11,15 +11,24 @@ type Samtaletilstand = {
   logg: readonly LoggOppforing[];
 };
 
+/** Mellomrom, tabulatorer og linjeskift slått sammen til ett mellomrom. */
+const likeOrd = (tekst: string) => tekst.trim().replace(/\s+/g, " ");
+
 /**
  * Teksten som skal lagres når studenten forlater et felt, eller `null` når
  * ingenting skal lagres: tom tekst (feltet får tilbake forrige tekst) eller
- * ingen faktisk endring utover mellomrom foran og bak.
+ * ingen faktisk endring utover mellomrom og linjeskift. Den lagrede teksten
+ * er trimmet, men linjeskift inne i teksten beholdes.
  */
 export function rettetTekst(gammel: string, ny: string): string | null {
   const trimmet = ny.trim();
-  if (trimmet === "" || trimmet === gammel.trim()) return null;
+  if (trimmet === "" || likeOrd(trimmet) === likeOrd(gammel)) return null;
   return trimmet;
+}
+
+/** Navnet på en erfaring i etiketter og kunngjøringer; tom tittel får en reserve. */
+export function visningsnavn(tittel: string): string {
+  return tittel.trim() || "Erfaring uten tittel";
 }
 
 /** De fangede erfaringene, i øktens rekkefølge. */
