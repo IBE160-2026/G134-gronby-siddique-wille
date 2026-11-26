@@ -24,3 +24,6 @@
 - [ ] 2026-11-26 [story-1-10-terskelregler](994-2026-11-26-20-48-33-story-1-10-terskelregler.md) — UX: egen eller varierende tekst når overgangsspørsmålet gjentas, og når maks er nådd og erfaringen er lukket
 - [ ] 2026-11-26 [story-1-10-terskelregler](994-2026-11-26-20-48-33-story-1-10-terskelregler.md) — Håndhev `MIN_ANNONSE_TEGN` i `/api/krav` (Epic 2)
 - [ ] 2026-11-26 [story-1-10-terskelregler](994-2026-11-26-20-48-33-story-1-10-terskelregler.md) — Demomanuset (1.13) må holde seg innenfor 3 oppfølgingsspørsmål per erfaring
+- [ ] 2026-11-26 [story-1-11-fremdrift](993-2026-11-26-21-01-42-story-1-11-fremdrift.md) — Fremdriftsmåleren står under chatinput; avgjør om den flyttes til sidepanelet når PR #7 (1.9) er merget
+- [ ] 2026-11-26 [story-1-11-fremdrift](993-2026-11-26-21-01-42-story-1-11-fremdrift.md) — epics.md story 1.11 AC sier «full ved N>3»; rett til N ≥ 3 (som UX-DR7/EXPERIENCE.md) etter at gruppen har bekreftet
+- [ ] 2026-11-26 [story-1-11-fremdrift](993-2026-11-26-21-01-42-story-1-11-fremdrift.md) — Sjekk fremdriftsmåleren i nettleser og med skjermleser (`role="status"`); ingen DOM-tester for Fremdriftsmaler/Samtalehandlinger
