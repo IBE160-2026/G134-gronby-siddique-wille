@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
-import { Button } from "@/components/ui/button";
 import { erLoggFull, kanTrykkeFerdig } from "@/kjerne/regler";
 import type { SamtaleForesporsel } from "@/kjerne/skjema";
 import { useOkt, useOktDispatch } from "@/klient/okt/kontekst";
@@ -11,6 +10,7 @@ import { useOkt, useOktDispatch } from "@/klient/okt/kontekst";
 import { lagForesporsel, sendSamtale, tilMeldinger, type SendtSvar } from "./api";
 import { Chatinput } from "./chatinput";
 import { Chatlogg } from "./chatlogg";
+import { Samtalehandlinger } from "./samtalehandlinger";
 
 /** Én feiltoast om gangen; et nytt forsøk fjerner den forrige. */
 const FEIL_TOAST = "samtale-feil";
@@ -125,13 +125,7 @@ export function Samtaleflate() {
         // Låst mens modellen svarer, før første spørsmål og når loggen er full.
         venter={venter || !harSporsmal || loggFull}
       />
-      {/* Alltid synlig, aktiv etter første spørsmål (EXPERIENCE.md, AD-16).
-        Kobles til Oppsummering i story 1.11. */}
-      <div className="flex justify-end">
-        <Button variant="outline" size="lg" disabled={!harSporsmal} onClick={() => {}}>
-          Ferdig
-        </Button>
-      </div>
+      <Samtalehandlinger />
     </div>
   );
 }
