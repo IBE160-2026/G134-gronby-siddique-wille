@@ -11,6 +11,7 @@ import { useOkt, useOktDispatch } from "@/klient/okt/kontekst";
 import { lagForesporsel, sendSamtale, tilMeldinger, type SendtSvar } from "./api";
 import { Chatinput } from "./chatinput";
 import { Chatlogg } from "./chatlogg";
+import { Sidepanel } from "./sidepanel";
 
 /** Én feiltoast om gangen; et nytt forsøk fjerner den forrige. */
 const FEIL_TOAST = "samtale-feil";
@@ -106,32 +107,40 @@ export function Samtaleflate() {
   }
 
   return (
-    <div className="mx-auto flex min-h-0 w-full max-w-chat-max flex-1 flex-col gap-5 px-6 py-6">
-      <Chatlogg meldinger={meldinger} venter={venter} className="min-h-0 flex-1" />
-      {loggFull && (
-        <p className="text-sm text-muted-foreground">
-          Samtalen er så lang som den kan bli. Trykk «Ferdig» for å gå videre.
-        </p>
-      )}
-      <Chatinput
-        verdi={utkast}
-        onEndre={(verdi) => {
-          setUtkast(verdi);
-          // Endret utkast: «Prøv igjen» ville sendt den gamle teksten. Send
-          // sender det nye. (Før første spørsmål er feltet låst.)
-          toast.dismiss(FEIL_TOAST);
-        }}
-        onSend={send}
-        // Låst mens modellen svarer, før første spørsmål og når loggen er full.
-        venter={venter || !harSporsmal || loggFull}
-      />
-      {/* Alltid synlig, aktiv etter første spørsmål (EXPERIENCE.md, AD-16).
-        Kobles til Oppsummering i story 1.11. */}
-      <div className="flex justify-end">
-        <Button variant="outline" size="lg" disabled={!harSporsmal} onClick={() => {}}>
-          Ferdig
-        </Button>
+    // To kolonner: chatten til venstre, erfaringskortene til høyre (story 1.9).
+    // Sidepanelet leser økten selv og oppdateres når `mottaSamtaleSvar` fletter
+    // inn endringene.
+    <div className="flex min-h-0 flex-1 overflow-hidden">
+      <div className="mx-auto flex min-h-0 w-full max-w-chat-max flex-1 flex-col gap-5 px-6 py-6">
+        <Chatlogg meldinger={meldinger} venter={venter} className="min-h-0 flex-1" />
+        {loggFull && (
+          <p className="text-sm text-muted-foreground">
+            Samtalen er så lang som den kan bli. Trykk «Ferdig» for å gå videre.
+          </p>
+        )}
+        <Chatinput
+          verdi={utkast}
+          onEndre={(verdi) => {
+            setUtkast(verdi);
+            // Endret utkast: «Prøv igjen» ville sendt den gamle teksten. Send
+            // sender det nye. (Før første spørsmål er feltet låst.)
+            toast.dismiss(FEIL_TOAST);
+          }}
+          onSend={send}
+          // Låst mens modellen svarer, før første spørsmål og når loggen er full.
+          venter={venter || !harSporsmal || loggFull}
+        />
+        {/* Alltid synlig, aktiv etter første spørsmål (EXPERIENCE.md, AD-16).
+          Kobles til Oppsummering i story 1.11. */}
+        <div className="flex justify-end">
+          <Button variant="outline" size="lg" disabled={!harSporsmal} onClick={() => {}}>
+            Ferdig
+          </Button>
+        </div>
       </div>
+      <aside aria-label="Erfaringer" className="w-side-panel shrink-0 border-l border-border px-4">
+        <Sidepanel />
+      </aside>
     </div>
   );
 }

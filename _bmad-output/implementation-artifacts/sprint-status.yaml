@@ -44,12 +44,12 @@ development_status:
   1-6-startside-med-personvernstekst-og-øktstart: review
   1-7-samtale-ui-chatboble-chatinput-og-skriveindikator: done
   1-8-samtalerute-som-stiller-og-mottar-oppfølgingsspørsmål: done
-  1-9-erfaringskort-r-h-r-brikker-og-fanget-logikk: backlog
+  1-9-erfaringskort-r-h-r-brikker-og-fanget-logikk: review
   1-10-terskelregler-for-oppfølgingsspørsmål: backlog
   1-11-fremdriftsmåler-og-ferdig-knapp: backlog
   1-12-oppsummeringsside-med-retting-av-erfaringer: backlog
   1-13-demomodus-for-samtalen: backlog
-  1-14-beforeunload-varsel-og-ny-økt-med-bekreftelse: backlog
+  1-14-beforeunload-varsel-og-ny-økt-med-bekreftelse: review
   1-15-stegindikator-skall-og-tilgjengelighet-for-samtaleflaten: done
   1-16-merkevaretema-og-kontrastverifisering: done
   1-17-responsivt-oppsett-for-hovedflatene: backlog
