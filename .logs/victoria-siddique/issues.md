@@ -18,3 +18,6 @@
 - [ ] 2026-11-24 [story-1-15-stegindikator](995-2026-11-24-22-13-19-story-1-15-stegindikator.md) — Story 1.8: `Appskall` må ligge i en felles layout hvis stegene blir ruter (ellers går fokus tapt), og Chatlogg må mountes før åpningsspørsmålet
 - [ ] 2026-11-24 [story-1-15-stegindikator](995-2026-11-24-22-13-19-story-1-15-stegindikator.md) — Gi Rikke beskjed om `Steg`/`STEG` i `src/klient/skall/steg.ts` og props-kontrakten (`aktivt`, `fullforte`, `onVelg`, `onNyOkt`)
 - [ ] 2026-11-24 [story-1-15-stegindikator](995-2026-11-24-22-13-19-story-1-15-stegindikator.md) — Gruppen bekrefter endringen i EXPERIENCE.md (chatloggen *har* en live-region for assistentsvar); NFR5 i epics.md bruker gammel ordlyd
+- [ ] 2026-11-26 [story-1-14-ny-okt](994-2026-11-25-18-41-00-story-1-14-ny-okt.md) — Ingen test for `useBeforeUnload`-lytteren (renderHook + jsdom + spy, mønster finnes ikke i suiten ennå)
+- [ ] 2026-11-26 [story-1-14-ny-okt](994-2026-11-25-18-41-00-story-1-14-ny-okt.md) — Bekreft at base-ui bruker document.activeElement ved åpning til fokusbann uten AlertDialogTrigger (maybe-false, medium hvis feil)
+- [ ] 2026-11-26 [story-1-14-ny-okt](994-2026-11-25-18-41-00-story-1-14-ny-okt.md) — Story 1.8: koble useBeforeUnload og NyOktDialog til produksjons-samtalevisningen
