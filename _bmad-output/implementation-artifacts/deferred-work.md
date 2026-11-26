@@ -49,6 +49,15 @@
   summary: Bevisst avvik, ingen handling. Mockupen `mockups/samtale.html` viser chatteksten i Inter, mens `chat-body` er Source Serif 4 i DESIGN.md og i koden.
   evidence: Blind Hunter og Acceptance Auditor. Victoria valgte serif (som i story-AC), og DESIGN.md-tokenet fikk `fontFamily: 'Source Serif 4'` 2026-11-24. Mockupen endres ikke, fordi spines vinner ved konflikt.
 
+## Deferred from: code review of spec-story-1-14-ny-okt (2026-11-26)
+
+- source_spec: `_bmad-output/specs/spec-story-1-14-ny-okt/SPEC.md`
+  summary: Ingen automatisk test for `useBeforeUnload`-lytteren.
+  evidence: Verification Gap. Krever `renderHook` + jsdom + `vi.spyOn(window, 'addEventListener')`, et mønster som ikke finnes i testsuiten. Uten test kan en som fjerner `window.addEventListener`-kallet sende det til prod uten at noen test slår ut.
+- source_spec: `_bmad-output/specs/spec-story-1-14-ny-okt/SPEC.md`
+  summary: Bekreft at fokusbann fungerer uten `AlertDialogTrigger` (programmatisk åpning).
+  evidence: Acceptance Auditor (maybe-false). CAP-2 krever at fokus returnerer til «Ny økt»-knappen ved lukking. Dialogen åpnes via setState, ikke via `AlertDialogPrimitive.Trigger`. Om base-ui bruker `document.activeElement` ved åpningstidspunkt er udokumentert. Avklar ved å lese base-ui-kilde eller skrive en Playwright-test.
+
 ## Deferred from: code review of spec-1-7-samtale-ui (2026-11-24)
 
 - source_spec: `_bmad-output/specs/spec-1-7-samtale-ui/SPEC.md`

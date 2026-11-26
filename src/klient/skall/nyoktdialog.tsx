@@ -14,7 +14,7 @@ import {
 type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  /** Kalles etter at dialogen er lukket — dispatcher nyOkt og navigerer til Start. */
+  /** Dispatcher nyOkt og navigerer til Start. Kalles synkront — ikke vent på lukkeanimasjonen. */
   onBekreft: () => void;
 };
 

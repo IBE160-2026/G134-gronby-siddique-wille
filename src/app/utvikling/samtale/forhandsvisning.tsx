@@ -85,7 +85,7 @@ export function Forhandsvisning({ lengst }: { lengst: Steg }) {
         className="mx-auto w-full max-w-chat-max gap-5 px-6 py-6"
       >
         <p className="text-sm text-muted-foreground">
-          Utviklingsside for story 1.7 og 1.15. Svarene er simulert, og flaten er
+          Utviklingsside for story 1.7, 1.14 og 1.15. Svarene er simulert, og flaten er
           alltid Samtale. Velg steg med <code>?steg=krav</code>.
         </p>
         <Chatlogg meldinger={meldinger} venter={venter} className="min-h-0 flex-1" />

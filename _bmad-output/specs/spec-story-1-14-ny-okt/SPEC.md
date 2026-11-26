@@ -50,3 +50,18 @@ Studenten har ingen sikkerhetsnett mot å miste øktinnholdet ved uhell. Et relo
 ## Assumptions
 
 - `tomOkt(okt.versjon + 1)` i den eksisterende `nyOkt`-handlingen er tilstrekkelig til å tømme all tilstand inkl. `logg` — `beforeunload`-lytteren deaktiveres dermed automatisk etter dispatch.
+
+## Review Findings
+
+- [x] [Review][Patch] `useBeforeUnload` setter ikke `event.returnValue = ""` — bryter CAP-1 success criterion eksplisitt [`src/klient/okt/useBeforeUnload.ts:17`]
+- [x] [Review][Patch] Dev-sidetekst nevner ikke story 1.14 [`src/app/utvikling/samtale/forhandsvisning.tsx:88`]
+- [x] [Review][Patch] JSDoc på `onBekreft` lover «etter dialogen er lukket» men kalles synkront [`src/klient/skall/nyoktdialog.tsx:17`]
+- [x] [Review][Defer] Ingen automatisk test for `useBeforeUnload`-lytteren [`src/klient/okt/useBeforeUnload.ts`] — deferred: krever renderHook + jsdom + vi.spyOn(window, 'addEventListener'), et mønster som ikke finnes i testsuiten ennå
+- [x] [Review][Defer] Fokusbann uten AlertDialogTrigger — maybe-false [`src/klient/skall/nyoktdialog.tsx`] — deferred: bekreft at base-ui bruker document.activeElement ved åpningstidspunkt til fokusbann når dialogen åpnes programmatisk (ikke via Trigger-wrapper)
+
+### Avvist
+
+- **false** — AlertDialogAction mangler destructive-variant: AlertDialogDescription sier «Alt i denne økten forsvinner.» — konsekvensen er kommunisert, ingen dårlig utfall.
+- **false** — `harGittSvar`-tester dekker ikke alle typer: `LoggOppforing` er en lukket union med nøyaktig 3 typer (`sporsmal`, `svar`, `rettelse`), alle tre er dekket.
+- **low/avvist** — Dobbeltklikk gir dobbel `nyOkt`-dispatch: usannsynlig å treffe i bruk, og fix legger til ref + betingelse (mer enn én linjerettelse).
+- **false** — `useBeforeUnload` ikke koblet til produksjons-samtalevisning: ruten finnes ikke ennå (story 1.7/1.15).
