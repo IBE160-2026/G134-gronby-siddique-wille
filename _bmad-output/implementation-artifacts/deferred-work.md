@@ -107,3 +107,15 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-1-8-samtalerute-som-stiller-og-mottar-oppfolgingssporsmal.md`
   summary: `Samtaleflate` har ingen komponenttester: send-vakten (`!harSporsmal || loggFull`), at utkastet bare tømmes når det fortsatt er teksten som ble sendt, «Prøv igjen» via toasten, at toasten fjernes når utkastet endres, og avbrudd ved unmount (forsinket én tick for StrictMode).
   evidence: Verification Gap og Blind Hunter i bmad-code-review. Ingen test importerer komponenten, og Vitest kjører uten DOM. `sendSamtale` er testet som ren funksjon. Dekkes når repoet får DOM-tester, eller ved å flytte reglene til rene hjelpere i `api.ts`.
+
+## Deferred from: code review of spec-1-6-startside (2026-11-26)
+
+- source_spec: `_bmad-output/specs/spec-1-6-startside/SPEC.md`
+  summary: Start tømmer en påbegynt økt uten bekreftelse når studenten går tilbake til Start og trykker «Start ny økt» eller «Prøv demomodus».
+  evidence: Blind Hunter. `starthandlinger` sender alltid `nyOkt`. EXPERIENCE.md krever bekreftelse i `Dialog` («Alt i denne økten forsvinner.») for «Ny økt»; story 1.14 bør bruke samme bekreftelse på Start når økten har innhold.
+- source_spec: `_bmad-output/specs/spec-1-6-startside/SPEC.md`
+  summary: DOM-test av `src/app/page.tsx`: klikk dispatcher `nyOkt` og `startOkt` i rekkefølge og kaller `router.push("/samtale")`.
+  evidence: Verification Gap. Krever jsdom (eller tilsvarende), som ikke er i prosjektet; samme åpne punkt som DOM-testen av `OktProvider` fra story 1.3. Startflate-hendelsene er dekket uten DOM.
+- source_spec: `_bmad-output/specs/spec-1-6-startside/SPEC.md`
+  summary: Når både nøkkel og demodata mangler, peker «Ingen API-nøkkel funnet. Se README, eller prøv demomodus.» på en deaktivert knapp.
+  evidence: Blind Hunter. Teksten er fast mikrotekst i EXPERIENCE.md, så UX avgjør om tilfellet trenger en egen tekst (f.eks. «Ingen API-nøkkel funnet. Se README.»).
