@@ -1,5 +1,11 @@
 import { nesteId, type Okt } from "./okt";
-import { MAKS_ERFARINGER_SPORSMAL, MAKS_LISTE, erMaksNadd } from "./regler";
+import {
+  MAKS_ERFARINGER_SPORSMAL,
+  MAKS_LISTE,
+  OVERGANGSSPORSMAL,
+  erLukket,
+  erMaksNadd,
+} from "./regler";
 import type { Endring, Erfaring, LoggOppforing, SamtaleSvar } from "./skjema";
 
 /** En referanse til en erfaring i et modellsvar: `E`-ID eller midlertidig `{ ny }`. */
@@ -138,4 +144,24 @@ export function begrensSamtaleSvar(
     ? svar.sporsmal
     : { tekst: MAKS_ERFARINGER_SPORSMAL, gjelder: null };
   return { sporsmal, endringer };
+}
+
+/**
+ * Håndhever grensen for oppfølgingsspørsmål i ruten, før svaret sendes
+ * (AD-16). Gjelder spørsmålet en lukket erfaring (`erLukket()`), byttes det ut
+ * med `OVERGANGSSPORSMAL` og `gjelder: null`. Er grensen for fangede
+ * erfaringer også nådd, brukes `MAKS_ERFARINGER_SPORSMAL`, siden ingen ny
+ * erfaring kan opprettes da.
+ *
+ * Endringene beholdes: grensen stopper bare nye spørsmål, ikke at studentens
+ * siste svar fyller felt på erfaringen.
+ */
+export function begrensOppfolging(
+  svar: SamtaleSvar,
+  tilstand: { erfaringer: readonly Erfaring[]; logg: readonly LoggOppforing[] },
+): SamtaleSvar {
+  const gjelder = svar.sporsmal.gjelder;
+  if (typeof gjelder !== "string" || !erLukket(tilstand, gjelder)) return svar;
+  const tekst = erMaksNadd(tilstand) ? MAKS_ERFARINGER_SPORSMAL : OVERGANGSSPORSMAL;
+  return { ...svar, sporsmal: { tekst, gjelder: null } };
 }
