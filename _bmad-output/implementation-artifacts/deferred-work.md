@@ -67,3 +67,16 @@
 - source_spec: `_bmad-output/specs/spec-1-15-stegindikator/SPEC.md`
   summary: Fokus etter stegvalg forutsetter at `Appskall` står mountet mens steget byttes. Lager story 1.8 stegene som egne ruter, må skallet ligge i en felles layout og ikke i hver side. Ellers faller fokus til `<body>` etter klikk på et fullført steg (CAP-4).
   evidence: Edge Case Hunter og Acceptance Auditor. Komponenten vet ikke om steg er ruter eller tilstand, så kontrakten står i JSDoc og må følges når 1.8 kobler til.
+
+## Deferred from: code review of spec-1-4-api-kontrakt-zod-skjema-og-statusrute (2026-11-24)
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-1-4-api-kontrakt-zod-skjema-og-statusrute.md`
+  summary: Klienten må holde seg innenfor forespørselsgrensene (`MAKS_TEKST_TEGN`, `MAKS_LOGG_OPPFORINGER`, `MAKS_LISTE`, `MAKS_ANNONSE_TEGN`). Chatinput (1.7) trenger `maxLength`, og 1.8/1.10 må håndtere full logg og `MAKS_ERFARINGER` før forespørselen sendes.
+  evidence: Loggen kan bare utvides (AD-5). Ett svar over grensen, eller den 301. oppføringen, gjør at alle senere `/api/samtale`- og `/api/bevis`-forespørsler avvises med `ugyldig_foresporsel`.
+- source_spec: `_bmad-output/implementation-artifacts/spec-1-4-api-kontrakt-zod-skjema-og-statusrute.md`
+  summary: Story 1.8 må gjøre `sporsmal.gjelder: { ny }` om til den nye `E`-ID-en før spørsmålet legges i loggen (AD-13, `brukEndringer()`).
+  evidence: `leggTilSporsmal` lagrer i dag `null` for alt som ikke er en aktiv erfaring. Spørsmålet mister da koblingen til erfaringen det gjelder.
+
+## Lukket av story 1.4 (2026-11-24)
+
+- `server-only` håndheves for `src/server/` med `tests/oppsett/server-only.test.ts` (rest fra 1.2/1.3).

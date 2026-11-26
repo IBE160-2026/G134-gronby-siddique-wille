@@ -3,73 +3,33 @@
  *
  * Typene ligger i kjernen fordi kjernefunksjoner (`nullstill`, senere
  * `brukEndringer`, `erFanget`) tar `Okt` som input og ikke kan importere
- * `klient`. Story 1.4 kan erstatte de delene som går over nettet med
- * `z.infer` fra skjemaene.
+ * `klient`. Typene som går over nettet avledes fra skjemaene i `skjema.ts`
+ * (AD-13), så kontrakt og tilstand ikke kan gli fra hverandre.
  */
 
-export type Modus = "ekte" | "demo";
+import type {
+  BevistabellRad,
+  Erfaring,
+  IdPrefiks,
+  Krav,
+  LoggOppforing,
+  Modus,
+} from "./skjema";
 
-/** Prefiks per ID-type: sporsmal, svar, rettelse, erfaring, krav. */
-export type IdPrefiks = "A" | "S" | "R" | "E" | "K";
+export type {
+  Bevis,
+  BevistabellRad,
+  Erfaring,
+  Felt,
+  FeltNavn,
+  IdPrefiks,
+  Krav,
+  LoggOppforing,
+  Modus,
+} from "./skjema";
 
 /** Én teller per prefiks. Øker bare, settes aldri ned innen en økt. */
 export type Tellere = Record<IdPrefiks, number>;
-
-export type FeltNavn = "rolle" | "handling" | "resultat";
-
-/** Ett R-H-R-felt (AD-13). `kilder` er `svar`-ID-er (`S…`). */
-export type Felt = {
-  tekst: string;
-  kilder: string[];
-  rettetAvStudent: boolean;
-};
-
-export type Erfaring = {
-  id: string;
-  tittel: string;
-  tittelRettetAvStudent: boolean;
-  rolle: Felt;
-  handling: Felt;
-  resultat: Felt;
-};
-
-/**
- * Loggen kan bare utvides (AD-5). Bare `svar` kan siteres; `rettelse`
- * registrerer en endring fra Oppsummering og brukes aldri som sitat.
- */
-export type LoggOppforing =
-  | {
-      type: "sporsmal";
-      id: string;
-      tekst: string;
-      /** Erfaringen spørsmålet gjelder, eller `null` (ny erfaring/overgang). */
-      gjelder: string | null;
-    }
-  | { type: "svar"; id: string; tekst: string }
-  | {
-      type: "rettelse";
-      id: string;
-      erfaringId: string;
-      felt: FeltNavn | "tittel";
-      /** Hele den nye teksten. */
-      tekst: string;
-    };
-
-export type Krav = { id: string; tekst: string };
-
-/** Et verifisert bevis (AD-6): sitatet klippes ut av loggen med `start`/`slutt`. */
-export type Bevis = {
-  erfaringId: string;
-  svarId: string;
-  start: number;
-  slutt: number;
-};
-
-export type BevistabellRad = {
-  kravId: string;
-  bevis: Bevis[];
-  refleksjonsforslag: string;
-};
 
 export type Okt = {
   /** `null` før studenten har startet en økt på Start. */
