@@ -27,3 +27,6 @@
 - [ ] 2026-11-24 [story-1-4-api-kontrakt](995-2026-11-24-22-35-05-story-1-4-api-kontrakt.md) — Story 1.8: gjør `sporsmal.gjelder: { ny }` om til den nye `E`-ID-en før spørsmålet legges i loggen (AD-13)
 - [ ] 2026-11-24 [story-1-4-api-kontrakt](995-2026-11-24-22-35-05-story-1-4-api-kontrakt.md) — Sjekk de foreløpige grenseverdiene i `regler.ts` og feilmeldingene i `FEILKODER` mot testsett A
 - [ ] 2026-11-24 [story-1-4-api-kontrakt](995-2026-11-24-22-35-05-story-1-4-api-kontrakt.md) — Stram inn `harDemodata` til en liste over påkrevde demofiler (1.13/5.1)
+- [ ] 2026-11-25 [story-1-5-modelladapter](994-2026-11-25-20-39-11-story-1-5-modelladapter.md) — Sjekk de foreløpige verdiene i `config.ts` (`max_tokens`, timeout, `MAX_RETRIES`, `FRIST_MS`, effort) ved første ekte kjøring mot testsett A, også at kostnaden er under 10 øre per økt
+- [ ] 2026-11-25 [story-1-5-modelladapter](994-2026-11-25-20-39-11-story-1-5-modelladapter.md) — Story 1.8: promptlasting, `velgModell`/`feilsvar` i ruten, valider modellsvaret mot `SamtaleSvar` (AD-9), vurder `request.signal`
+- [ ] 2026-11-25 [story-1-5-modelladapter](994-2026-11-25-20-39-11-story-1-5-modelladapter.md) — Story 1.13: demodata i formatet `DemoModell` leser (`samtale.json` liste, `krav.json`/`bevis.json` objekter)
