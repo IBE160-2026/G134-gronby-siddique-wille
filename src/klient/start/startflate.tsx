@@ -11,6 +11,7 @@ import {
   MANGLER_DEMODATA,
   MANGLER_NOKKEL,
   PERSONVERNTEKST,
+  PERSONVERN_SEKSJON,
   PROV_DEMOMODUS,
   START_NY_OKT,
 } from "./tekster";
@@ -26,7 +27,6 @@ type StartflateProps = {
 };
 
 const ID = {
-  personvern: "start-personvern",
   avkrysningTekst: "start-avkrysning-tekst",
   manglerNokkel: "start-mangler-nokkel",
   manglerDemodata: "start-mangler-demodata",
@@ -47,17 +47,16 @@ export function Startflate({ status, avkrysset, onAvkrysset, starter = false, on
       </div>
 
       <section
-        aria-label="Personvern"
+        aria-label={PERSONVERN_SEKSJON}
         className="space-y-5 rounded-md border border-border bg-card p-6"
       >
-        <p id={ID.personvern}>{PERSONVERNTEKST}</p>
+        <p>{PERSONVERNTEKST}</p>
         <label className="flex cursor-pointer items-start gap-3">
           <Checkbox
             className="mt-0.5"
             checked={avkrysset}
             onCheckedChange={(verdi) => onAvkrysset(verdi === true)}
             aria-labelledby={ID.avkrysningTekst}
-            aria-describedby={ID.personvern}
           />
           <span id={ID.avkrysningTekst}>{AVKRYSNING}</span>
         </label>
@@ -67,6 +66,7 @@ export function Startflate({ status, avkrysset, onAvkrysset, starter = false, on
         <div className="flex flex-wrap gap-3">
           <Button
             size="lg"
+            focusableWhenDisabled
             disabled={!k.ekteAktiv || starter}
             aria-describedby={k.visManglerNokkel ? ID.manglerNokkel : undefined}
             onClick={() => onStart("ekte")}
@@ -76,6 +76,7 @@ export function Startflate({ status, avkrysset, onAvkrysset, starter = false, on
           <Button
             variant="outline"
             size="lg"
+            focusableWhenDisabled
             disabled={!k.demoAktiv || starter}
             aria-describedby={k.visManglerDemodata ? ID.manglerDemodata : undefined}
             onClick={() => onStart("demo")}
@@ -83,7 +84,8 @@ export function Startflate({ status, avkrysset, onAvkrysset, starter = false, on
             {PROV_DEMOMODUS}
           </Button>
         </div>
-        {/* Alltid i DOM-en, så meldingene kunngjøres når status kommer. */}
+        {/* Alltid i DOM-en, så meldingene kunngjøres når status kommer. Knappene
+            kan få fokus også når de er deaktivert, så forklaringen leses opp. */}
         <div aria-live="polite" className="space-y-1 text-muted-foreground">
           {k.visManglerNokkel && <p id={ID.manglerNokkel}>{MANGLER_NOKKEL}</p>}
           {k.visManglerDemodata && <p id={ID.manglerDemodata}>{MANGLER_DEMODATA}</p>}

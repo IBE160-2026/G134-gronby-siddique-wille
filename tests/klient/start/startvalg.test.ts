@@ -96,26 +96,31 @@ describe("hentStartstatus", () => {
 });
 
 describe("starthandlinger", () => {
-  it("starter direkte når økten ikke har modus", () => {
-    expect(starthandlinger(null, "ekte")).toEqual([{ type: "startOkt", modus: "ekte" }]);
-    expect(starthandlinger(null, "demo")).toEqual([{ type: "startOkt", modus: "demo" }]);
+  it("sender alltid nyOkt før startOkt", () => {
+    expect(starthandlinger("ekte")).toEqual([{ type: "nyOkt" }, { type: "startOkt", modus: "ekte" }]);
+    expect(starthandlinger("demo")).toEqual([{ type: "nyOkt" }, { type: "startOkt", modus: "demo" }]);
   });
 
-  it("nullstiller med nyOkt før startOkt når økten allerede har modus", () => {
-    expect(starthandlinger("demo", "ekte")).toEqual([
-      { type: "nyOkt" },
-      { type: "startOkt", modus: "ekte" },
-    ]);
-  });
-
-  it("gir en ny, tom økt i valgt modus gjennom reduceren", () => {
+  it("gir en ny, tom økt i valgt modus når økten allerede er startet", () => {
     let okt = oktReducer(tomOkt(), { type: "startOkt", modus: "demo" });
     okt = oktReducer(okt, { type: "leggTilSvar", tekst: "Jeg jobbet i butikk." });
+    const versjon = okt.versjon;
 
-    for (const handling of starthandlinger(okt.modus, "ekte")) okt = oktReducer(okt, handling);
+    for (const handling of starthandlinger("ekte")) okt = oktReducer(okt, handling);
 
     expect(okt.modus).toBe("ekte");
     expect(okt.logg).toEqual([]);
     expect(okt.erfaringer).toEqual([]);
+    expect(okt.versjon).toBeGreaterThan(versjon);
+  });
+
+  it("tømmer også en økt uten modus som har innhold", () => {
+    let okt = oktReducer(tomOkt(), { type: "settAnnonse", tekst: "Butikkmedarbeider søkes." });
+    expect(okt.modus).toBeNull();
+
+    for (const handling of starthandlinger("demo")) okt = oktReducer(okt, handling);
+
+    expect(okt.modus).toBe("demo");
+    expect(okt.annonse).toBe(tomOkt().annonse);
   });
 });

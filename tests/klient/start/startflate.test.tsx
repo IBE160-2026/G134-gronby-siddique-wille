@@ -1,8 +1,11 @@
 import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
+import { isValidElement, type ReactElement, type ReactNode } from "react";
 import { renderToString } from "react-dom/server";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import type { StatusSvar } from "@/kjerne/skjema";
 import { Startflate } from "@/klient/start/startflate";
 import {
@@ -29,7 +32,9 @@ function knapp(html: string, tekst: string): string {
   return treff[0].slice(0, treff[0].indexOf(">") + 1);
 }
 
-const erDeaktivert = (tag: string) => /\sdisabled(=""|\s|>)/.test(tag);
+// Knappene har `focusableWhenDisabled`, så deaktivert vises som `aria-disabled`.
+const erDeaktivert = (tag: string) =>
+  /\sdisabled(=""|\s|>)/.test(tag) || tag.includes('aria-disabled="true"');
 
 describe("tekstene på Start", () => {
   it("er ordrett fra EXPERIENCE.md", () => {
@@ -59,13 +64,27 @@ describe("Startflate", () => {
     expect(html).toContain(`<span id="start-avkrysning-tekst">${AVKRYSNING}</span>`);
   });
 
-  it("kobler avkrysningen til etiketten og personvernteksten", () => {
+  it("kobler avkrysningen til etiketten", () => {
     const html = vis(begge);
     const boks = html.match(/<[^>]*role="checkbox"[^>]*>/)?.[0] ?? "";
     expect(boks).toContain('aria-labelledby="start-avkrysning-tekst"');
-    expect(boks).toContain('aria-describedby="start-personvern"');
     expect(boks).toContain('aria-checked="false"');
     expect(html).toMatch(/<label\b[\s\S]*role="checkbox"[\s\S]*<\/label>/);
+  });
+
+  it("nevner lagring og sletting bare i personvernteksten", () => {
+    const html = vis({ harNokkel: false, harDemodata: false }, true);
+    const tekst = html.replace(PERSONVERNTEKST, "").replace(/<[^>]+>/g, " ");
+    expect(tekst).not.toMatch(/lagr|slett|kryptert|dager|år\b|forsvinner|anthropic/i);
+  });
+
+  it("holder deaktiverte knapper i tabulatorrekkefølgen, så forklaringen kan leses", () => {
+    const html = vis({ harNokkel: false, harDemodata: false });
+    for (const navn of ["Start ny økt", "Prøv demomodus"]) {
+      const tag = knapp(html, navn);
+      expect(tag).toContain('aria-disabled="true"');
+      expect(tag).not.toMatch(/tabindex="-1"/);
+    }
   });
 
   it("deaktiverer «Start ny økt» uten avkrysning, selv med nøkkel", () => {
@@ -116,13 +135,61 @@ describe("Startflate", () => {
   });
 });
 
+/** Alle elementer i treet `Startflate` returnerer (uten å rendre barnekomponentene). */
+function elementer(node: ReactNode): ReactElement<Record<string, unknown>>[] {
+  if (Array.isArray(node)) return node.flatMap(elementer);
+  if (!isValidElement<Record<string, unknown>>(node)) return [];
+  return [node, ...elementer(node.props.children as ReactNode)];
+}
+
+describe("hendelsene i Startflate", () => {
+  // Startflate har ingen hooks, så den kan kalles som funksjon.
+  function tre(onStart = vi.fn(), onAvkrysset = vi.fn()) {
+    const rot = Startflate({
+      status: { harNokkel: true, harDemodata: true },
+      avkrysset: true,
+      onAvkrysset,
+      onStart,
+    });
+    return { alle: elementer(rot), onStart, onAvkrysset };
+  }
+
+  const knappMed = (alle: ReturnType<typeof elementer>, tekst: string) => {
+    const funnet = alle.find((e) => e.type === Button && e.props.children === tekst);
+    if (!funnet) throw new Error(`Fant ikke knappen «${tekst}»`);
+    return funnet.props as { onClick: () => void };
+  };
+
+  it("«Start ny økt» starter i modus ekte, «Prøv demomodus» i modus demo", () => {
+    const { alle, onStart } = tre();
+    knappMed(alle, "Start ny økt").onClick();
+    expect(onStart).toHaveBeenLastCalledWith("ekte");
+    knappMed(alle, "Prøv demomodus").onClick();
+    expect(onStart).toHaveBeenLastCalledWith("demo");
+  });
+
+  it("avkrysningen sender ny verdi videre", () => {
+    const { alle, onAvkrysset } = tre();
+    const boks = alle.find((e) => e.type === Checkbox)?.props as {
+      onCheckedChange: (verdi: boolean) => void;
+    };
+    boks.onCheckedChange(true);
+    expect(onAvkrysset).toHaveBeenLastCalledWith(true);
+    boks.onCheckedChange(false);
+    expect(onAvkrysset).toHaveBeenLastCalledWith(false);
+  });
+});
+
 describe("personvern i koden for Start", () => {
   it("bruker ikke nettleserlagring eller cookies", () => {
+    const rot = path.resolve(import.meta.dirname, "..", "..", "..");
+    const startmappe = path.join(rot, "src", "klient", "start");
     const filer = [
-      path.join("src", "app", "page.tsx"),
-      ...readdirSync(path.join("src", "klient", "start")).map((f) =>
-        path.join("src", "klient", "start", f),
-      ),
+      path.join(rot, "src", "app", "page.tsx"),
+      path.join(rot, "src", "components", "ui", "checkbox.tsx"),
+      ...readdirSync(startmappe, { withFileTypes: true, recursive: true })
+        .filter((f) => f.isFile())
+        .map((f) => path.join(f.parentPath, f.name)),
     ];
     for (const fil of filer) {
       expect(readFileSync(fil, "utf8"), fil).not.toMatch(

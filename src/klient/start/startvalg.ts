@@ -49,10 +49,11 @@ export function knappetilstand(status: StatusSvar | null, avkrysset: boolean): K
 }
 
 /**
- * Handlingene som gir en ny, tom økt i `modus`. `startOkt` ignoreres når økten
- * allerede har en modus, så en påbegynt økt nullstilles først med `nyOkt`.
+ * Handlingene som gir en ny, tom økt i `modus`. `nyOkt` sendes alltid først:
+ * `startOkt` ignoreres når økten allerede har en modus, og en økt uten modus
+ * kan likevel ha innhold. Da blir økten alltid ny og tom, og forespørsler som
+ * er underveis fra en eldre økt, forkastes fordi versjonen øker (AD-14).
  */
-export function starthandlinger(naavaerendeModus: Modus | null, modus: Modus): Handling[] {
-  const start: Handling = { type: "startOkt", modus };
-  return naavaerendeModus === null ? [start] : [{ type: "nyOkt" }, start];
+export function starthandlinger(modus: Modus): Handling[] {
+  return [{ type: "nyOkt" }, { type: "startOkt", modus }];
 }

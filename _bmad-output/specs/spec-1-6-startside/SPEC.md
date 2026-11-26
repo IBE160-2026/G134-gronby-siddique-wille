@@ -37,11 +37,11 @@ Krav (FR-1, FR-10, NFR1, AD-17): før studenten skriver noe, skal hen forstå hv
 
 - Status hentes fra `GET /api/status` (story 1.4) og valideres med `StatusSvar` fra `kjerne/skjema`. Klienten importerer ikke `server` og ikke `zod` direkte (eslint-grensene).
 - Kontrakten mot 1.8 beholdes: `dispatch({ type: "startOkt", modus })` og `router.push("/samtale")`.
-- Har økten allerede en modus (studenten kom tilbake til Start), dispatches `nyOkt` før `startOkt`. `startOkt` ignoreres når modus er satt, og AC krever en ny, tom økt.
+- `nyOkt` dispatches alltid før `startOkt`. `startOkt` ignoreres når modus er satt, og en økt uten modus kan likevel ha innhold, men AC krever en ny, tom økt. Versjonen øker, så svar på forespørsler fra en eldre økt forkastes.
 - Mens status lastes, er begge knappene deaktivert, og ingen statusmelding vises. Feiler kallet eller er svaret ugyldig, behandles det som `harNokkel: false` og `harDemodata: false`, så ingen knapp lover noe serveren ikke kan levere.
 - Tekstene står som konstanter i `src/klient/start/tekster.ts`. `src/kjerne/regler.ts` røres ikke.
 - Ingen `localStorage`, `sessionStorage`, IndexedDB eller cookies. Avkrysningen lever bare i komponenttilstand.
-- WCAG 2.2 AA: én `h1`, etikett koblet til avkrysningen, statusmeldinger koblet med `aria-describedby`, alt kan nås med tastatur, fokusringen kommer fra shadcn, og DOM-rekkefølgen er lik leserekkefølgen.
+- WCAG 2.2 AA: én `h1`, etikett koblet til avkrysningen, statusmeldinger koblet med `aria-describedby` og kunngjort i en `aria-live`-region, alt kan nås med tastatur, fokusringen kommer fra shadcn, og DOM-rekkefølgen er lik leserekkefølgen. Deaktiverte knapper kan få fokus (`focusableWhenDisabled`), så forklaringen leses opp.
 - Visuelt: én kolonne, sentrert, maks `column-max`. Overskriften har `type-display`. «Start ny økt» er primærknapp, «Prøv demomodus» er `outline`. Start har ingen stegindikator, fordi skallet gjelder flatene etter Start.
 - Avkrysningen er shadcn `Checkbox`, lagt til med shadcn-CLI og brukt uendret. Kan CLI-en ikke hentes, brukes native `<input type="checkbox">`.
 - Visningen `Startflate` er ren (props: status, avkrysset og hendelser). `src/app/page.tsx` henter status, eier avkrysningen og dispatcher.
@@ -57,7 +57,7 @@ Krav (FR-1, FR-10, NFR1, AD-17): før studenten skriver noe, skal hen forstå hv
 
 ## Success signal
 
-- `npm test`, `npm run lint` og `npm run build` er grønne. Vitest dekker deaktiveringstabellen for alle kombinasjoner av lasting, nøkkel, demodata og avkrysning, statusparsing og handlingsrekkefølgen (`nyOkt` før `startOkt`), og en `renderToString`-test viser tekstene ordrett. I dev-serveren kan Start brukes med bare tastatur.
+- `npm test`, `npm run lint` og `npm run build` er grønne. Vitest dekker deaktiveringstabellen for alle kombinasjoner av lasting, nøkkel, demodata og avkrysning, statusparsing handlingsrekkefølgen (`nyOkt` før `startOkt`) og knappenes hendelser, og en `renderToString`-test viser tekstene ordrett. I dev-serveren kan Start brukes med bare tastatur.
 
 ## Assumptions
 

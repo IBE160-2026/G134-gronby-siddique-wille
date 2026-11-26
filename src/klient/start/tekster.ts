@@ -11,6 +11,9 @@ export const FORKLARING =
 export const PERSONVERNTEKST =
   "Svarene dine sendes kryptert til språkmodellen Claude hos Anthropic, som stiller spørsmålene og finner bevisene. Erfaringsgruven lagrer ingenting, og økten forsvinner når du lukker fanen. Anthropic sletter dataene innen 30 dager, men samtaler som flagges for brudd på bruksvilkårene kan lagres i opptil 2 år. Ikke skriv personnummer, helseopplysninger eller annet du ikke vil dele.";
 
+/** Navnet på seksjonen med personverntekst og avkrysning (landemerke for skjermleser). */
+export const PERSONVERN_SEKSJON = "Personvern";
+
 export const AVKRYSNING = "Jeg har lest dette og vil starte.";
 
 export const START_NY_OKT = "Start ny økt";
