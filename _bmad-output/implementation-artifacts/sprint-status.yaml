@@ -41,7 +41,7 @@ development_status:
   1-3-øktreducer-context-og-versjonering: done
   1-4-api-kontrakt-zod-skjema-og-statusrute: done
   1-5-modelladapter-grensesnitt-og-konfigurasjon: backlog
-  1-6-startside-med-personvernstekst-og-øktstart: backlog
+  1-6-startside-med-personvernstekst-og-øktstart: review
   1-7-samtale-ui-chatboble-chatinput-og-skriveindikator: done
   1-8-samtalerute-som-stiller-og-mottar-oppfølgingsspørsmål: backlog
   1-9-erfaringskort-r-h-r-brikker-og-fanget-logikk: backlog
