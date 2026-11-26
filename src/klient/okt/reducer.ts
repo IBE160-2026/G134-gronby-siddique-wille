@@ -1,3 +1,4 @@
+import { brukEndringer, losGjelder } from "@/kjerne/endringer";
 import { nullstill, type NullstillArsak } from "@/kjerne/nullstill";
 import {
   nesteId,
@@ -8,7 +9,7 @@ import {
   type Modus,
   type Okt,
 } from "@/kjerne/okt";
-import type { Endring } from "@/kjerne/skjema";
+import type { Endring, SamtaleSvar } from "@/kjerne/skjema";
 
 /**
  * Alle endringer av økten (AD-4). Handlinger som bærer et serversvar har
@@ -20,6 +21,18 @@ export type Handling =
   | { type: "leggTilSporsmal"; versjon: number; tekst: string; gjelder: string | null }
   | { type: "leggTilSvar"; tekst: string }
   | {
+      /**
+       * Hele svaret fra `/api/samtale` (AD-13). `svar` er studentsvaret som ble
+       * sendt med forespørselen (med ID-en `nesteId(okt.tellere, "S")` ga da),
+       * eller `null` for åpningsspørsmålet.
+       */
+      type: "mottaSamtaleSvar";
+      versjon: number;
+      svar: { id: string; tekst: string } | null;
+      sporsmal: SamtaleSvar["sporsmal"];
+      endringer: readonly Endring[];
+    }
+  | {
       type: "leggTilRettelse";
       erfaringId: string;
       felt: FeltNavn | "tittel";
@@ -29,7 +42,6 @@ export type Handling =
   | { type: "slettErfaring"; erfaringId: string }
   | { type: "settAnnonse"; tekst: string }
   | { type: "settKrav"; versjon: number; krav: Omit<Krav, "id">[] }
-  | { type: "brukEndringer"; versjon: number; endringer: Endring[] }
   | { type: "nullstill"; arsak: NullstillArsak }
   | { type: "nyOkt" };
 
@@ -67,6 +79,38 @@ export function oktReducer(okt: Okt, handling: Handling): Okt {
         ...okt,
         tellere,
         logg: [...okt.logg, { type: "svar", id, tekst: handling.tekst }],
+      };
+    }
+
+    case "mottaSamtaleSvar": {
+      if (handling.versjon !== okt.versjon) return okt;
+      let neste = okt;
+      if (handling.svar === null) {
+        // Åpningsspørsmålet bare i en tom logg, så et dobbelt kall
+        // (StrictMode) ikke gir to A-oppføringer.
+        if (okt.logg.length > 0) return okt;
+      } else {
+        // ID-en modellen så, må fortsatt være neste S-ID. Ellers er svaret
+        // utdatert (et annet svar er tatt imot i mellomtiden).
+        const { id, tellere } = nesteId(okt.tellere, "S");
+        if (id !== handling.svar.id) return okt;
+        neste = {
+          ...okt,
+          tellere,
+          logg: [...okt.logg, { type: "svar", id, tekst: handling.svar.tekst }],
+        };
+      }
+
+      const { okt: medEndringer, nyRefs } = brukEndringer(neste, handling.endringer);
+      const gjelder = losGjelder(handling.sporsmal.gjelder, medEndringer.erfaringer, nyRefs);
+      const { id, tellere } = nesteId(medEndringer.tellere, "A");
+      return {
+        ...medEndringer,
+        tellere,
+        logg: [
+          ...medEndringer.logg,
+          { type: "sporsmal", id, tekst: handling.sporsmal.tekst, gjelder },
+        ],
       };
     }
 
@@ -155,72 +199,6 @@ export function oktReducer(okt: Okt, handling: Handling): Okt {
         return { ...k, id: neste.id };
       });
       return { ...okt, tellere, krav, bevistabell: null };
-    }
-
-    case "brukEndringer": {
-      if (handling.versjon !== okt.versjon) return okt;
-
-      // Pass 1: tildel E-ID-er for alle `opprett`-endringer og bygg ref-kart.
-      const refKart = new Map<string, string>(); // "n1" → "E3"
-      let tellere = okt.tellere;
-      let erfaringer = okt.erfaringer;
-
-      for (const endring of handling.endringer) {
-        if (endring.type !== "opprett") continue;
-        const { id, tellere: neste } = nesteId(tellere, "E");
-        tellere = neste;
-        refKart.set(endring.ny, id);
-        const nyErfaring: Erfaring = {
-          id,
-          tittel: endring.tittel,
-          tittelRettetAvStudent: false,
-          rolle: tomtFelt(),
-          handling: tomtFelt(),
-          resultat: tomtFelt(),
-        };
-        erfaringer = [...erfaringer, nyErfaring];
-      }
-
-      // Løser opp en ErfaringRef til faktisk E-ID, eller null ved ukjent ref.
-      const losRef = (ref: string | { ny: string }): string | null =>
-        typeof ref === "string" ? ref : (refKart.get(ref.ny) ?? null);
-
-      // Pass 2: anvend `settTekst` og `leggTilKilde`.
-      for (const endring of handling.endringer) {
-        if (endring.type === "opprett") continue;
-        const erfaringId = losRef(endring.erfaring);
-        if (!erfaringId) continue;
-        // Endringer på slettede erfaringer ignoreres stille (AD-5).
-        if (okt.slettedeErfaringer.includes(erfaringId)) continue;
-
-        const idx = erfaringer.findIndex((e) => e.id === erfaringId);
-        if (idx === -1) continue;
-
-        if (endring.type === "settTekst") {
-          // Overskrives aldri felt som studenten har rettet (AD-13).
-          if (erfaringer[idx][endring.felt].rettetAvStudent) continue;
-          erfaringer = erfaringer.map((e, i) =>
-            i === idx
-              ? { ...e, [endring.felt]: { ...e[endring.felt], tekst: endring.tekst } }
-              : e,
-          );
-        } else if (endring.type === "leggTilKilde") {
-          // Kun gyldige svar-ID-er (AD-5).
-          if (!okt.logg.some((o) => o.type === "svar" && o.id === endring.svarId)) continue;
-          const felt = erfaringer[idx][endring.felt];
-          if (felt.kilder.includes(endring.svarId)) continue;
-          erfaringer = erfaringer.map((e, i) =>
-            i === idx
-              ? {
-                  ...e,
-                  [endring.felt]: { ...e[endring.felt], kilder: [...e[endring.felt].kilder, endring.svarId] },
-                }
-              : e,
-          );
-        }
-      }
-
-      return { ...okt, tellere, erfaringer };
     }
 
     case "nullstill":

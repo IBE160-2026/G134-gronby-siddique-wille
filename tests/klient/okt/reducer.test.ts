@@ -358,161 +358,154 @@ describe("oktReducer – nullstilling og ny økt", () => {
   });
 });
 
-describe("oktReducer – brukEndringer", () => {
-  /** Okt med S1 i loggen, klar for brukEndringer-testing. */
-  function medSvar(): Okt {
-    return kjor(tomOkt(), { type: "leggTilSvar", tekst: "Jeg jobbet på kafé." });
-  }
+describe("oktReducer – mottaSamtaleSvar (story 1.8)", () => {
+  const startet = () => kjor(tomOkt(), { type: "startOkt", modus: "ekte" });
 
-  it("opprett med ny-ref tildeler E-ID og oppretter tomt erfaringskort", () => {
-    const okt = kjor(medSvar(), {
-      type: "brukEndringer",
-      versjon: 0,
-      endringer: [{ type: "opprett", ny: "n1", tittel: "Kafé" }],
-    });
-    expect(okt.erfaringer).toHaveLength(1);
-    expect(okt.erfaringer[0].id).toBe("E1");
-    expect(okt.erfaringer[0].tittel).toBe("Kafé");
-    expect(okt.erfaringer[0].rolle).toEqual({ tekst: "", kilder: [], rettetAvStudent: false });
-    expect(okt.tellere.E).toBe(1);
+  const apning = (versjon = 0): Handling => ({
+    type: "mottaSamtaleSvar",
+    versjon,
+    svar: null,
+    sporsmal: { tekst: "Hei! Fortell om noe du har gjort.", gjelder: null },
+    endringer: [],
   });
 
-  it("settTekst setter felttekst for eksisterende erfaring", () => {
-    const start = kjor(
-      medSvar(),
-      { type: "brukEndringer", versjon: 0, endringer: [{ type: "opprett", ny: "n1", tittel: "Kafé" }] },
-    );
-    const okt = kjor(start, {
-      type: "brukEndringer",
-      versjon: 0,
-      endringer: [{ type: "settTekst", erfaring: "E1", felt: "rolle", tekst: "Skiftleder" }],
-    });
-    expect(okt.erfaringer[0].rolle.tekst).toBe("Skiftleder");
-    expect(okt.erfaringer[0].rolle.rettetAvStudent).toBe(false);
+  it("åpningsspørsmålet i tom logg gir A1", () => {
+    const okt = kjor(startet(), apning());
+    expect(okt.logg).toEqual([
+      { type: "sporsmal", id: "A1", tekst: "Hei! Fortell om noe du har gjort.", gjelder: null },
+    ]);
+    expect(okt.tellere.A).toBe(1);
   });
 
-  it("settTekst overstyrer ikke felt med rettetAvStudent:true (AD-13)", () => {
-    const start: Okt = {
-      ...tomOkt(),
-      tellere: { A: 0, S: 1, R: 1, E: 1, K: 0 },
-      logg: [{ type: "svar", id: "S1", tekst: "Skiftleder" }],
-      erfaringer: [
-        {
-          id: "E1",
-          tittel: "Kafé",
-          tittelRettetAvStudent: false,
-          rolle: { tekst: "Skiftleder (rettet av student)", kilder: ["S1"], rettetAvStudent: true },
-          handling: { tekst: "", kilder: [], rettetAvStudent: false },
-          resultat: { tekst: "", kilder: [], rettetAvStudent: false },
-        },
-      ],
-    };
-    const okt = kjor(start, {
-      type: "brukEndringer",
-      versjon: 0,
-      endringer: [{ type: "settTekst", erfaring: "E1", felt: "rolle", tekst: "Overskriver?" }],
-    });
-    expect(okt.erfaringer[0].rolle.tekst).toBe("Skiftleder (rettet av student)");
+  it("et dobbelt åpningsspørsmål (StrictMode) forkastes", () => {
+    const okt = kjor(startet(), apning());
+    expect(oktReducer(okt, apning())).toBe(okt);
   });
 
-  it("leggTilKilde legger til svarId i felt.kilder", () => {
-    const start = kjor(
-      medSvar(),
-      { type: "brukEndringer", versjon: 0, endringer: [{ type: "opprett", ny: "n1", tittel: "Kafé" }] },
-    );
-    const okt = kjor(start, {
-      type: "brukEndringer",
+  it("svar: S1, endringene og A2 i den rekkefølgen", () => {
+    const okt = kjor(startet(), apning(), {
+      type: "mottaSamtaleSvar",
       versjon: 0,
-      endringer: [{ type: "leggTilKilde", erfaring: "E1", felt: "rolle", svarId: "S1" }],
-    });
-    expect(okt.erfaringer[0].rolle.kilder).toEqual(["S1"]);
-  });
-
-  it("leggTilKilde ignorerer svarId som ikke finnes i loggen", () => {
-    const start = kjor(
-      medSvar(),
-      { type: "brukEndringer", versjon: 0, endringer: [{ type: "opprett", ny: "n1", tittel: "Kafé" }] },
-    );
-    const okt = kjor(start, {
-      type: "brukEndringer",
-      versjon: 0,
-      endringer: [{ type: "leggTilKilde", erfaring: "E1", felt: "rolle", svarId: "S99" }],
-    });
-    expect(okt.erfaringer[0].rolle.kilder).toEqual([]);
-  });
-
-  it("leggTilKilde legger ikke til duplikat svarId", () => {
-    const start = kjor(
-      medSvar(),
-      {
-        type: "brukEndringer",
-        versjon: 0,
-        endringer: [
-          { type: "opprett", ny: "n1", tittel: "Kafé" },
-          { type: "leggTilKilde", erfaring: { ny: "n1" }, felt: "rolle", svarId: "S1" },
-        ],
-      },
-    );
-    const okt = kjor(start, {
-      type: "brukEndringer",
-      versjon: 0,
-      endringer: [{ type: "leggTilKilde", erfaring: "E1", felt: "rolle", svarId: "S1" }],
-    });
-    expect(okt.erfaringer[0].rolle.kilder).toEqual(["S1"]);
-  });
-
-  it("kombinert: opprett + settTekst + leggTilKilde i én handling", () => {
-    const okt = kjor(medSvar(), {
-      type: "brukEndringer",
-      versjon: 0,
+      svar: { id: "S1", tekst: "Jeg jobbet på kafé." },
+      sporsmal: { tekst: "Hva gjorde du der?", gjelder: { ny: "n1" } },
       endringer: [
         { type: "opprett", ny: "n1", tittel: "Kafé" },
-        { type: "settTekst", erfaring: { ny: "n1" }, felt: "rolle", tekst: "Skiftleder" },
+        { type: "settTekst", erfaring: { ny: "n1" }, felt: "rolle", tekst: "Servitør" },
         { type: "leggTilKilde", erfaring: { ny: "n1" }, felt: "rolle", svarId: "S1" },
       ],
     });
-    expect(okt.erfaringer[0]).toMatchObject({
-      id: "E1",
-      tittel: "Kafé",
-      rolle: { tekst: "Skiftleder", kilder: ["S1"], rettetAvStudent: false },
+    expect(okt.logg.map((o) => o.id)).toEqual(["A1", "S1", "A2"]);
+    expect(okt.logg[1]).toEqual({ type: "svar", id: "S1", tekst: "Jeg jobbet på kafé." });
+    expect(okt.logg[2]).toEqual({
+      type: "sporsmal",
+      id: "A2",
+      tekst: "Hva gjorde du der?",
+      gjelder: "E1",
     });
+    expect(okt.erfaringer).toHaveLength(1);
+    expect(okt.erfaringer[0].rolle).toEqual({
+      tekst: "Servitør",
+      kilder: ["S1"],
+      rettetAvStudent: false,
+    });
+    expect(okt.tellere).toEqual({ A: 2, S: 1, R: 0, E: 1, K: 0 });
   });
 
-  it("endringer på slettet erfaring ignoreres stille (AD-5)", () => {
-    const start = kjor(
-      medSvar(),
-      { type: "brukEndringer", versjon: 0, endringer: [{ type: "opprett", ny: "n1", tittel: "Kafé" }] },
-      { type: "slettErfaring", erfaringId: "E1" },
-    );
-    // Versjon økte ved slettingen, oppdater versjon.
-    const okt = kjor(start, {
-      type: "brukEndringer",
-      versjon: start.versjon,
-      endringer: [{ type: "settTekst", erfaring: "E1", felt: "rolle", tekst: "Overskriver?" }],
-    });
-    expect(okt.erfaringer).toHaveLength(0);
-  });
-
-  it("brukEndringer med eldre versjon forkastes (AD-14)", () => {
-    const okt = tomOkt(2);
-    const ny = oktReducer(okt, {
-      type: "brukEndringer",
-      versjon: 1,
-      endringer: [{ type: "opprett", ny: "n1", tittel: "Kafé" }],
-    });
-    expect(ny).toBe(okt);
-  });
-
-  it("to opprett-endringer tildeler E1 og E2 uten gjenbruk", () => {
-    const okt = kjor(medSvar(), {
-      type: "brukEndringer",
+  it("endrer ikke versjon (nullstilling er opp til «Fortsett samtalen»)", () => {
+    const okt = kjor(startet(), apning(), {
+      type: "mottaSamtaleSvar",
       versjon: 0,
+      svar: { id: "S1", tekst: "Svar" },
+      sporsmal: { tekst: "Neste?", gjelder: null },
+      endringer: [],
+    });
+    expect(okt.versjon).toBe(0);
+  });
+
+  it("ved MAKS_ERFARINGER fangede: opprett forkastes og gjelder { ny } blir null", () => {
+    const felt = { tekst: "t", kilder: ["S1"], rettetAvStudent: false };
+    const fangede = Array.from({ length: 8 }, (_, i) => ({
+      id: `E${i + 1}`,
+      tittel: `E${i + 1}`,
+      tittelRettetAvStudent: false,
+      rolle: felt,
+      handling: felt,
+      resultat: felt,
+    }));
+    const base = kjor(startet(), apning(), {
+      type: "mottaSamtaleSvar",
+      versjon: 0,
+      svar: { id: "S1", tekst: "Svar" },
+      sporsmal: { tekst: "Neste?", gjelder: null },
+      endringer: [],
+    });
+    const fylt: Okt = { ...base, erfaringer: fangede, tellere: { ...base.tellere, E: 8 } };
+    const okt = kjor(fylt, {
+      type: "mottaSamtaleSvar",
+      versjon: 0,
+      svar: { id: "S2", tekst: "En ny ting" },
+      sporsmal: { tekst: "Fortell om den nye?", gjelder: { ny: "n1" } },
+      endringer: [{ type: "opprett", ny: "n1", tittel: "Ny" }],
+    });
+    expect(okt.erfaringer).toHaveLength(8);
+    expect(okt.tellere.E).toBe(8);
+    expect(okt.logg.at(-1)).toMatchObject({ id: "A3", gjelder: null });
+  });
+
+  it("ukjent { ny } og ukjent ID i gjelder blir null", () => {
+    const base = kjor(startet(), apning());
+    for (const gjelder of [{ ny: "n9" }, "E4"]) {
+      const okt = kjor(base, {
+        type: "mottaSamtaleSvar",
+        versjon: 0,
+        svar: { id: "S1", tekst: "Svar" },
+        sporsmal: { tekst: "Neste?", gjelder },
+        endringer: [],
+      });
+      expect(okt.logg.at(-1)).toMatchObject({ id: "A2", gjelder: null });
+    }
+  });
+
+  it("forkastes ved annen versjon", () => {
+    const okt = kjor(startet(), apning());
+    const svar: Handling = {
+      type: "mottaSamtaleSvar",
+      versjon: 1,
+      svar: { id: "S1", tekst: "Svar" },
+      sporsmal: { tekst: "Neste?", gjelder: null },
+      endringer: [],
+    };
+    expect(oktReducer(okt, svar)).toBe(okt);
+    expect(oktReducer(tomOkt(1), apning(0))).toEqual(tomOkt(1));
+  });
+
+  it("forkastes når svarId ikke lenger er neste S-ID", () => {
+    const okt = kjor(startet(), apning(), { type: "leggTilSvar", tekst: "Et annet svar" });
+    const utdatert: Handling = {
+      type: "mottaSamtaleSvar",
+      versjon: 0,
+      svar: { id: "S1", tekst: "Svar" },
+      sporsmal: { tekst: "Neste?", gjelder: null },
+      endringer: [],
+    };
+    expect(oktReducer(okt, utdatert)).toBe(okt);
+  });
+
+  it("to opprett i samme svar gir E1 og E2 uten gjenbruk (story 1.9)", () => {
+    const okt = kjor(startet(), apning(), {
+      type: "mottaSamtaleSvar",
+      versjon: 0,
+      svar: { id: "S1", tekst: "Kafé og fotball." },
+      sporsmal: { tekst: "Fortell om kafeen.", gjelder: { ny: "n1" } },
       endringer: [
         { type: "opprett", ny: "n1", tittel: "Kafé" },
         { type: "opprett", ny: "n2", tittel: "Fotball" },
       ],
     });
-    expect(okt.erfaringer.map((e) => e.id)).toEqual(["E1", "E2"]);
+    expect(okt.erfaringer.map((e) => [e.id, e.tittel])).toEqual([
+      ["E1", "Kafé"],
+      ["E2", "Fotball"],
+    ]);
     expect(okt.tellere.E).toBe(2);
   });
 });

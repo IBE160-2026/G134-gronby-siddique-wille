@@ -1,66 +1,44 @@
 import { describe, expect, it } from "vitest";
 
-import { erFanget } from "@/kjerne/fanget";
-import type { Erfaring } from "@/kjerne/okt";
+import { antallFangede, erFanget } from "@/kjerne/fanget";
 
-const felt = (tekst: string, kilder: string[] = [], rettetAvStudent = false) => ({
-  tekst,
-  kilder,
-  rettetAvStudent,
+import { erfaring, felt, svar, tomErfaring } from "./hjelpere";
+
+const logg = [svar("S1")];
+
+describe("erFanget (AD-7)", () => {
+  it("sann når alle tre felt har tekst og en gyldig kilde", () => {
+    expect(erFanget(erfaring("E1"), logg)).toBe(true);
+  });
+
+  it.each(["rolle", "handling", "resultat"] as const)("usann når %s mangler tekst", (navn) => {
+    expect(erFanget(erfaring("E1", { [navn]: felt("   ", ["S1"]) }), logg)).toBe(false);
+  });
+
+  it.each(["rolle", "handling", "resultat"] as const)("usann når %s mangler kilde", (navn) => {
+    expect(erFanget(erfaring("E1", { [navn]: felt("tekst") }), logg)).toBe(false);
+  });
+
+  it("en kilde som ikke er et svar i loggen, er ikke gyldig", () => {
+    const e = erfaring("E1", { resultat: felt("tekst", ["S9"]) });
+    expect(erFanget(e, logg)).toBe(false);
+    expect(erFanget(e, [...logg, svar("S9")])).toBe(true);
+  });
+
+  it("usann når ingen felt er fylt (story 1.9)", () => {
+    expect(erFanget(tomErfaring("E1"), logg)).toBe(false);
+  });
+
+  it("én gyldig kilde blant ugyldige holder", () => {
+    expect(erFanget(erfaring("E1", { rolle: felt("t", ["S7", "S1"]) }), logg)).toBe(true);
+  });
 });
 
-const lagErfaring = (
-  r: string, rkilder: string[],
-  h: string, hkilder: string[],
-  res: string, reskilder: string[],
-): Erfaring => ({
-  id: "E1",
-  tittel: "Testerfaring",
-  tittelRettetAvStudent: false,
-  rolle: felt(r, rkilder),
-  handling: felt(h, hkilder),
-  resultat: felt(res, reskilder),
-});
-
-describe("erFanget", () => {
-  it("returnerer true når alle tre felt har tekst og minst én kilde", () => {
-    expect(erFanget(lagErfaring("Rolle", ["S1"], "Handling", ["S2"], "Resultat", ["S3"]))).toBe(true);
-  });
-
-  it("returnerer true med samme kilde for alle felt", () => {
-    expect(erFanget(lagErfaring("Rolle", ["S1"], "Handling", ["S1"], "Resultat", ["S1"]))).toBe(true);
-  });
-
-  it("returnerer false når rolle-tekst er tom", () => {
-    expect(erFanget(lagErfaring("", [], "Handling", ["S2"], "Resultat", ["S3"]))).toBe(false);
-  });
-
-  it("returnerer false når handling-tekst er tom", () => {
-    expect(erFanget(lagErfaring("Rolle", ["S1"], "", [], "Resultat", ["S3"]))).toBe(false);
-  });
-
-  it("returnerer false når resultat-tekst er tom", () => {
-    expect(erFanget(lagErfaring("Rolle", ["S1"], "Handling", ["S2"], "", []))).toBe(false);
-  });
-
-  it("returnerer false når tekst finnes men kilde mangler for rolle", () => {
-    expect(erFanget(lagErfaring("Rolle", [], "Handling", ["S2"], "Resultat", ["S3"]))).toBe(false);
-  });
-
-  it("returnerer false når tekst finnes men kilde mangler for handling", () => {
-    expect(erFanget(lagErfaring("Rolle", ["S1"], "Handling", [], "Resultat", ["S3"]))).toBe(false);
-  });
-
-  it("returnerer false når tekst finnes men kilde mangler for resultat", () => {
-    expect(erFanget(lagErfaring("Rolle", ["S1"], "Handling", ["S2"], "Resultat", []))).toBe(false);
-  });
-
-  it("returnerer false for tekst med bare mellomrom (trim)", () => {
-    expect(erFanget(lagErfaring("  ", ["S1"], "Handling", ["S2"], "Resultat", ["S3"]))).toBe(false);
-    expect(erFanget(lagErfaring("Rolle", ["S1"], "\t", ["S2"], "Resultat", ["S3"]))).toBe(false);
-  });
-
-  it("returnerer false når ingen felt er fylt", () => {
-    expect(erFanget(lagErfaring("", [], "", [], "", []))).toBe(false);
+describe("antallFangede", () => {
+  it("teller bare fangede", () => {
+    expect(
+      antallFangede({ erfaringer: [erfaring("E1"), tomErfaring("E2"), erfaring("E3")], logg }),
+    ).toBe(2);
+    expect(antallFangede({ erfaringer: [], logg: [] })).toBe(0);
   });
 });

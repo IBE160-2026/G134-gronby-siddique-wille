@@ -5,6 +5,8 @@ import path from "node:path";
 
 import type { StatusSvar } from "@/kjerne/skjema";
 
+import { lesNokkel } from "./nokkel";
+
 /** Demodata for testsett A (AD-9), adskilt fra `fasit.json`. Regnes ut ved kall. */
 export function demoMappe(): string {
   return path.join(process.cwd(), "fixtures", "testsett-a", "demo");
@@ -23,7 +25,7 @@ export async function hentStatus({
   env?: Record<string, string | undefined>;
   demoMappe?: string;
 } = {}): Promise<StatusSvar> {
-  const harNokkel = (env.ANTHROPIC_API_KEY ?? "").trim().length > 0;
+  const harNokkel = lesNokkel(env) !== undefined;
   return { harNokkel, harDemodata: await harJsonFil(mappe) };
 }
 

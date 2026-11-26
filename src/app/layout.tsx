@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Source_Serif_4 } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "@/components/ui/sonner";
 import { OktProvider } from "@/klient/okt/kontekst";
 
 // Selvhostet av next/font: nettleseren sender ingen forespørsler til Google (AD-17).
@@ -29,6 +30,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <OktProvider>{children}</OktProvider>
+        <Toaster />
       </body>
     </html>
   );

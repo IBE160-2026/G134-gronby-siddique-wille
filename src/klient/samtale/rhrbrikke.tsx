@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import type { Felt, FeltNavn, LoggOppforing } from "@/kjerne/okt";
+import { useOkt } from "@/klient/okt/kontekst";
 
 const FELT_ETIKETTER: Record<FeltNavn, string> = {
   rolle: "Rolle",
@@ -14,8 +15,6 @@ const FELT_ETIKETTER: Record<FeltNavn, string> = {
 type Props = {
   felt: Felt;
   feltNavn: FeltNavn;
-  /** Samtaleloggen, for å slå opp kildetekstene (bare `svar`-oppføringer siteres). */
-  logg: LoggOppforing[];
 };
 
 /**
@@ -24,9 +23,11 @@ type Props = {
  * - fylt: covered-bakgrunn, hake
  * - oppdatert: kort animate-pulse ved overgang tom → fylt
  *
- * Klikk eller Enter åpner Popover med felttekst og kildesitater.
+ * Klikk eller Enter åpner Popover med felttekst og kildesitater. Sitatene
+ * slås opp i øktens logg (bare `svar`-oppføringer). Leser bare fra økten.
  */
-export function RHRBrikke({ felt, feltNavn, logg }: Props) {
+export function RHRBrikke({ felt, feltNavn }: Props) {
+  const { logg } = useOkt();
   const erFylt = felt.tekst.trim() !== "";
   const forrigeErFylt = useRef(erFylt);
   const [pulserer, setPulserer] = useState(false);
