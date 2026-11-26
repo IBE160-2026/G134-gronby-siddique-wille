@@ -490,4 +490,22 @@ describe("oktReducer – mottaSamtaleSvar (story 1.8)", () => {
     };
     expect(oktReducer(okt, utdatert)).toBe(okt);
   });
+
+  it("to opprett i samme svar gir E1 og E2 uten gjenbruk (story 1.9)", () => {
+    const okt = kjor(startet(), apning(), {
+      type: "mottaSamtaleSvar",
+      versjon: 0,
+      svar: { id: "S1", tekst: "Kafé og fotball." },
+      sporsmal: { tekst: "Fortell om kafeen.", gjelder: { ny: "n1" } },
+      endringer: [
+        { type: "opprett", ny: "n1", tittel: "Kafé" },
+        { type: "opprett", ny: "n2", tittel: "Fotball" },
+      ],
+    });
+    expect(okt.erfaringer.map((e) => [e.id, e.tittel])).toEqual([
+      ["E1", "Kafé"],
+      ["E2", "Fotball"],
+    ]);
+    expect(okt.tellere.E).toBe(2);
+  });
 });
