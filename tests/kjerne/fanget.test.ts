@@ -25,6 +25,10 @@ describe("erFanget (AD-7)", () => {
     expect(erFanget(e, [...logg, svar("S9")])).toBe(true);
   });
 
+  it("usann når ingen felt er fylt (story 1.9)", () => {
+    expect(erFanget(tomErfaring("E1"), logg)).toBe(false);
+  });
+
   it("én gyldig kilde blant ugyldige holder", () => {
     expect(erFanget(erfaring("E1", { rolle: felt("t", ["S7", "S1"]) }), logg)).toBe(true);
   });
