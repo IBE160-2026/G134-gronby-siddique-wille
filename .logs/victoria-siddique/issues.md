@@ -20,4 +20,7 @@
 - [ ] 2026-11-24 [story-1-15-stegindikator](995-2026-11-24-22-13-19-story-1-15-stegindikator.md) — Gruppen bekrefter endringen i EXPERIENCE.md (chatloggen *har* en live-region for assistentsvar); NFR5 i epics.md bruker gammel ordlyd
 - [ ] 2026-11-26 [story-1-10-terskelregler](994-2026-11-26-20-48-33-story-1-10-terskelregler.md) — `kanGaVidere()` er ≥3 fangede, men ARCHITECTURE-SPINE sier «minst én fanget»; oppdater arkitekturen og lag egen sperre for kravuttrekk ved 0 fangede (1.12)
 - [ ] 2026-11-26 [story-1-10-terskelregler](994-2026-11-26-20-48-33-story-1-10-terskelregler.md) — `MAKS_ANNONSE_TEGN` er 20000 i `regler.ts`, men 6000 i epics.md (story 2.1); gruppen avklarer
-- [ ] 2026-11-26 [story-1-10-terskelregler](994-2026-11-26-20-48-33-story-1-10-terskelregler.md) — Kodegjennomgang av story 1.10 før den settes til done
+- [x] 2026-11-26 [story-1-10-terskelregler](994-2026-11-26-20-48-33-story-1-10-terskelregler.md) — Kodegjennomgang av story 1.10 før den settes til done (løst 2026-11-26 i cb90d77)
+- [ ] 2026-11-26 [story-1-10-terskelregler](994-2026-11-26-20-48-33-story-1-10-terskelregler.md) — UX: egen eller varierende tekst når overgangsspørsmålet gjentas, og når maks er nådd og erfaringen er lukket
+- [ ] 2026-11-26 [story-1-10-terskelregler](994-2026-11-26-20-48-33-story-1-10-terskelregler.md) — Håndhev `MIN_ANNONSE_TEGN` i `/api/krav` (Epic 2)
+- [ ] 2026-11-26 [story-1-10-terskelregler](994-2026-11-26-20-48-33-story-1-10-terskelregler.md) — Demomanuset (1.13) må holde seg innenfor 3 oppfølgingsspørsmål per erfaring
