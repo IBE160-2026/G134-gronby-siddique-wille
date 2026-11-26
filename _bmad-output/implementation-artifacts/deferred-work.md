@@ -101,3 +101,15 @@
 - source_spec: `_bmad-output/specs/spec-1-10-terskelregler/SPEC.md`
   summary: Demomanuset for samtalen (story 1.13) må holde seg innenfor `MAKS_OPPFOLGING_PER_ERFARING`, ellers byttes spørsmål nummer fire om samme erfaring stille med `OVERGANGSSPORSMAL`.
   evidence: Demo går gjennom `begrensOppfolging` i `/api/samtale`.
+
+## Deferred from: code review of spec-1-11-fremdrift (2026-11-26)
+
+- source_spec: `_bmad-output/specs/spec-1-11-fremdrift/SPEC.md`
+  summary: «Ferdig» og «Gå videre til oppsummering» sender til `/oppsummering`, som gir 404 til story 1.12 lager siden. Merge 1.11 til main bare sammen med eller etter 1.12.
+  evidence: Edge Case Hunter, Blind Hunter og Verification Gap. Bestemt med vilje i specen (siden bygges i 1.12).
+- source_spec: `_bmad-output/specs/spec-1-11-fremdrift/SPEC.md`
+  summary: Skjermleseren får ikke vite at «Gå videre til oppsummering» har dukket opp, fordi statusregionen bare leser «3 av 3 erfaringer fanget». UX vurderer en tilleggstekst ved N ≥ 3.
+  evidence: Blind Hunter. AC er oppfylt. Tilleggsteksten er mikrotekst som UX eier.
+- source_spec: `_bmad-output/specs/spec-1-11-fremdrift/SPEC.md`
+  summary: UX-DR8 og EXPERIENCE.md sier at «Ferdig» er deaktivert til minst ett *oppfølgingsspørsmål* er stilt, men `kanTrykkeFerdig()` (1.10) er sann etter åpningsspørsmålet. Gruppen bestemmer ordlyden, eller endrer regelen i regler.ts.
+  evidence: Blind Hunter. Story 1.10 AC og Victorias AC for 1.11 sier «minst ett spørsmål».

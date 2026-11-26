@@ -15,9 +15,10 @@ describe("fremdriftTekst (UX-DR7)", () => {
     expect(fremdriftTekst(antall)).toBe(tekst);
   });
 
-  it("negative tall og NaN gir 0, desimaltall rundes ned", () => {
+  it("negative og ikke-endelige tall gir 0, desimaltall rundes ned", () => {
     expect(fremdriftTekst(-1)).toBe("0 av 3 erfaringer fanget");
     expect(fremdriftTekst(Number.NaN)).toBe("0 av 3 erfaringer fanget");
+    expect(fremdriftTekst(Number.POSITIVE_INFINITY)).toBe("0 av 3 erfaringer fanget");
     expect(fremdriftTekst(2.9)).toBe("2 av 3 erfaringer fanget");
   });
 });
@@ -38,7 +39,10 @@ describe("fylteSegmenter", () => {
     expect(fylteSegmenter(MAAL_ERFARINGER)).toBe(MAAL_ERFARINGER);
   });
 
-  it("negative tall gir 0", () => {
+  it("negative og ikke-endelige tall gir 0, desimaltall rundes ned", () => {
     expect(fylteSegmenter(-2)).toBe(0);
+    expect(fylteSegmenter(Number.NaN)).toBe(0);
+    expect(fylteSegmenter(Number.POSITIVE_INFINITY)).toBe(0);
+    expect(fylteSegmenter(2.9)).toBe(2);
   });
 });

@@ -29,7 +29,7 @@ Studenten skal se hvor mange erfaringer som er fanget, og ha en tydelig vei vide
   - **success:** Knappen finnes ikke ved N < 3 og finnes ved N ≥ 3. Klikk gir `router.push("/oppsummering")`. Uten klikk skjer ingen navigasjon.
 - **CAP-4** «Ferdig»
   - **intent:** «Ferdig» er alltid synlig, aktiv når `kanTrykkeFerdig()` er sann, og sender til Oppsummering uansett antall fangede.
-  - **success:** Knappen er deaktivert før første spørsmål og aktiv etterpå. Klikk gir `router.push("/oppsummering")` med 0, 1–2 og ≥ 3 fangede.
+  - **success:** Knappen er deaktivert før første spørsmål og aktiv etterpå. Klikk gir `router.push("/oppsummering")` med 0, 1–2 og ≥ 3 fangede. Mens modellen svarer, er både «Ferdig» og «Gå videre til oppsummering» låst.
 
 ## Constraints
 
@@ -37,6 +37,8 @@ Studenten skal se hvor mange erfaringer som er fanget, og ha en tydelig vei vide
 - `samtaleflate.tsx` endres bare ved montering: den gamle «Ferdig»-blokken fra 1.8 erstattes av `<Samtalehandlinger />`, som én hunk. PR #7 (1.9) endrer samme fil.
 - Logikk og UI ligger i nye filer: `src/kjerne/fremdrift.ts` (ren), `src/klient/samtale/fremdriftsmaler.tsx` (presentasjon, tar `antall`) og `src/klient/samtale/samtalehandlinger.tsx` (leser `useOkt()`, navigerer).
 - Navigasjon med `useRouter` fra `next/navigation` til `/${steg}` med `Steg`-id-en `oppsummering` fra `src/klient/skall/steg.ts`, samme mønster som `Flytskall`. Siden selv bygges ikke (1.12), så ruten gir 404 inntil da.
+- `Samtalehandlinger` tar `venter` fra `Samtaleflate`. Å forlate Samtale midt i et modellkall ville avbryte kallet (unmount), og svaret studenten sendte, havner ikke i loggen.
+- 1.11 merges til main bare sammen med eller etter 1.12.
 - Komponentene dispatcher ingenting og bruker ikke localStorage, sessionStorage eller cookies.
 - Alt nås med tastatur: begge handlingene er shadcn `Button`, og fokusringen arves. DOM-rekkefølgen er chatinput → måler → «Gå videre til oppsummering» → «Ferdig».
 - Stil fra DESIGN.md `progress-meter`: spor `bg-muted`, fyll `bg-primary`, `rounded-full`. Grønt brukes bare for fremdrift. «Gå videre til oppsummering» er `Button` (primær), og «Ferdig» er `variant="outline"` som før.
@@ -48,11 +50,11 @@ Studenten skal se hvor mange erfaringer som er fanget, og ha en tydelig vei vide
 - Å markere Samtale som fullført i stegindikatoren (1.12).
 - Å flytte måleren til sidepanelet eller til `md`-stripen «2 av 3 · Vis erfaringer» (1.9, 1.17).
 - Demomodusens «Neste» → «Gå videre til oppsummering» (1.13).
-- DOM-tester for komponentene, fordi repoet ikke har jsdom-oppsett.
+- DOM-tester med klikk og navigasjon, fordi repoet ikke har jsdom-oppsett. Hva som vises, testes med `renderToString`.
 
 ## Success signal
 
-- `npm test`, `npm run lint` og `npm run build` går uten feil, og `tests/kjerne/fremdrift.test.ts` dekker CAP-1. På `/samtale` viser måleren «0 av 3 erfaringer fanget» ved start. «Ferdig» blir aktiv etter åpningsspørsmålet og sender til `/oppsummering`. «Gå videre til oppsummering» dukker opp først ved 3 fangede.
+- `npm test`, `npm run lint` og `npm run build` går uten feil, `tests/kjerne/fremdrift.test.ts` dekker CAP-1, og `tests/klient/samtale/samtalehandlinger.test.tsx` dekker hva CAP-2–CAP-4 viser. På `/samtale` viser måleren «0 av 3 erfaringer fanget» ved start. «Ferdig» blir aktiv etter åpningsspørsmålet og sender til `/oppsummering`. «Gå videre til oppsummering» dukker opp først ved 3 fangede.
 
 ## Assumptions
 

@@ -22,9 +22,12 @@ const OPPSUMMERING: Steg = "oppsummering";
  *   sender til Oppsummering uansett antall fangede. Oppsummering viser selv
  *   riktig notis for 0, 1–2 og ≥ 3 (story 1.12).
  *
+ * Begge er låst mens modellen svarer (`venter`): å forlate Samtale da ville
+ * avbryte kallet, og svaret studenten nettopp sendte, havner ikke i loggen.
+ *
  * Leser bare økten; dispatcher ingenting.
  */
-export function Samtalehandlinger() {
+export function Samtalehandlinger({ venter }: { venter: boolean }) {
   const okt = useOkt();
   const router = useRouter();
   const tilOppsummering = () => router.push(`/${OPPSUMMERING}`);
@@ -34,14 +37,14 @@ export function Samtalehandlinger() {
       <Fremdriftsmaler antall={antallFangede(okt)} className="w-48 grow" />
       <div className="flex gap-2.5">
         {kanGaVidere(okt) && (
-          <Button size="lg" onClick={tilOppsummering}>
+          <Button size="lg" disabled={venter} onClick={tilOppsummering}>
             Gå videre til oppsummering
           </Button>
         )}
         <Button
           variant="outline"
           size="lg"
-          disabled={!kanTrykkeFerdig(okt)}
+          disabled={venter || !kanTrykkeFerdig(okt)}
           onClick={tilOppsummering}
         >
           Ferdig

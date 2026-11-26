@@ -9,8 +9,9 @@ type FremdriftsmalerProps = {
 };
 
 /**
- * Fremdriftsmåler (DESIGN.md `progress-meter`, UX-DR7): tre segmenter med
- * spor `muted` og fyll `primary`, full ved N ≥ 3, og teksten under.
+ * Fremdriftsmåler (DESIGN.md `progress-meter`, UX-DR7): ett segment per
+ * erfaring i `MAAL_ERFARINGER`, med spor `muted` og fyll `primary`, full når
+ * målet er nådd, og teksten under.
  *
  * Teksten er selv en `role="status"`-region (polite). Den er mountet fra
  * start, så første visning leses ikke opp, men hver endring gjør det (NFR5).

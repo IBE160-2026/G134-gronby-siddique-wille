@@ -125,7 +125,7 @@ export function Samtaleflate() {
         // Låst mens modellen svarer, før første spørsmål og når loggen er full.
         venter={venter || !harSporsmal || loggFull}
       />
-      <Samtalehandlinger />
+      <Samtalehandlinger venter={venter} />
     </div>
   );
 }
