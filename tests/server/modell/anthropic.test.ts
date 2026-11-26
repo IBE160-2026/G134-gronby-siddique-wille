@@ -239,3 +239,38 @@ describe("tilModellFeil", () => {
     expect(tilModellFeil(feil)).toBe(feil);
   });
 });
+
+describe("AnthropicModell – signal fra kalleren", () => {
+  it("et avbrutt signal gir modell_feil, og fristen gjelder fortsatt", async () => {
+    const timeout = vi.spyOn(AbortSignal, "timeout");
+    const { fetch } = falskFetch(() => tekst(JSON.stringify(gyldigSamtale)));
+    const feil = await fangFeil(
+      new AnthropicModell({ apiKey: "sk-ant-test", fetch }).kall({
+        ...foresporsel,
+        signal: AbortSignal.abort(),
+      }),
+    );
+    expect(timeout).toHaveBeenCalledWith(FRIST_MS);
+    forventModellFeil(feil, "modell_feil");
+  });
+
+  it("fristen gjelder også når kalleren sender et levende signal", async () => {
+    vi.spyOn(AbortSignal, "timeout").mockReturnValue(AbortSignal.abort());
+    const { fetch } = falskFetch(() => tekst(JSON.stringify(gyldigSamtale)));
+    const feil = await fangFeil(
+      new AnthropicModell({ apiKey: "sk-ant-test", fetch }).kall({
+        ...foresporsel,
+        signal: new AbortController().signal,
+      }),
+    );
+    forventModellFeil(feil, "modell_feil");
+  });
+
+  it("et signal som ikke avbrytes, påvirker ikke svaret", async () => {
+    const { fetch } = falskFetch(() => tekst(JSON.stringify(gyldigSamtale)));
+    const modell = new AnthropicModell({ apiKey: "sk-ant-test", fetch });
+    expect(
+      await modell.kall({ ...foresporsel, signal: new AbortController().signal }),
+    ).toEqual(gyldigSamtale);
+  });
+});
