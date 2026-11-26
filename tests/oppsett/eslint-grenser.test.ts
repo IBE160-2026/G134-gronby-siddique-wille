@@ -70,4 +70,29 @@ describe("modulgrenser i ESLint", () => {
   it("src/kjerne kan importere ./okt", async () => {
     expect(await begrensedeImporter(`import "./okt";\n`, "src/kjerne/sjekk.ts")).toBe(0);
   });
+
+  it.each([
+    "src/server/modell/demo.ts",
+    "src/server/modell/velg.ts",
+    "src/server/status.ts",
+    "src/app/api/status/route.ts",
+    "src/klient/okt/sjekk.ts",
+    "src/kjerne/okt.ts",
+    "src/kjerne/skjema.ts",
+    "src/lib/sjekk.ts",
+    "tests/server/sjekk.test.ts",
+    "scripts/sjekk.mjs",
+  ])("%s kan ikke importere @anthropic-ai/sdk", async (fil) => {
+    expect(await begrensedeImporter(`import Anthropic from "@anthropic-ai/sdk";\n`, fil)).toBe(1);
+    expect(
+      await begrensedeImporter(`import "@anthropic-ai/sdk/helpers/zod";\n`, fil),
+    ).toBe(1);
+  });
+
+  it("src/server/modell/anthropic.ts kan importere @anthropic-ai/sdk, men ikke zod", async () => {
+    const fil = "src/server/modell/anthropic.ts";
+    expect(await begrensedeImporter(`import Anthropic from "@anthropic-ai/sdk";\n`, fil)).toBe(0);
+    expect(await begrensedeImporter(`import "@anthropic-ai/sdk/helpers/zod";\n`, fil)).toBe(0);
+    expect(await begrensedeImporter(`import { z } from "zod";\n`, fil)).toBe(1);
+  });
 });

@@ -34,7 +34,7 @@ Studenten skal kunne starte en anonym økt uten innlogging, bli intervjuet med �
 - Personvern: ingenting lagres etter økten; ingen `localStorage`/`sessionStorage`/IndexedDB/cookies med øktinnhold. Personvernteksten skal si at svar sendes kryptert til Anthropic, at Anthropic sletter API-data innen 30 dager og at flaggede samtaler kan lagres opptil 2 år – ikke mer. «Start ny økt» krever avkrysning («Jeg har lest dette og vil starte») og API-nøkkel; demomodus krever ingen avkrysning.
 - Kostnad: lav kostnad per økt (<10 øre); faste `max_tokens`/timeout/`maxRetries`.
 - Kun lokal kjøring via `next dev -H 127.0.0.1`; ingen hosting, database eller CI.
-- Tilgjengelighet WCAG 2.2 AA: chatlogg `aria-live="polite"`, fremdrift kunngjøres som tekst, alt nås med tastatur, `lang="nb"`, kun lyst tema.
+- Tilgjengelighet WCAG 2.2 AA: chatloggen har en `aria-live="polite"`-region som leser opp nye assistentmeldinger og skriveindikatoren – studentens egen melding leses ikke opp på nytt. Fremdrift kunngjøres som tekst, alt nås med tastatur, `lang="nb"`, kun lyst tema.
 - Persondata (svar-, sitat-, annonsetekst) skal aldri havne i logger eller feilsvar – bare ID-er, feilkoder og Zod-stier.
 
 ## Technical Decisions
@@ -62,7 +62,7 @@ Studenten skal kunne starte en anonym økt uten innlogging, bli intervjuet med �
 - Feil: `toast.error` (sonner) «Noe gikk galt. Prøv igjen.» med «Prøv igjen»; input bevares. «Ny økt» bekreftes i `Dialog` «Alt i denne økten forsvinner.»; `beforeunload` aktivt fra første svar.
 - Demomodus: ikke-lukkbart banner «Demomodus – eksempelsvar, ingen API-nøkkel» på alle flater; studenten trykker «Neste» i stedet for å skrive.
 - Tone: du-form, varm, nysgjerrig, ingen fagsjargong (ikke «STAR», «kompetanse»), ingen poeng/prosent.
-- Tema: overstyr shadcn-tokens med bakgrunn `#FBF8F3`, primær `#1F5E4A`, `covered`/`gap`-tilstander og varme nøytraler; Inter for brødtekst, Source Serif 4 for `display`/`quote`/`chat-body`; mykere `rounded` (6/10/14px/full); layoutmål `content-max`, `chat-max`, `column-max`, `section-gap`, `side-panel`. Kontrast verifiseres (foreground/background ≥7:1, øvrige par ≥4.5:1). Grønt bare for funnet/dekket/fremdrift.
+- Tema: overstyr shadcn-tokens med bakgrunn `#FBF8F3`, primær `#1F5E4A`, `covered`/`gap`-tilstander og varme nøytraler; Inter for brødtekst, Source Serif 4 for `display`/`display-sm`/`quote`/`chat-body` (også chatboblene); mykere `rounded` (6/10/14px/full); layoutmål `content-max`, `chat-max`, `column-max`, `section-gap`, `side-panel`. Kontrast verifiseres (foreground/background ≥7:1, øvrige par ≥4.5:1). Grønt bare for funnet/dekket/fremdrift.
 - Responsivt: `md` gir sammenleggbar stripe («2 av 3 · Vis erfaringer»), `<md` én kolonne med erfaringer i `Sheet` nedenfra.
 
 ## Cross-Story Dependencies
