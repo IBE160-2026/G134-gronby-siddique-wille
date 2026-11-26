@@ -19,11 +19,11 @@ Studenten har ingen sikkerhetsnett mot å miste øktinnholdet ved uhell. Et relo
 
 - **CAP-1**
   - **intent:** Nettleseren advarer studenten når hun prøver å forlate siden mens økten har data.
-  - **success:** Når `okt.logg` inneholder minst én `svar`-oppføring, er en `beforeunload`-lytter aktiv som setter `event.returnValue = ""`; lytteren fjernes automatisk når loggen tømmes (f.eks. etter «Ny økt»). Avgjørelsen om aktivering delegeres til den rene funksjonen `harGittSvar(okt: Okt): boolean` i `src/kjerne/`. Vitest-tester i `tests/kjerne/` dekker sant/usant.
+  - **success:** Når `okt.logg` inneholder minst én `svar`-oppføring, er en `beforeunload`-lytter aktiv som setter `event.returnValue = ""`; lytteren fjernes automatisk når loggen tømmes (f.eks. etter «Ny økt»). Avgjørelsen om aktivering delegeres til den rene funksjonen `harGittSvar(okt: Okt): boolean` i `src/kjerne/hargittsvar.ts`. Vitest-tester i `tests/kjerne/` dekker sant/usant.
 
 - **CAP-2**
   - **intent:** Studenten kan starte en ny økt uten å miste data ved et feilklikk.
-  - **success:** Klikk på «Ny økt» i `Appskall` åpner en shadcn `AlertDialog` med overskriften «Ny økt» og brødteksten «Alt i denne økten forsvinner.» Dialogen har to knapper: «Avbryt» (lukker dialogen, ingen tilstandsendring) og «Start ny økt» (dispatcher `{ type: "nyOkt" }` og navigerer til `/`). `Esc` avbryter. Fokus settes til dialogen ved åpning og tilbake til «Ny økt»-knappen ved lukking. Dialogen er en egen komponent `NyOktDialog` i `src/klient/skall/`.
+  - **success:** Klikk på «Ny økt» i `Appskall` åpner en shadcn `AlertDialog` med overskriften «Ny økt» og brødteksten «Alt i denne økten forsvinner.» Dialogen har to knapper: «Avbryt» (lukker dialogen, ingen tilstandsendring) og «Start ny økt» (dispatcher `{ type: "nyOkt" }` og navigerer til `/`). `Esc` avbryter. Fokus settes til dialogen ved åpning og tilbake til «Ny økt»-knappen ved lukking. Dialogen er en egen komponent `NyOktDialog` i `src/klient/skall/`, og den og `useBeforeUnload` kobles inn i `src/klient/skall/flytskall.tsx`.
 
 ## Constraints
 
@@ -53,10 +53,10 @@ Studenten har ingen sikkerhetsnett mot å miste øktinnholdet ved uhell. Et relo
 
 ## Review Findings
 
-- [x] [Review][Patch] `useBeforeUnload` setter ikke `event.returnValue = ""` — bryter CAP-1 success criterion eksplisitt [`src/klient/okt/useBeforeUnload.ts:17`]
-- [x] [Review][Patch] Dev-sidetekst nevner ikke story 1.14 [`src/app/utvikling/samtale/forhandsvisning.tsx:88`]
+- [x] [Review][Patch] `useBeforeUnload` setter ikke `event.returnValue = ""` — bryter CAP-1 success criterion eksplisitt [`src/klient/okt/usebeforeunload.ts:17`]
+- [x] [Review][Patch] Dev-sidetekst nevner ikke story 1.14 [`src/app/utvikling/samtale/forhandsvisning.tsx:88`] — utgått: forhåndsvisningen ble fjernet i story 1.8; dialogen og `useBeforeUnload` er nå koblet inn i `src/klient/skall/flytskall.tsx`
 - [x] [Review][Patch] JSDoc på `onBekreft` lover «etter dialogen er lukket» men kalles synkront [`src/klient/skall/nyoktdialog.tsx:17`]
-- [x] [Review][Defer] Ingen automatisk test for `useBeforeUnload`-lytteren [`src/klient/okt/useBeforeUnload.ts`] — deferred: krever renderHook + jsdom + vi.spyOn(window, 'addEventListener'), et mønster som ikke finnes i testsuiten ennå
+- [x] [Review][Defer] Ingen automatisk test for `useBeforeUnload`-lytteren [`src/klient/okt/usebeforeunload.ts`] — deferred: krever renderHook + jsdom + vi.spyOn(window, 'addEventListener'), et mønster som ikke finnes i testsuiten ennå
 - [x] [Review][Defer] Fokusbann uten AlertDialogTrigger — maybe-false [`src/klient/skall/nyoktdialog.tsx`] — deferred: bekreft at base-ui bruker document.activeElement ved åpningstidspunkt til fokusbann når dialogen åpnes programmatisk (ikke via Trigger-wrapper)
 
 ### Avvist
@@ -64,4 +64,4 @@ Studenten har ingen sikkerhetsnett mot å miste øktinnholdet ved uhell. Et relo
 - **false** — AlertDialogAction mangler destructive-variant: AlertDialogDescription sier «Alt i denne økten forsvinner.» — konsekvensen er kommunisert, ingen dårlig utfall.
 - **false** — `harGittSvar`-tester dekker ikke alle typer: `LoggOppforing` er en lukket union med nøyaktig 3 typer (`sporsmal`, `svar`, `rettelse`), alle tre er dekket.
 - **low/avvist** — Dobbeltklikk gir dobbel `nyOkt`-dispatch: usannsynlig å treffe i bruk, og fix legger til ref + betingelse (mer enn én linjerettelse).
-- **false** — `useBeforeUnload` ikke koblet til produksjons-samtalevisning: ruten finnes ikke ennå (story 1.7/1.15).
+- **løst** — `useBeforeUnload` ikke koblet til produksjons-samtalevisning: koblet inn i `src/klient/skall/flytskall.tsx` sammen med `NyOktDialog` etter at story 1.8 la til `(flyt)`-rutene.

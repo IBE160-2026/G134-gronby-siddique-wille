@@ -3,6 +3,7 @@
 import { useLayoutEffect, useRef, type KeyboardEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { MAKS_TEKST_TEGN } from "@/kjerne/regler";
 import { cn } from "@/lib/utils";
 
 type ChatinputProps = {
@@ -62,6 +63,8 @@ export function Chatinput({ verdi, onEndre, onSend, venter, className }: Chatinp
         value={verdi}
         onChange={(e) => onEndre(e.target.value)}
         onKeyDown={vedTast}
+        // Samme grense som forespørselsskjemaet, så et svar aldri gir ugyldig_foresporsel.
+        maxLength={MAKS_TEKST_TEGN}
         readOnly={venter}
         aria-disabled={venter || undefined}
         aria-label="Ditt svar"

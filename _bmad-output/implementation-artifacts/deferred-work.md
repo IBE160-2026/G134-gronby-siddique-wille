@@ -34,9 +34,6 @@
   summary: UI-et for «Fortsett samtalen» må dispatche `nullstill('samtaleFortsatt')` eksplisitt, ellers blir bevistabellen stående etter nye svar og erfaringer.
   evidence: Reduceren nullstiller ikke automatisk ved `leggTilSvar`/`opprettErfaring`, fordi en versjonsøkning midt i et samtalesvar ville forkastet spørsmålet.
 - source_spec: `_bmad-output/implementation-artifacts/spec-1-3-oktreducer-context-og-versjonering.md`
-  summary: Story 1.8 må legge samtalesvaret (spørsmål + endringer + nye erfaringer) inn som én versjonert handling, ikke som løse `opprettErfaring`-dispatcher. Forespørsler må sendes med versjonen etter rettelse eller sletting.
-  evidence: `opprettErfaring` har ingen `versjon`; i dag finnes ingen asynkron kaller.
-- source_spec: `_bmad-output/implementation-artifacts/spec-1-3-oktreducer-context-og-versjonering.md`
   summary: Legg til en DOM-test (jsdom/happy-dom) som viser at en dispatch gjennom `OktProvider` oppdaterer `useOkt()`.
   evidence: `renderToString` kan ikke rendre på nytt etter en dispatch; en provider koblet til feil reducer ville bestått dagens tester.
 
@@ -52,7 +49,7 @@
 ## Deferred from: code review of spec-story-1-14-ny-okt (2026-11-26)
 
 - source_spec: `_bmad-output/specs/spec-story-1-14-ny-okt/SPEC.md`
-  summary: Ingen automatisk test for `useBeforeUnload`-lytteren.
+  summary: Ingen automatisk test for `useBeforeUnload`-lytteren (`src/klient/okt/usebeforeunload.ts`).
   evidence: Verification Gap. Krever `renderHook` + jsdom + `vi.spyOn(window, 'addEventListener')`, et mønster som ikke finnes i testsuiten. Uten test kan en som fjerner `window.addEventListener`-kallet sende det til prod uten at noen test slår ut.
 - source_spec: `_bmad-output/specs/spec-story-1-14-ny-okt/SPEC.md`
   summary: Bekreft at fokusbann fungerer uten `AlertDialogTrigger` (programmatisk åpning).
@@ -73,6 +70,28 @@
 - source_spec: `_bmad-output/specs/spec-1-15-stegindikator/SPEC.md`
   summary: Ingen automatiske tester for live-regionen i Chatlogg og for Stegindikator. Live-regionen bør testes for fem ting: den er tom ved første visning, er uendret når en studentmelding legges til, viser `SKRIVER_TEKST` når `venter` er sann, kunngjør et nytt assistentsvar, og tømmes når `venter` blir sann, så et feilet kall ikke leser opp forrige svar igjen. Stegindikatoren bør testes med `aktivt="krav"`: aktivt vinner over fullført, det finnes tre knapper med «(fullført)», og kommende steg kan ikke få fokus. Den bør også sjekke at `onVelg` kalles og at fokus går til det aktive steget. Skriv testene sammen med testene for samtalekomponentene fra 1.7 (Vitest, Testing Library og jsdom).
   evidence: Verification Gap og Blind Hunter. Repoet har ingen testkjører, og tester er ikke-mål i specen. Atferden ble verifisert manuelt i Chrome med et midlertidig playwright-core-script.
-- source_spec: `_bmad-output/specs/spec-1-15-stegindikator/SPEC.md`
-  summary: Fokus etter stegvalg forutsetter at `Appskall` står mountet mens steget byttes. Lager story 1.8 stegene som egne ruter, må skallet ligge i en felles layout og ikke i hver side. Ellers faller fokus til `<body>` etter klikk på et fullført steg (CAP-4).
-  evidence: Edge Case Hunter og Acceptance Auditor. Komponenten vet ikke om steg er ruter eller tilstand, så kontrakten står i JSDoc og må følges når 1.8 kobler til.
+
+## Deferred from: code review of spec-1-4-api-kontrakt-zod-skjema-og-statusrute (2026-11-24)
+
+- Begge punktene er lukket av story 1.8 (se under).
+
+## Lukket av story 1.4 (2026-11-24)
+
+- `server-only` håndheves for `src/server/` med `tests/oppsett/server-only.test.ts` (rest fra 1.2/1.3).
+
+## Lukket av story 1.8 (2026-11-25)
+
+- Samtalesvaret legges inn som én versjonert handling (`mottaSamtaleSvar`), og forespørsler sendes med gjeldende `versjon` (rest fra 1.3).
+- `sporsmal.gjelder: { ny }` løses til den nye `E`-ID-en med `losGjelder()` (rest fra 1.4).
+- Klienten holder seg innenfor grensene i samtalen: `maxLength` på Chatinput, `erLoggFull()` låser input, og `MAKS_ERFARINGER` håndheves i ruten og reduceren (rest fra 1.4; `MAKS_ANNONSE_TEGN` gjelder 2.1).
+- `Appskall` ligger i en felles layout (`src/app/(flyt)/layout.tsx` med `Flytskall`), så fokus etter stegvalg ikke går tapt (rest fra 1.15).
+- `/utvikling/samtale` er fjernet (del av punktet fra 1.7; testene for samtalekomponentene står fortsatt åpne).
+
+## Deferred from: code review of spec-1-8-samtalerute-som-stiller-og-mottar-oppfolgingssporsmal (2026-11-25)
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-1-8-samtalerute-som-stiller-og-mottar-oppfolgingssporsmal.md`
+  summary: `Flytskall` (omdirigering til `/` uten startet økt, aktivt steg fra stien) og den midlertidige Start-knappen i `src/app/page.tsx` har ingen automatiske tester.
+  evidence: Verification Gap i bmad-build for 1.8. Ingen test importerer `Flytskall` eller `page.tsx`, og Vitest kjører uten DOM. Dekkes når repoet får DOM-tester, eller ved å flytte avgjørelsen til en ren hjelper. Start-knappen erstattes i 1.6.
+- source_spec: `_bmad-output/implementation-artifacts/spec-1-8-samtalerute-som-stiller-og-mottar-oppfolgingssporsmal.md`
+  summary: `Samtaleflate` har ingen komponenttester: send-vakten (`!harSporsmal || loggFull`), at utkastet bare tømmes når det fortsatt er teksten som ble sendt, «Prøv igjen» via toasten, at toasten fjernes når utkastet endres, og avbrudd ved unmount (forsinket én tick for StrictMode).
+  evidence: Verification Gap og Blind Hunter i bmad-code-review. Ingen test importerer komponenten, og Vitest kjører uten DOM. `sendSamtale` er testet som ren funksjon. Dekkes når repoet får DOM-tester, eller ved å flytte reglene til rene hjelpere i `api.ts`.

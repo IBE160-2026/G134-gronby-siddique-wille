@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { harGittSvar } from "@/kjerne/harGittSvar";
+import { harGittSvar } from "@/kjerne/hargittsvar";
 import { useOkt } from "./kontekst";
 
 /**

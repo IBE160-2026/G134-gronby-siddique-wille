@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { harGittSvar } from "@/kjerne/harGittSvar";
+import { harGittSvar } from "@/kjerne/hargittsvar";
 import { tomOkt } from "@/kjerne/okt";
 
 describe("harGittSvar", () => {

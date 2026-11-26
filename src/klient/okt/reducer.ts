@@ -1,3 +1,4 @@
+import { brukEndringer, losGjelder } from "@/kjerne/endringer";
 import { nullstill, type NullstillArsak } from "@/kjerne/nullstill";
 import {
   nesteId,
@@ -8,6 +9,7 @@ import {
   type Modus,
   type Okt,
 } from "@/kjerne/okt";
+import type { Endring, SamtaleSvar } from "@/kjerne/skjema";
 
 /**
  * Alle endringer av økten (AD-4). Handlinger som bærer et serversvar har
@@ -18,6 +20,18 @@ export type Handling =
   | { type: "startOkt"; modus: Modus }
   | { type: "leggTilSporsmal"; versjon: number; tekst: string; gjelder: string | null }
   | { type: "leggTilSvar"; tekst: string }
+  | {
+      /**
+       * Hele svaret fra `/api/samtale` (AD-13). `svar` er studentsvaret som ble
+       * sendt med forespørselen (med ID-en `nesteId(okt.tellere, "S")` ga da),
+       * eller `null` for åpningsspørsmålet.
+       */
+      type: "mottaSamtaleSvar";
+      versjon: number;
+      svar: { id: string; tekst: string } | null;
+      sporsmal: SamtaleSvar["sporsmal"];
+      endringer: readonly Endring[];
+    }
   | {
       type: "leggTilRettelse";
       erfaringId: string;
@@ -65,6 +79,38 @@ export function oktReducer(okt: Okt, handling: Handling): Okt {
         ...okt,
         tellere,
         logg: [...okt.logg, { type: "svar", id, tekst: handling.tekst }],
+      };
+    }
+
+    case "mottaSamtaleSvar": {
+      if (handling.versjon !== okt.versjon) return okt;
+      let neste = okt;
+      if (handling.svar === null) {
+        // Åpningsspørsmålet bare i en tom logg, så et dobbelt kall
+        // (StrictMode) ikke gir to A-oppføringer.
+        if (okt.logg.length > 0) return okt;
+      } else {
+        // ID-en modellen så, må fortsatt være neste S-ID. Ellers er svaret
+        // utdatert (et annet svar er tatt imot i mellomtiden).
+        const { id, tellere } = nesteId(okt.tellere, "S");
+        if (id !== handling.svar.id) return okt;
+        neste = {
+          ...okt,
+          tellere,
+          logg: [...okt.logg, { type: "svar", id, tekst: handling.svar.tekst }],
+        };
+      }
+
+      const { okt: medEndringer, nyRefs } = brukEndringer(neste, handling.endringer);
+      const gjelder = losGjelder(handling.sporsmal.gjelder, medEndringer.erfaringer, nyRefs);
+      const { id, tellere } = nesteId(medEndringer.tellere, "A");
+      return {
+        ...medEndringer,
+        tellere,
+        logg: [
+          ...medEndringer.logg,
+          { type: "sporsmal", id, tekst: handling.sporsmal.tekst, gjelder },
+        ],
       };
     }
 
