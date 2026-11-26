@@ -29,7 +29,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 # - Retrospective appends its action items to action_items; the status view surfaces open ones
 generated: 11-15-2026 00:00
-last_updated: 11-25-2026 21:16
+last_updated: 11-26-2026 20:53
 project: G134-gronby-siddique-wille
 project_key: NOKEY
 tracking_system: file-system
@@ -45,7 +45,7 @@ development_status:
   1-7-samtale-ui-chatboble-chatinput-og-skriveindikator: done
   1-8-samtalerute-som-stiller-og-mottar-oppfølgingsspørsmål: done
   1-9-erfaringskort-r-h-r-brikker-og-fanget-logikk: backlog
-  1-10-terskelregler-for-oppfølgingsspørsmål: review
+  1-10-terskelregler-for-oppfølgingsspørsmål: done
   1-11-fremdriftsmåler-og-ferdig-knapp: backlog
   1-12-oppsummeringsside-med-retting-av-erfaringer: backlog
   1-13-demomodus-for-samtalen: backlog

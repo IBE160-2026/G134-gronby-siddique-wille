@@ -52,6 +52,6 @@ Svar med `sporsmal` og `endringer`.
 - Hver gang du setter tekst på et felt, legg også til kilden: ID-en til svaret der studenten sa det.
 - Ikke endre et felt der `rettetAvStudent` er `true`.
 - Ikke lag en ny erfaring for noe som allerede finnes i `erfaringer`. Bruk den eksisterende ID-en.
-- Still ikke flere spørsmål om en erfaring i `lukkede`, selv om noe mangler. Spør heller om en ny erfaring. Sier studenten likevel mer om den, kan du fortsatt legge til tekst og kilder.
+- Still ikke flere spørsmål om en erfaring i `lukkede`, selv om noe mangler. Spør heller om en ny erfaring, eller, når `maksNadd` er `true`, om en erfaring som ikke er lukket. Er alle erfaringene lukket og `maksNadd` er `true`, si kort at studenten kan trykke «Ferdig». Sier studenten likevel mer om en lukket erfaring, kan du fortsatt legge til tekst og kilder.
 - Er `maksNadd` `true`, skal du ikke opprette nye erfaringer. Spør heller om noe som mangler i erfaringene som finnes.
 - Har studenten ikke sagt noe nytt om erfaringene, kan `endringer` være en tom liste.

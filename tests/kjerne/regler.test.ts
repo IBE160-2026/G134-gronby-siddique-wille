@@ -1,3 +1,6 @@
+import { readFileSync } from "node:fs";
+import path from "node:path";
+
 import { describe, expect, it } from "vitest";
 
 import {
@@ -63,6 +66,16 @@ describe("terskelregler (AD-16)", () => {
     expect(STANDARD_REFLEKSJON).toBe(
       "Tenk på: har du gjort noe lignende i en jobb, på studiet eller i fritiden, selv om du ikke tenkte på det som erfaring da?",
     );
+    // UX eier ordlyden: endres EXPERIENCE.md, må konstantene følge med.
+    const experience = readFileSync(
+      path.join(
+        process.cwd(),
+        "docs/ux-designs/ux-G134-gronby-siddique-wille-2026-11-04/EXPERIENCE.md",
+      ),
+      "utf8",
+    );
+    expect(experience).toContain(`«${OVERGANGSSPORSMAL}»`);
+    expect(experience).toContain(`«${STANDARD_REFLEKSJON}»`);
     expect(OVERGANGSSPORSMAL.length).toBeLessThanOrEqual(MAKS_TEKST_TEGN);
     expect(STANDARD_REFLEKSJON.length).toBeLessThanOrEqual(MAKS_TEKST_TEGN);
   });

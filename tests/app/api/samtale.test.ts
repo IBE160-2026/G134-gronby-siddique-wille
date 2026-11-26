@@ -268,10 +268,28 @@ describe("POST /api/samtale", () => {
 
     it("under grensen og for andre erfaringer går modellens spørsmål uendret gjennom", async () => {
       const om = (gjelder: string) => ({ sporsmal: { tekst: "Og hva mer?", gjelder }, endringer });
-      svarer(om("E1"));
+      const kall = svarer(om("E1"));
       expect(await (await rute.POST(post(oppfolging(2)))).json()).toEqual(om("E1"));
+      expect(JSON.parse(kall[0].melding).lukkede).toEqual([]);
       svarer(om("E2"));
       expect(await (await rute.POST(post(oppfolging(3)))).json()).toEqual(om("E2"));
+    });
+
+    it("en slettet lukket erfaring sendes ikke i lukkede", async () => {
+      const kall = svarer({ sporsmal, endringer: [] });
+      await rute.POST(post({ ...oppfolging(3), slettedeErfaringer: ["E1"] }));
+      expect(JSON.parse(kall[0].melding).lukkede).toEqual([]);
+    });
+
+    it("maks nådd og lukket: spørsmålet byttes med MAKS_ERFARINGER_SPORSMAL", async () => {
+      svarer({ sporsmal: { tekst: "Og hva mer?", gjelder: "E1" }, endringer });
+      const f = oppfolging(3);
+      const erfaringer = Array.from({ length: 8 }, (_, i) => fanget(`E${i + 1}`));
+      const svar = await rute.POST(post({ ...f, erfaringer }));
+      expect(await svar.json()).toEqual({
+        sporsmal: { tekst: MAKS_ERFARINGER_SPORSMAL, gjelder: null },
+        endringer,
+      });
     });
   });
 });

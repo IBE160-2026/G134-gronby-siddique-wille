@@ -86,3 +86,18 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-1-8-samtalerute-som-stiller-og-mottar-oppfolgingssporsmal.md`
   summary: `Samtaleflate` har ingen komponenttester: send-vakten (`!harSporsmal || loggFull`), at utkastet bare tømmes når det fortsatt er teksten som ble sendt, «Prøv igjen» via toasten, at toasten fjernes når utkastet endres, og avbrudd ved unmount (forsinket én tick for StrictMode).
   evidence: Verification Gap og Blind Hunter i bmad-code-review. Ingen test importerer komponenten, og Vitest kjører uten DOM. `sendSamtale` er testet som ren funksjon. Dekkes når repoet får DOM-tester, eller ved å flytte reglene til rene hjelpere i `api.ts`.
+
+## Deferred from: code review of spec-1-10-terskelregler (2026-11-26)
+
+- source_spec: `_bmad-output/specs/spec-1-10-terskelregler/SPEC.md`
+  summary: `kanGaVidere()` er ≥ `MAAL_ERFARINGER` (3), men ARCHITECTURE-SPINE og EXPERIENCE.md krever «minst 1 fanget» for å gå videre fra Oppsummering. Velg før 1.11/1.12, for eksempel `kanTilbyOppsummering` (≥ 3) og `kanGaVidere` (≥ 1), og oppdater arkitekturen.
+  evidence: Implementert slik Victoria ba om. Funksjonen har ingen kallere ennå. Blind Hunter-funn 1 og 11.
+- source_spec: `_bmad-output/specs/spec-1-10-terskelregler/SPEC.md`
+  summary: Det faste overgangsspørsmålet kan gjentas tur etter tur når modellen holder seg på en lukket erfaring. Med maks nådd inviterer `MAKS_ERFARINGER_SPORSMAL` til mer om lukkede erfaringer. UX bør gi variasjon eller en egen tekst for maks + lukket.
+  evidence: Edge Case Hunter og Blind Hunter. Promptregelen gjør det sjeldnere, men ordlyden eies av UX.
+- source_spec: `_bmad-output/specs/spec-1-10-terskelregler/SPEC.md`
+  summary: `MIN_ANNONSE_TEGN` må også håndheves i `/api/krav` med `ugyldig_foresporsel`, ikke bare på «Finn krav»-knappen.
+  evidence: review-reconcile.md (arkitektur). Ruten kommer i Epic 2.
+- source_spec: `_bmad-output/specs/spec-1-10-terskelregler/SPEC.md`
+  summary: Demomanuset for samtalen (story 1.13) må holde seg innenfor `MAKS_OPPFOLGING_PER_ERFARING`, ellers byttes spørsmål nummer fire om samme erfaring stille med `OVERGANGSSPORSMAL`.
+  evidence: Demo går gjennom `begrensOppfolging` i `/api/samtale`.
