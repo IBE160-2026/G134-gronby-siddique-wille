@@ -391,7 +391,7 @@ So that jeg vet når jeg kan gå til oppsummeringen (FR-3, UX-DR7, UX-DR8).
 
 **Given** 0, 1, 2 eller ≥3 fangede erfaringer
 **When** fremdriftsmåleren vises
-**Then** den viser «N av 3 erfaringer fanget», full ved N>3, og kunngjøres via tekst ved endring (aria, NFR5)
+**Then** den viser «N av 3 erfaringer fanget», full ved N ≥ 3, og kunngjøres via tekst ved endring (aria, NFR5)
 
 **Given** N ≥ 3 fangede erfaringer
 **When** fremdriftsmåleren oppdateres
