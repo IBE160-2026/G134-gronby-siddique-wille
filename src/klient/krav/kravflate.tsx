@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
-import { IKKE_STARTET, INGEN_KRAV, LESER_ANNONSEN, kravlistetilstand } from "@/kjerne/kravliste";
+import { IKKE_STARTET, INGEN_KRAV, kravkunngjoring, kravlistetilstand } from "@/kjerne/kravliste";
 import { useOkt } from "@/klient/okt/kontekst";
 import type { Steg } from "@/klient/skall/steg";
 
@@ -36,9 +36,10 @@ export function Kravflate() {
           )}
         </div>
 
-        {/* Alltid i DOM-en, så «Leser annonsen …» kunngjøres når den dukker opp. */}
+        {/* Alltid i DOM-en, så både «Leser annonsen …» og resultatet kunngjøres
+            når de dukker opp. Bare venteteksten er synlig. */}
         <p role="status" className={tilstand === "venter" ? "text-muted-foreground" : "sr-only"}>
-          {tilstand === "venter" ? LESER_ANNONSEN : ""}
+          {kravkunngjoring(tilstand, okt.krav?.length ?? 0)}
         </p>
 
         {tilstand === "venter" && (

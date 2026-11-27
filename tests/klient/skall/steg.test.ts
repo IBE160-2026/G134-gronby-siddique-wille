@@ -12,6 +12,7 @@ describe("stegFor (lineær flyt)", () => {
   });
 
   it("alle før Bevistabell er fullført", () => {
+    expect(stegFor("krav")).toEqual(["samtale", "oppsummering", "annonse"]);
     expect(stegFor("bevistabell")).toEqual(["samtale", "oppsummering", "annonse", "krav"]);
   });
 });

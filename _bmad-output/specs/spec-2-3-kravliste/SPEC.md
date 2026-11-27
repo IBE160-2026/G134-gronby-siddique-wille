@@ -47,7 +47,7 @@ Studenten skal se kravene som er funnet i annonsen før bevistabellen bygges, sl
 - Ingen localStorage, sessionStorage eller cookies med øktinnhold.
 - WCAG 2.2 AA:
   - Én `h1`, og listen er en semantisk `<ol>`.
-  - Venter-tilstanden kunngjøres i `role="status"`.
+  - Venter-tilstanden og resultatet («Fant N krav.» / «Fant ingen krav.») kunngjøres i `role="status"`.
   - Alt nås med tastatur, og fokusringen arves fra shadcn. `Skeleton`-animasjonen kjører bare med `motion-safe`.
 - Stil:
   - Én kolonne, sentrert, `max-w-column-max`. Overskriften har `type-display-sm`.

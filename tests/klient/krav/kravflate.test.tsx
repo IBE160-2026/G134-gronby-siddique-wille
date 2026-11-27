@@ -1,3 +1,4 @@
+import { isValidElement, type ReactElement, type ReactNode } from "react";
 import { renderToString } from "react-dom/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -14,10 +15,18 @@ vi.mock("@/klient/okt/kontekst", () => ({
   useOkt: () => okt,
   useOktDispatch: () => vi.fn(),
 }));
-vi.mock("next/navigation", () => ({ useRouter: () => ({ push: vi.fn() }) }));
+const { push } = vi.hoisted(() => ({ push: vi.fn() }));
+vi.mock("next/navigation", () => ({ useRouter: () => ({ push }) }));
 
 const ANNONSE = "Vi søker en medarbeider. ".repeat(Math.ceil(MIN_ANNONSE_TEGN / 20));
-const KRAV = ["Samarbeid", "Erfaring med Excel", "Kundeservice"];
+const KRAV = [
+  "Samarbeid",
+  "Erfaring med Excel",
+  "Kundeservice",
+  "Førerkort klasse B",
+  "Gode norskkunnskaper",
+  "Selvstendig",
+];
 
 const kjor = (fra: Okt, ...handlinger: Handling[]) => handlinger.reduce(oktReducer, fra);
 
@@ -48,13 +57,41 @@ function knapp(html: string, tekst: string): string {
   if (!treff) throw new Error(`Fant ikke knappen «${tekst}»`);
   return treff[0];
 }
-const erPrimar = (k: string) => /\sbg-primary\s/.test(k);
+/** Primær ut fra shadcn-klassen `bg-primary` som eget ord i `class`. */
+const erPrimar = (k: string) =>
+  /(^|\s)bg-primary(\s|$)/.test(k.match(/class="([^"]*)"/)?.[1] ?? "");
+
+type Props = { children?: ReactNode; onClick?: () => void };
+const tekstAv = (node: ReactNode): string =>
+  typeof node === "string" || typeof node === "number"
+    ? String(node)
+    : Array.isArray(node)
+      ? node.map(tekstAv).join("")
+      : isValidElement<Props>(node)
+        ? tekstAv(node.props.children)
+        : "";
+/**
+ * Klikker knappen med teksten uten DOM: `Kravflate` bruker bare de mockede
+ * krokene, så den kan kalles som funksjon og elementtreet gås gjennom.
+ */
+function klikk(tekst: string) {
+  const finn = (node: ReactNode): ReactElement<Props> | undefined => {
+    if (Array.isArray(node)) return node.map(finn).find(Boolean);
+    if (!isValidElement<Props>(node)) return undefined;
+    if (node.props.onClick && tekstAv(node.props.children) === tekst) return node;
+    return finn(node.props.children);
+  };
+  const knappen = finn(Kravflate());
+  if (!knappen) throw new Error(`Fant ikke knappen «${tekst}»`);
+  knappen.props.onClick?.();
+}
 const punkter = (html: string) =>
   [...html.matchAll(/<li\b[^>]*>([\s\S]*?)<\/li>/g)].map((t) => t[1]);
 
 describe("Kravflate (FR-4, UX-DR10)", () => {
   beforeEach(() => {
     okt = tomOkt();
+    push.mockClear();
   });
 
   it("med krav: nummerert, skrivebeskyttet liste i øktens rekkefølge", () => {
@@ -74,6 +111,30 @@ describe("Kravflate (FR-4, UX-DR10)", () => {
     expect(erPrimar(knapp(html, "Tilbake"))).toBe(false);
   });
 
+  it("«Bygg bevistabell» går til steget bevistabell og «Tilbake» til annonse", () => {
+    okt = oktMedKrav();
+    klikk("Bygg bevistabell");
+    expect(push).toHaveBeenLastCalledWith("/bevistabell");
+    klikk("Tilbake");
+    expect(push).toHaveBeenLastCalledWith("/annonse");
+    expect(push).toHaveBeenCalledTimes(2);
+  });
+
+  it("«Tilbake» går til annonse også i tom og venter", () => {
+    okt = oktMedKrav([]);
+    klikk("Tilbake");
+    okt = kjor(tomOkt(), { type: "settAnnonse", tekst: ANNONSE });
+    klikk("Tilbake");
+    expect(push.mock.calls).toEqual([["/annonse"], ["/annonse"]]);
+  });
+
+  it("statusregionen kunngjør resultatet, ikke bare ventingen", () => {
+    okt = oktMedKrav();
+    expect(vis()).toMatch(/role="status"[^>]*>Fant 6 krav\.</);
+    okt = oktMedKrav([]);
+    expect(vis()).toMatch(/role="status"[^>]*>Fant ingen krav\.</);
+  });
+
   it("tom kravliste: rolig forklaring og bare «Tilbake»", () => {
     okt = oktMedKrav([]);
     const html = vis();
@@ -87,6 +148,11 @@ describe("Kravflate (FR-4, UX-DR10)", () => {
     okt = kjor(tomOkt(), { type: "settAnnonse", tekst: ANNONSE });
     const html = vis();
     expect(html).toMatch(new RegExp(`role="status"[^>]*>${LESER_ANNONSEN}<`));
+    // Skjelettrader skjult for skjermleseren, animert bare med motion-safe.
+    expect(html).toMatch(
+      /<div aria-hidden="true"[^>]*>(<div class="[^"]*motion-safe:animate-pulse[^"]*"><\/div>)+<\/div>/,
+    );
+    expect(html).not.toMatch(/\sanimate-pulse/);
     expect(html).not.toMatch(/<ol\b/);
     expect(knapper(html)).toEqual(["Tilbake"]);
   });

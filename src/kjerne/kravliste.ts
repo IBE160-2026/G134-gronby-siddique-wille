@@ -3,12 +3,9 @@
  */
 
 import { annonsetilstand } from "./annonse";
-import type { Krav } from "./skjema";
+import type { Okt } from "./okt";
 
-type Kravtilstand = {
-  annonse: string;
-  krav: readonly Krav[] | null;
-};
+type Kravtilstand = Pick<Okt, "annonse" | "krav">;
 
 /**
  * - `liste`: kravuttrekket er ferdig og fant krav.
@@ -37,5 +34,27 @@ export const INGEN_KRAV =
 /** Teksten mens kravuttrekket pågår, ordrett fra EXPERIENCE.md. */
 export const LESER_ANNONSEN = "Leser annonsen …";
 
+/**
+ * Teksten når kravuttrekket ikke er startet. Ikke fra EXPERIENCE.md, men
+ * foreløpig ordlyd fra story 2.3 som UX kan endre.
+ */
 export const IKKE_STARTET =
   "Vi har ikke funnet krav ennå. Lim inn stillingsannonsen og trykk «Finn krav».";
+
+/**
+ * Det statusregionen på Krav kunngjør (WCAG 4.1.3): at uttrekket pågår, og
+ * deretter resultatet, så skjermleseren også får vite når kravene er kommet
+ * eller at ingen ble funnet. «krav» er likt i entall og flertall.
+ */
+export function kravkunngjoring(tilstand: Kravlistetilstand, antall: number): string {
+  switch (tilstand) {
+    case "venter":
+      return LESER_ANNONSEN;
+    case "liste":
+      return `Fant ${antall} krav.`;
+    case "tom":
+      return "Fant ingen krav.";
+    case "ikke-startet":
+      return "";
+  }
+}
