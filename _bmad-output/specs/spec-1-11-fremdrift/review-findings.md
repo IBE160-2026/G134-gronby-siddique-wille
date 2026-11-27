@@ -1,0 +1,20 @@
+# Review Findings: story 1.11
+
+Kodegjennomgang (`bmad-code-review`) 2026-11-26 av `story-1-10-terskelregler...story-1-11-fremdrift`. Fire lag: Blind Hunter, Edge Case Hunter, Verification Gap og Acceptance Auditor. Gruppert ga det 14 funn: 4 patch, 3 defer og 7 avvist. Acceptance Auditor fant at CAP-1–CAP-4 og alle constraints er oppfylt. Victoria ba om at funnene ble triagert uten spørsmål. Patchene er tatt med, og `npm test` (339), `npm run lint` og `npm run build` er grønne.
+
+- [x] [Review][Patch] «Ferdig» og «Gå videre til oppsummering» var aktive mens modellen svarte. Et klikk unmounter `Samtaleflate`, som avbryter kallet, og svaret studenten nettopp sendte, havner aldri i loggen (det legges inn først når svaret er tatt imot) [src/klient/samtale/samtalehandlinger.tsx]. `Samtalehandlinger` tar nå `venter`, og begge knappene er låst mens den er sann. `samtaleflate.tsx` sender `venter={venter}`.
+- [x] [Review][Patch] Det fantes ingen tester for CAP-2–CAP-4. Et omvendt `kanGaVidere`, en `disabled` uten `!`, `erfaringer.length` i stedet for `antallFangede` eller en manglende `role="status"` ville alle gått gjennom [tests/klient/samtale/samtalehandlinger.test.tsx]. Nye render-tester med `renderToString` i node-miljøet (som `kontekst.test.tsx`), der `useOkt` og `useRouter` er mocket, dekker tekst, `role="status"`, fylte segmenter, at «Gå videre» bare vises ved N ≥ 3, at «Ferdig» er deaktivert før første spørsmål, at bare fangede telles, og låsen mens modellen svarer.
+- [x] [Review][Patch] `fylteSegmenter` var ikke testet for NaN, `Infinity` og desimaltall, og `fremdriftTekst` var ikke testet for `Infinity` [tests/kjerne/fremdrift.test.ts]. Tilfellene er lagt til for begge funksjonene.
+- [x] [Review][Patch] JSDoc-en i `Fremdriftsmaler` sa «tre segmenter … full ved N ≥ 3», mens koden bruker `MAAL_ERFARINGER` [src/klient/samtale/fremdriftsmaler.tsx]. Den er nå skrevet ut fra konstanten.
+- [x] [Review][Defer] Begge knappene sender til `/oppsummering`, som gir 404 til 1.12 er laget. «Ferdig» gjorde ingenting før [src/klient/samtale/samtalehandlinger.tsx] — deferred: dette er bestemt med vilje (Victoria: «ikke bygg selve siden»). 1.11 bør ikke merges til main før 1.12, eller begge bør merges samtidig.
+- [x] [Review][Defer] Skjermleseren får ikke vite at «Gå videre til oppsummering» har dukket opp. Statusregionen leser bare «3 av 3 erfaringer fanget» [src/klient/samtale/fremdriftsmaler.tsx] — deferred: AC («kunngjøres som tekst ved endring») er oppfylt. En tilleggstekst som «Du kan gå videre til oppsummering» er mikrotekst som UX eier.
+- [x] [Review][Defer] UX-DR8 og EXPERIENCE.md sier at knappen er deaktivert «til minst ett *oppfølgingsspørsmål* er stilt», men `kanTrykkeFerdig()` er sann allerede etter åpningsspørsmålet [src/kjerne/regler.ts] — deferred: regelen eies av 1.10 (AC: «minst ett spørsmål er stilt»), og regler.ts skal ikke endres her. Gruppen bestemmer ordlyden i UX-DR8 og EXPERIENCE.md.
+
+**Rejected:**
+- Dobbeltklikk kan gi to `router.push` og to historikkoppføringer — low: det første klikket bytter rute og unmounter komponenten. En vakt krever ekstra tilstand.
+- `sources: []` i SPEC.md — avvist: rettelsen endrer specen under gjennomgang. Formatet er det samme som i de tidligere specene, og epics.md er ikke absorbert helt (den har flere stories).
+- To memlog-linjer er uenige om testantallet (14 og 15) — false: memlog er append-only med vilje, og rettelsen står som egen linje.
+- Den kunngjorte teksten mangler punktum, sammenlignet med EXPERIENCE.md — false: punktumet i EXPERIENCE.md er setningstegn i eksempelet. Mockupens etikett («1 av 3 erfaringer fanget») har ikke punktum.
+- `samtaleflate.tsx` har tre hunks, ikke «én hunk» — avvist: rettelsen endrer specen. Selve blokkbyttet er én hunk, og de to importhunkene kan ikke unngås.
+- Statusregionen forutsetter at den er mountet fra start — false: `Samtalehandlinger` rendres alltid i `Samtaleflate`.
+- Rekkefølgen mellom statusregionen og chatloggens live-region er ikke styrt — low/maybe-false: begge er polite, og skjermleseren setter dem i kø. Ingen kjent feil.
