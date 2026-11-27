@@ -164,3 +164,15 @@
 - source_spec: `_bmad-output/specs/spec-1-6-startside/SPEC.md`
   summary: Når både nøkkel og demodata mangler, peker «Ingen API-nøkkel funnet. Se README, eller prøv demomodus.» på en deaktivert knapp.
   evidence: Blind Hunter. Teksten er fast mikrotekst i EXPERIENCE.md, så UX avgjør om tilfellet trenger en egen tekst (f.eks. «Ingen API-nøkkel funnet. Se README.»).
+
+## Deferred from: code review of spec-2-3-kravliste (2026-11-27)
+
+- source_spec: `_bmad-output/specs/spec-2-3-kravliste/SPEC.md`
+  summary: Krav-flaten viser «Leser annonsen …» for alltid når `krav` er `null` og annonsen er gyldig, også når ingen forespørsel pågår (før 2.2, feil, nytt forsøk med samme tekst, Frem i nettleseren). Story 2.2 må legge til forespørselsstatus eller feiltilstand i økten og en vei til nytt forsøk.
+  evidence: Blind Hunter, Edge Case Hunter, Verification Gap og Acceptance Auditor. `settAnnonse` med samme tekst gir samme økt, så «Finn krav» uten endring starter ikke noe nytt.
+- source_spec: `_bmad-output/specs/spec-2-3-kravliste/SPEC.md`
+  summary: `KravModellSvar` tillater krav med tom tekst, som vises som tomme listepunkter. 2.2 bør kreve ikke-tom tekst i skjemaet eller filtrere i ruten.
+  evidence: Edge Case Hunter.
+- source_spec: `_bmad-output/specs/spec-2-3-kravliste/SPEC.md`
+  summary: EXPERIENCE.md sier at studenten «sendes tilbake til Annonse» ved tom kravliste og har ingen tekst for ikke-startet. Specen viser forklaring og «Tilbake», og bruker en foreløpig ikke-startet-tekst. UX oppdaterer EXPERIENCE.md eller endrer teksten.
+  evidence: Blind Hunter.

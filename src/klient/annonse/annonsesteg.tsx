@@ -11,8 +11,9 @@ import { Annonseflate } from "./annonseflate";
  * Kobler Annonse til økten (AD-4). Utkastet lever lokalt mens studenten
  * skriver, så `versjon` ikke øker for hvert tegn. Først ved «Finn krav»
  * lagres teksten i økten (`settAnnonse`), som tømmer krav og bevistabell når
- * annonsen er endret (AD-14). Kravflaten (story 2.2/2.3) sender kallet med
- * `lagKravForesporsel(okt)`.
+ * annonsen er endret (AD-14). Kallet til `/api/krav` med
+ * `lagKravForesporsel(okt)` kommer i story 2.2; Krav-flaten (2.3) viser bare
+ * `okt.krav`.
  */
 export function Annonsesteg() {
   const okt = useOkt();
