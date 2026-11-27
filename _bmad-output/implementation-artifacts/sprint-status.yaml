@@ -29,7 +29,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 # - Retrospective appends its action items to action_items; the status view surfaces open ones
 generated: 11-15-2026 00:00
-last_updated: 11-27-2026 08:45
+last_updated: 11-27-2026 12:10
 project: G134-gronby-siddique-wille
 project_key: NOKEY
 tracking_system: file-system
@@ -58,7 +58,7 @@ development_status:
   epic-2: backlog
   2-1-annonsefelt-med-terskel-for-finn-krav: review
   2-2-samtalerute-for-kravuttrekk: backlog
-  2-3-kravliste-side: backlog
+  2-3-kravliste-side: review
   2-4-demomodus-for-kravuttrekk: backlog
   2-5-kjernetester-for-kravuttrekk-mot-testsett-a: backlog
   2-6-feilhåndtering-ved-kravuttrekk: backlog
