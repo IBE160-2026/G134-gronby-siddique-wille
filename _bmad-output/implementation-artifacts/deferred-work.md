@@ -135,6 +135,24 @@
   summary: UX-DR8 og EXPERIENCE.md sier at «Ferdig» er deaktivert til minst ett *oppfølgingsspørsmål* er stilt, men `kanTrykkeFerdig()` (1.10) er sann etter åpningsspørsmålet. Gruppen bestemmer ordlyden, eller endrer regelen i regler.ts.
   evidence: Blind Hunter. Story 1.10 AC og Victorias AC for 1.11 sier «minst ett spørsmål».
 
+## Deferred from: code review of spec-1-12-oppsummering (2026-11-26)
+
+- source_spec: `_bmad-output/specs/spec-1-12-oppsummering/SPEC.md`
+  summary: Det er ingen DOM-tester av at blur sender `leggTilRettelse` med riktig `erfaringId`, `felt` og trimmet tekst, eller av at sletting flytter fokus til overskriften.
+  evidence: Verification Gap. Krever jsdom eller testing-library. Tastelogikken (`tastValg`) og `rettetTekst` er testet som rene funksjoner, og atferden er sjekket i Chrome.
+- source_spec: `_bmad-output/specs/spec-1-12-oppsummering/SPEC.md`
+  summary: «Gå videre» på Oppsummering sender til `/annonse`, som gir 404 til story 2.1. Merge 1.12 til main sammen med eller før 2.1.
+  evidence: Edge Case Hunter og Blind Hunter. Bestemt med vilje i specen.
+- source_spec: `_bmad-output/specs/spec-1-12-oppsummering/SPEC.md`
+  summary: Retting og sletting av erfaringer nullstiller krav og bevistabell (AD-14) uten advarsel. Når Epic 2 finnes, bør UX vurdere en advarsel eller angre på Oppsummering.
+  evidence: Blind Hunter. Krav og bevistabell finnes ikke ennå.
+- source_spec: `_bmad-output/specs/spec-1-12-oppsummering/SPEC.md`
+  summary: ARCHITECTURE-SPINE bør beskrive `kanGaTilKravuttrekk` (≥ 1 fanget, `src/kjerne/oppsummering.ts`) ved siden av `kanGaVidere` (≥ 3).
+  evidence: Blind Hunter. Delvis løst for punktet fra 1.10: sperren for kravuttrekk ved 0 fangede finnes nå. Punktet fra 1.11 om `/oppsummering` 404 er løst på denne branchen, men 1.11 må fortsatt merges sammen med 1.12.
+- source_spec: `_bmad-output/specs/spec-1-12-oppsummering/SPEC.md`
+  summary: Samtale-siden (`src/app/(flyt)/samtale/page.tsx`) har ingen egen `metadata.title` (WCAG 2.4.2). Oppsummering har fått «Oppsummering – Erfaringsgruven».
+  evidence: Blind Hunter. Fantes fra før 1.12.
+
 ## Deferred from: code review of spec-1-6-startside (2026-11-26)
 
 - source_spec: `_bmad-output/specs/spec-1-6-startside/SPEC.md`

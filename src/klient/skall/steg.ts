@@ -18,3 +18,12 @@ export type Steg = (typeof STEG)[number]["id"];
 export function erSteg(verdi: unknown): verdi is Steg {
   return STEG.some((steg) => steg.id === verdi);
 }
+
+/**
+ * Stegene før `aktivt`. Flyten er lineær, så alt før det aktive steget er
+ * fullført og kan velges for å gå tilbake (EXPERIENCE.md).
+ */
+export function stegFor(aktivt: Steg): Steg[] {
+  const i = STEG.findIndex((steg) => steg.id === aktivt);
+  return STEG.slice(0, Math.max(i, 0)).map((steg) => steg.id);
+}

@@ -8,10 +8,7 @@ import { useBeforeUnload } from "@/klient/okt/usebeforeunload";
 
 import { Appskall } from "./appskall";
 import { NyOktDialog } from "./nyoktdialog";
-import { erSteg, type Steg } from "./steg";
-
-/** Ingen steg er fullført før Oppsummering finnes (story 1.11/1.12). */
-const INGEN_FULLFORTE: readonly Steg[] = [];
+import { erSteg, stegFor, type Steg } from "./steg";
 
 /**
  * Felles skall for stegene etter Start. Ligger i `(flyt)/layout.tsx`, så
@@ -45,7 +42,7 @@ export function Flytskall({ children }: { children: ReactNode }) {
     <div className="flex h-dvh flex-col">
       <Appskall
         aktivt={aktivt}
-        fullforte={INGEN_FULLFORTE}
+        fullforte={stegFor(aktivt)}
         onVelgSteg={(steg) => router.push(`/${steg}`)}
         onNyOkt={() => setDialogApen(true)}
       >
