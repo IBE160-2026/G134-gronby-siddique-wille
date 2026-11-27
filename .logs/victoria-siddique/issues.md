@@ -38,7 +38,7 @@
 - [x] 2026-11-26 [story-1-11-fremdrift](993-2026-11-26-21-01-42-story-1-11-fremdrift.md) — Sjekk samtaleflaten i nettleser etter merge av 1.9 inn i 1.11 (sidepanel + fremdriftsmåler under chatinput) (løst 2026-11-26: Chrome, 1440 og 1024 px)
 - [ ] 2026-11-26 [story-1-11-fremdrift](993-2026-11-26-21-01-42-story-1-11-fremdrift.md) — UX: tomme segmenter i fremdriftsmåleren (`bg-muted` på bakgrunnen) er nesten usynlige; vurder sterkere spor
 - [x] 2026-11-26 [story-1-12-oppsummering](992-2026-11-26-21-37-07-story-1-12-oppsummering.md) — Kjør kodegjennomgang (bmad-code-review) av story 1.12 (løst 2026-11-26 i 98d2052)
-- [ ] 2026-11-26 [story-1-12-oppsummering](992-2026-11-26-21-37-07-story-1-12-oppsummering.md) — `/annonse` gir 404 til story 2.1; merge 1.12 sammen med eller før 2.1
+- [x] 2026-11-26 [story-1-12-oppsummering](992-2026-11-26-21-37-07-story-1-12-oppsummering.md) — `/annonse` gir 404 til story 2.1; merge 1.12 sammen med eller før 2.1 (løst 2026-11-27: 1.12 og 2.1 er begge på main)
 - [ ] 2026-11-26 [story-1-12-oppsummering](992-2026-11-26-21-37-07-story-1-12-oppsummering.md) — UX: sletting på Oppsummering har ingen angre eller bekreftelse; vurder om det trengs
 - [ ] 2026-11-26 [story-1-12-oppsummering](992-2026-11-26-21-37-07-story-1-12-oppsummering.md) — epics.md story 1.12 AC 3: skill 0 (tom tilstand) fra 1–2 (notis) og bruk entall ved 1; gruppen bekrefter
 - [ ] 2026-11-26 [story-1-12-oppsummering](992-2026-11-26-21-37-07-story-1-12-oppsummering.md) — DOM-tester (jsdom/testing-library) av blur → leggTilRettelse og fokus etter sletting på Oppsummering
@@ -52,3 +52,7 @@
 - [ ] 2026-11-26 [story-1-14-ny-okt](994-2026-11-25-18-41-00-story-1-14-ny-okt.md) — Ingen test for `useBeforeUnload`-lytteren (renderHook + jsdom + spy, mønster finnes ikke i suiten ennå)
 - [ ] 2026-11-26 [story-1-14-ny-okt](994-2026-11-25-18-41-00-story-1-14-ny-okt.md) — Bekreft at base-ui bruker document.activeElement ved åpning til fokusbann uten AlertDialogTrigger (maybe-false, medium hvis feil)
 - [x] 2026-11-26 [story-1-14-ny-okt](994-2026-11-25-18-41-00-story-1-14-ny-okt.md) — Story 1.8: koble useBeforeUnload og NyOktDialog til produksjons-samtalevisningen (løst 2026-11-26 i 7898820: koblet inn i flytskall.tsx)
+- [ ] 2026-11-27 [story-2-3-kravliste](991-2026-11-27-12-18-00-story-2-3-kravliste.md) — Sjekk Krav-siden i nettleser og med skjermleser
+- [ ] 2026-11-27 [story-2-3-kravliste](991-2026-11-27-12-18-00-story-2-3-kravliste.md) — Story 2.2: forespørselsstatus eller feiltilstand i økten, så «Leser annonsen …» ikke står for alltid (feil, nytt forsøk med samme tekst)
+- [ ] 2026-11-27 [story-2-3-kravliste](991-2026-11-27-12-18-00-story-2-3-kravliste.md) — Story 2.2: krev ikke-tom tekst for krav i `KravModellSvar` eller filtrer i ruten
+- [ ] 2026-11-27 [story-2-3-kravliste](991-2026-11-27-12-18-00-story-2-3-kravliste.md) — Gruppen bekrefter avviket fra EXPERIENCE.md ved tom kravliste og ordlyden for ikke-startet på Krav
