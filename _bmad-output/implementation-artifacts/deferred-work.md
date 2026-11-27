@@ -46,6 +46,15 @@
   summary: Bevisst avvik, ingen handling. Mockupen `mockups/samtale.html` viser chatteksten i Inter, mens `chat-body` er Source Serif 4 i DESIGN.md og i koden.
   evidence: Blind Hunter og Acceptance Auditor. Victoria valgte serif (som i story-AC), og DESIGN.md-tokenet fikk `fontFamily: 'Source Serif 4'` 2026-11-24. Mockupen endres ikke, fordi spines vinner ved konflikt.
 
+## Deferred from: code review of spec-story-1-14-ny-okt (2026-11-26)
+
+- source_spec: `_bmad-output/specs/spec-story-1-14-ny-okt/SPEC.md`
+  summary: Ingen automatisk test for `useBeforeUnload`-lytteren (`src/klient/okt/usebeforeunload.ts`).
+  evidence: Verification Gap. Krever `renderHook` + jsdom + `vi.spyOn(window, 'addEventListener')`, et mønster som ikke finnes i testsuiten. Uten test kan en som fjerner `window.addEventListener`-kallet sende det til prod uten at noen test slår ut.
+- source_spec: `_bmad-output/specs/spec-story-1-14-ny-okt/SPEC.md`
+  summary: Bekreft at fokusbann fungerer uten `AlertDialogTrigger` (programmatisk åpning).
+  evidence: Acceptance Auditor (maybe-false). CAP-2 krever at fokus returnerer til «Ny økt»-knappen ved lukking. Dialogen åpnes via setState, ikke via `AlertDialogPrimitive.Trigger`. Om base-ui bruker `document.activeElement` ved åpningstidspunkt er udokumentert. Avklar ved å lese base-ui-kilde eller skrive en Playwright-test.
+
 ## Deferred from: code review of spec-1-7-samtale-ui (2026-11-24)
 
 - source_spec: `_bmad-output/specs/spec-1-7-samtale-ui/SPEC.md`
@@ -143,3 +152,15 @@
 - source_spec: `_bmad-output/specs/spec-1-12-oppsummering/SPEC.md`
   summary: Samtale-siden (`src/app/(flyt)/samtale/page.tsx`) har ingen egen `metadata.title` (WCAG 2.4.2). Oppsummering har fått «Oppsummering – Erfaringsgruven».
   evidence: Blind Hunter. Fantes fra før 1.12.
+
+## Deferred from: code review of spec-1-6-startside (2026-11-26)
+
+- source_spec: `_bmad-output/specs/spec-1-6-startside/SPEC.md`
+  summary: Start tømmer en påbegynt økt uten bekreftelse når studenten går tilbake til Start og trykker «Start ny økt» eller «Prøv demomodus».
+  evidence: Blind Hunter. `starthandlinger` sender alltid `nyOkt`. EXPERIENCE.md krever bekreftelse i `Dialog` («Alt i denne økten forsvinner.») for «Ny økt»; story 1.14 bør bruke samme bekreftelse på Start når økten har innhold.
+- source_spec: `_bmad-output/specs/spec-1-6-startside/SPEC.md`
+  summary: DOM-test av `src/app/page.tsx`: klikk dispatcher `nyOkt` og `startOkt` i rekkefølge og kaller `router.push("/samtale")`.
+  evidence: Verification Gap. Krever jsdom (eller tilsvarende), som ikke er i prosjektet; samme åpne punkt som DOM-testen av `OktProvider` fra story 1.3. Startflate-hendelsene er dekket uten DOM.
+- source_spec: `_bmad-output/specs/spec-1-6-startside/SPEC.md`
+  summary: Når både nøkkel og demodata mangler, peker «Ingen API-nøkkel funnet. Se README, eller prøv demomodus.» på en deaktivert knapp.
+  evidence: Blind Hunter. Teksten er fast mikrotekst i EXPERIENCE.md, så UX avgjør om tilfellet trenger en egen tekst (f.eks. «Ingen API-nøkkel funnet. Se README.»).

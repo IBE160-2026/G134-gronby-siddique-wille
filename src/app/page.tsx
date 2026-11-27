@@ -1,29 +1,42 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
-import { Button } from "@/components/ui/button";
+import type { Modus, StatusSvar } from "@/kjerne/skjema";
 import { useOktDispatch } from "@/klient/okt/kontekst";
+import { Startflate } from "@/klient/start/startflate";
+import { hentStartstatus, starthandlinger } from "@/klient/start/startvalg";
 
-/** Midlertidig Start til story 1.6 lager den ekte siden med personvernteksten. */
-export default function Home() {
+/** Start (story 1.6). Avkrysningen lever bare i komponenttilstand (AD-2). */
+export default function Start() {
   const dispatch = useOktDispatch();
   const router = useRouter();
+  const [status, setStatus] = useState<StatusSvar | null>(null);
+  const [avkrysset, setAvkrysset] = useState(false);
+  const [starter, setStarter] = useState(false);
 
-  function start() {
-    dispatch({ type: "startOkt", modus: "ekte" });
+  useEffect(() => {
+    const avbryt = new AbortController();
+    hentStartstatus(fetch, avbryt.signal).then((svar) => {
+      if (!avbryt.signal.aborted) setStatus(svar);
+    });
+    return () => avbryt.abort();
+  }, []);
+
+  function start(modus: Modus) {
+    setStarter(true);
+    for (const handling of starthandlinger(modus)) dispatch(handling);
     router.push("/samtale");
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-column-max flex-1 flex-col justify-center gap-4 px-6 py-24">
-      <h1 className="type-display">Erfaringsgruven</h1>
-      <p className="text-muted-foreground">Appen er under bygging.</p>
-      <div>
-        <Button size="lg" onClick={start}>
-          Start samtalen
-        </Button>
-      </div>
-    </main>
+    <Startflate
+      status={status}
+      avkrysset={avkrysset}
+      onAvkrysset={setAvkrysset}
+      starter={starter}
+      onStart={start}
+    />
   );
 }
