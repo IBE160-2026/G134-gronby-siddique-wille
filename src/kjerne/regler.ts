@@ -6,8 +6,8 @@
 import { antallFangede } from "./fanget";
 import type { Erfaring, LoggOppforing } from "./skjema";
 
-/** Maks tegn i stillingsannonsen. */
-export const MAKS_ANNONSE_TEGN = 20000;
+/** Maks tegn i stillingsannonsen (epics.md, story 2.1). */
+export const MAKS_ANNONSE_TEGN = 6000;
 
 /** Maks tegn i én tekst (svar, spørsmål, felt, tittel, krav). */
 export const MAKS_TEKST_TEGN = 5000;

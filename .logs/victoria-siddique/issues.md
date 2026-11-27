@@ -5,9 +5,9 @@
 - [ ] 2026-11-04 [erfaringsgruven-ux](999-2026-11-04-15-21-18-erfaringsgruven-ux.md) — Ingen mockups for Start, Oppsummering, Annonse, Krav og Eksport (bygges fra spines)
 - [ ] 2026-11-04 [erfaringsgruven-ux](999-2026-11-04-15-21-18-erfaringsgruven-ux.md) — Gjenstående lave rubric-funn i review-rubric.md (f.eks. tom tilstand i sidepanelet)
 - [x] 2026-11-04 [erfaringsgruven-ux](999-2026-11-04-15-21-18-erfaringsgruven-ux.md) — PRD Å.s. 5 er besvart av UX; må lukkes i PRD-en og i Thea Willes issues.md (løst 2026-11-05: lukket i PRD-en)
-- [ ] 2026-11-12 [ux-personvern-og-mikrotekst](998-2026-11-12-13-20-00-ux-personvern-og-mikrotekst.md) — PRD trenger eget krav for personverntekst og avkrysning på Start (lærerens FR-11)
+- [x] 2026-11-12 [ux-personvern-og-mikrotekst](998-2026-11-12-13-20-00-ux-personvern-og-mikrotekst.md) — PRD trenger eget krav for personverntekst og avkrysning på Start (lærerens FR-11) (løst 2026-11-26: FR-10 står i PRD §4.1, lagt inn av Thea 2026-11-15)
 - [ ] 2026-11-12 [ux-personvern-og-mikrotekst](998-2026-11-12-13-20-00-ux-personvern-og-mikrotekst.md) — «statisk refleksjonsforslag» står fortsatt i PRD §9/§10 og epics.md FR-7
-- [ ] 2026-11-12 [ux-personvern-og-mikrotekst](998-2026-11-12-13-20-00-ux-personvern-og-mikrotekst.md) — Story 1.6 i epics.md må få avkrysningen og teksten fra «Fast mikrotekst»
+- [x] 2026-11-12 [ux-personvern-og-mikrotekst](998-2026-11-12-13-20-00-ux-personvern-og-mikrotekst.md) — Story 1.6 i epics.md må få avkrysningen og teksten fra «Fast mikrotekst» (løst 2026-11-26: AC lagt inn av Thea 2026-11-15, implementert i 0ed95bf)
 - [ ] 2026-11-24 [story-1-16-merkevaretema](997-2026-11-24-21-10-58-story-1-16-merkevaretema.md) — Fokusringen (arvet `--ring`) har 2,44:1 (1,50:1 med `/50`) mot bakgrunnen, mens WCAG 1.4.11 krever 3:1; gruppen bestemmer
 - [ ] 2026-11-24 [story-1-16-merkevaretema](997-2026-11-24-21-10-58-story-1-16-merkevaretema.md) — Gi Rikke beskjed om at hennes punkt «Fjern mørkt tema … i story 1.16» kan lukkes (løst i 24dea10)
 - [x] 2026-11-24 [story-1-7-samtale-ui](996-2026-11-24-21-38-00-story-1-7-samtale-ui.md) — Chatloggen er én live-region, så studentens egen melding leses opp; story 1.15 avgjør endelig løsning (løst 2026-11-24 i 169cc85/2a1de11: egen live-region for assistentsvar)
@@ -37,3 +37,11 @@
 - [ ] 2026-11-26 [story-1-11-fremdrift](993-2026-11-26-21-01-42-story-1-11-fremdrift.md) — To loggfiler har løpenummer 994 (1.9 og 1.10, laget på hver sin branch); gi én av dem nytt nummer etter merge
 - [x] 2026-11-26 [story-1-11-fremdrift](993-2026-11-26-21-01-42-story-1-11-fremdrift.md) — Sjekk samtaleflaten i nettleser etter merge av 1.9 inn i 1.11 (sidepanel + fremdriftsmåler under chatinput) (løst 2026-11-26: Chrome, 1440 og 1024 px)
 - [ ] 2026-11-26 [story-1-11-fremdrift](993-2026-11-26-21-01-42-story-1-11-fremdrift.md) — UX: tomme segmenter i fremdriftsmåleren (`bg-muted` på bakgrunnen) er nesten usynlige; vurder sterkere spor
+- [x] 2026-11-26 [story-1-6-startside](994-2026-11-26-19-45-13-story-1-6-startside.md) — Ved merge av PR #8: behold Start fra 1.6 i `src/app/page.tsx` (samme kontrakt: `startOkt` + `router.push("/samtale")`) (løst 2026-11-26 i ceb7292)
+- [ ] 2026-11-26 [story-1-6-startside](994-2026-11-26-19-45-13-story-1-6-startside.md) — DOM-test av Start-klikk gjennom `OktProvider` (`nyOkt`/`startOkt` og navigering) når jsdom er på plass
+- [x] 2026-11-26 [story-1-6-startside](994-2026-11-26-19-45-13-story-1-6-startside.md) — Kodegjennomgang av story 1.6 før `done` (løst 2026-11-26 i 70367cb)
+- [ ] 2026-11-26 [story-1-6-startside](994-2026-11-26-19-45-13-story-1-6-startside.md) — Story 1.14: bekreftelse også når Start tømmer en påbegynt økt
+- [ ] 2026-11-26 [story-1-6-startside](994-2026-11-26-19-45-13-story-1-6-startside.md) — UX: egen tekst når både API-nøkkel og demodata mangler («… eller prøv demomodus.» peker på en deaktivert knapp)?
+- [ ] 2026-11-26 [story-1-14-ny-okt](994-2026-11-25-18-41-00-story-1-14-ny-okt.md) — Ingen test for `useBeforeUnload`-lytteren (renderHook + jsdom + spy, mønster finnes ikke i suiten ennå)
+- [ ] 2026-11-26 [story-1-14-ny-okt](994-2026-11-25-18-41-00-story-1-14-ny-okt.md) — Bekreft at base-ui bruker document.activeElement ved åpning til fokusbann uten AlertDialogTrigger (maybe-false, medium hvis feil)
+- [x] 2026-11-26 [story-1-14-ny-okt](994-2026-11-25-18-41-00-story-1-14-ny-okt.md) — Story 1.8: koble useBeforeUnload og NyOktDialog til produksjons-samtalevisningen (løst 2026-11-26 i 7898820: koblet inn i flytskall.tsx)
