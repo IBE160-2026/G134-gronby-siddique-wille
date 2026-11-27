@@ -8,7 +8,7 @@ import { Flytskall } from "@/klient/skall/flytskall";
 // og klikkbare (story 1.12). Økten og ruteren er mocket.
 let sti = "/oppsummering";
 const okt: Okt = { ...tomOkt(), modus: "ekte" };
-vi.mock("@/klient/okt/kontekst", () => ({ useOkt: () => okt }));
+vi.mock("@/klient/okt/kontekst", () => ({ useOkt: () => okt, useOktDispatch: () => vi.fn() }));
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: vi.fn(), replace: vi.fn() }),
   usePathname: () => sti,
